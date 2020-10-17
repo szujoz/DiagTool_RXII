@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ui_SerialSettingsDialog.h"
 #include <QChartView>
 #include <QGraphicsView>
 #include <QtWidgets/QWidget>
@@ -49,6 +50,24 @@ void MainWindow::on_widget_NewDataToDisplay(int i)
 
     ui->frame->setLayout(mainLayout);
     ui->frame->show();
+}
 
+void MainWindow::on_pushButton_2_clicked()
+{
+    if (ui->groupBox->isHidden())
+    {
+        ui->groupBox->show();
+    }
+    else
+    {
+        ui->groupBox->hide();
+    }
+}
 
+void MainWindow::on_actionSettings_triggered()
+{
+    auto *m = new QDialog();
+    auto *nw = new Ui::Dialog;
+    nw->setupUi(m);
+    m->show();
 }

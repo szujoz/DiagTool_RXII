@@ -18,6 +18,7 @@ HEADERS += \
     mainwindow.h
 
 FORMS += \
+    SerialSettingsDialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.

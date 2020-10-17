@@ -18,6 +18,11 @@ public:
 public slots:
     void on_widget_NewDataToDisplay(int i);
 
+private slots:
+    void on_pushButton_2_clicked();
+
+    void on_actionSettings_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
