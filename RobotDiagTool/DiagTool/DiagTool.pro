@@ -12,14 +12,16 @@ TARGET = DiagTool
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    serialsettingsdialog.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    serialsettingsdialog.h
 
 FORMS += \
-    SerialSettingsDialog.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    serialsettingsdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

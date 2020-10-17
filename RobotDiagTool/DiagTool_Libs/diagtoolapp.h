@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "communicationserialport.h"
 #include "robotproxy.h"
+#include "inifilehandler.h"
 
 class DiagToolApp : public QObject
 {
@@ -17,6 +18,7 @@ public:
 
 private:
     std::unique_ptr<CommunicationSerialPort> communication;
+    std::unique_ptr<IniFileHandler> iniFileHandler;
  //   RobotProxy robot;
 //    Simulator simulator;
 //    QQmlApplicationEngine engine;

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "ui_SerialSettingsDialog.h"
+#include "serialsettingsdialog.h"
+#include "inifilehandler.h"
 #include <QChartView>
 #include <QGraphicsView>
 #include <QtWidgets/QWidget>
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete settingsWindow;
 }
 
 
@@ -66,8 +68,10 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    auto *m = new QDialog();
-    auto *nw = new Ui::Dialog;
-    nw->setupUi(m);
-    m->show();
+    settingsWindow = new SerialSettingsDialog();
+    settingsWindow->setAttribute(Qt::WA_QuitOnClose, false);
+    settingsWindow->show();
+
+    //connect(&settingsWindow, &SerialSettingsDialog::SettingsChanged,
+    //        &IniFileHandler, &IniFileHandler::)
 }

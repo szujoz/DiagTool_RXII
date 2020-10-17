@@ -1,5 +1,6 @@
 #include "diagtoolapp.h"
 #include <QSerialPort>
+#include <QDir>
 
 DiagToolApp::DiagToolApp()
 {
@@ -13,7 +14,7 @@ DiagToolApp::DiagToolApp()
     ThreadTest();
     communication->connect();
 
-
+    iniFileHandler = std::make_unique<IniFileHandler>(QDir::currentPath() + "/serial.ini");
 }
 
 void DiagToolApp::ThreadTest()
