@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "serialsettingsdialog.h"
-#include "inifilehandler.h"
 #include <QChartView>
 #include <QGraphicsView>
 #include <QtWidgets/QWidget>
@@ -26,12 +24,13 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete settingsWindow;
 }
 
 
 void MainWindow::on_widget_NewDataToDisplay(int i)
 {
+    Q_UNUSED(i);
+
     QChart *m_chart = new QChart();
     QChartView *chartView = new QChartView(m_chart);
     chartView->setMinimumSize(200, 100);
@@ -68,10 +67,5 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    settingsWindow = new SerialSettingsDialog();
-    settingsWindow->setAttribute(Qt::WA_QuitOnClose, false);
-    settingsWindow->show();
-
-    //connect(&settingsWindow, &SerialSettingsDialog::SettingsChanged,
-    //        &IniFileHandler, &IniFileHandler::)
+    emit SerialDialogNeeded();
 }

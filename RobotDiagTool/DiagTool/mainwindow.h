@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "serialsettingsdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,6 +15,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void SerialDialogNeeded();
+
 public slots:
     void on_widget_NewDataToDisplay(int i);
 
@@ -26,7 +28,5 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
-    SerialSettingsDialog* settingsWindow;
 };
 #endif // MAINWINDOW_H
