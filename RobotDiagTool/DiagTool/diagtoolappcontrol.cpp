@@ -30,8 +30,7 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 
     mainWindow->on_widget_NewDataToDisplay(2);
 
-    QObject::connect(mainWindow.get(), &MainWindow::SerialDialogNeeded,
-                     this, &DiagToolAppControl::OpenSerialDialog);
+    ConnectSignalsToSlots();
 
     a.exec();
 }
@@ -80,4 +79,24 @@ void DiagToolAppControl::SettingsArrived(const QString com, const QString baud, 
     emit SettingsToIni(settMap);
 
     settingsWindow->close();
+}
+
+void DiagToolAppControl::SerialConnRequestReceived()
+{
+    communication->connect();
+}
+
+void DiagToolAppControl::SerialDisconnReqestReceived()
+{
+
+}
+
+void DiagToolAppControl::ConnectSignalsToSlots()
+{
+    connect(mainWindow.get(), &MainWindow::SerialDialogNeeded, this, &DiagToolAppControl::OpenSerialDialog);
+
+    connect(mainWindow.get(), &MainWindow::SerialConnectionRequest, this, &DiagToolAppControl::SerialConnRequestReceived);
+    connect(mainWindow.get(), &MainWindow::SerialDisconnectionRequest, this, &DiagToolAppControl::SerialDisconnReqestReceived);
+
+
 }

@@ -15,8 +15,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void DisplaySerialState(bool const connected);
+
 signals:
     void SerialDialogNeeded();
+    void SerialConnectionRequest();
+    void SerialDisconnectionRequest();
 
 public slots:
     void on_widget_NewDataToDisplay(int i);
@@ -25,6 +29,10 @@ private slots:
     void on_pushButton_2_clicked();
 
     void on_actionSettings_triggered();
+
+    void on_btn_ToolBarConnectSerial_clicked();
+
+    void on_btn_ToolBarDisconnectSerial_clicked();
 
 private:
     Ui::MainWindow *ui;

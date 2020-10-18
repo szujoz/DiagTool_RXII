@@ -57,14 +57,14 @@
            <widget class="QLineEdit" name="lineEdit_ComChannel"/>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="label_Baude">
+           <widget class="QLabel" name="label_Baud">
             <property name="text">
-             <string>Baude Rate</string>
+             <string>Baud Rate</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEdit_Baude"/>
+           <widget class="QLineEdit" name="lineEdit_Baud"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_DataBits">

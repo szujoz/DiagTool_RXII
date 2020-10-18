@@ -26,6 +26,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::DisplaySerialState(const bool connected)
+{
+    if (connected == true)
+    {
+        ui->label_ToolBarSerialStatus->setText("Connected");
+        //ui->label_ToolBarSerialStatus->setStyleSheet("QLabel { background-color : red; color : blue; }")
+    }
+    else
+    {
+        ui->label_ToolBarSerialStatus->setText("Disconnected");
+    }
+}
+
 
 void MainWindow::on_widget_NewDataToDisplay(int i)
 {
@@ -55,17 +68,27 @@ void MainWindow::on_widget_NewDataToDisplay(int i)
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if (ui->groupBox->isHidden())
+    if (ui->groupBox_QuickTab->isHidden())
     {
-        ui->groupBox->show();
+        ui->groupBox_QuickTab->show();
     }
     else
     {
-        ui->groupBox->hide();
+        ui->groupBox_QuickTab->hide();
     }
 }
 
 void MainWindow::on_actionSettings_triggered()
 {
     emit SerialDialogNeeded();
+}
+
+void MainWindow::on_btn_ToolBarConnectSerial_clicked()
+{
+    emit SerialConnectionRequest();
+}
+
+void MainWindow::on_btn_ToolBarDisconnectSerial_clicked()
+{
+    emit SerialDisconnectionRequest();
 }

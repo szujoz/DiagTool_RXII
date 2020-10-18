@@ -27,12 +27,14 @@ public slots:
                          QString const baud,
                          QString const dataBits,
                          QString const stopBits);
+    void SerialConnRequestReceived();
+    void SerialDisconnReqestReceived(); //TODO implement disconnect
 
 signals:
     void SettingsToIni(QMap<QString,QString> params);
 
 private:
-    std::unique_ptr<CommunicationSerialPort> communication;
+    std::unique_ptr<CommunicationSerialPort> communication; // TODO Use parent class
     std::unique_ptr<IniFileHandler> iniFileHandler;
  //   RobotProxy robot;
 //    Simulator simulator;
@@ -42,6 +44,8 @@ private:
 
     std::unique_ptr<MainWindow> mainWindow;
     std::unique_ptr<SerialSettingsDialog> settingsWindow;
+
+    void ConnectSignalsToSlots();
 
 };
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>599</width>
-    <height>376</height>
+    <width>647</width>
+    <height>391</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,7 +31,7 @@
      <number>2</number>
     </property>
     <item>
-     <widget class="QFrame" name="frame_2">
+     <widget class="QFrame" name="frame_ToolBar">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -80,6 +80,63 @@
          <property name="spacing">
           <number>0</number>
          </property>
+         <item>
+          <widget class="QLabel" name="label_ToolBarSerialStatus">
+           <property name="text">
+            <string>Disconnected</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_ToolBarConnectSerial">
+           <property name="minimumSize">
+            <size>
+             <width>20</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string>C</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_ToolBarDisconnectSerial">
+           <property name="minimumSize">
+            <size>
+             <width>20</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string>D</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
@@ -146,9 +203,9 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
-        <widget class="QWidget" name="tabGrid">
+        <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
          </property>
@@ -515,9 +572,9 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_2">
+        <widget class="QWidget" name="tab_Scope">
          <attribute name="title">
-          <string>Grid</string>
+          <string>Scope</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="0" column="0">
@@ -535,7 +592,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_3">
+        <widget class="QWidget" name="tab_Terminal">
          <attribute name="title">
           <string>Terminal</string>
          </attribute>
@@ -573,18 +630,45 @@
           </property>
          </widget>
         </widget>
-        <widget class="QWidget" name="tab">
+        <widget class="QWidget" name="tab_Controllers">
          <property name="accessibleName">
           <string/>
          </property>
          <attribute name="title">
-          <string>Page</string>
+          <string>Controllers</string>
          </attribute>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="1" column="2">
+             <widget class="QGroupBox" name="groupBox_9">
+              <property name="title">
+               <string>GroupBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QGroupBox" name="groupBox_LineFollowController">
+              <property name="title">
+               <string>GroupBox</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QGroupBox" name="groupBox_10">
+              <property name="title">
+               <string>GroupBox</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox">
+       <widget class="QGroupBox" name="groupBox_QuickTab">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -592,7 +676,7 @@
          <enum>Qt::TabFocus</enum>
         </property>
         <property name="title">
-         <string>GroupBox</string>
+         <string>Quick Tab</string>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -604,24 +688,24 @@
             <enum>QLayout::SetDefaultConstraint</enum>
            </property>
            <item alignment="Qt::AlignLeft|Qt::AlignTop">
-            <widget class="QLabel" name="label_14">
+            <widget class="QLabel" name="label_QuickTabSpeed">
              <property name="text">
-              <string>TextLabel</string>
+              <string>Speed</string>
              </property>
             </widget>
            </item>
            <item alignment="Qt::AlignLeft|Qt::AlignTop">
-            <widget class="QLineEdit" name="lineEdit_15"/>
+            <widget class="QLineEdit" name="lineEdit_QuickTabSpeed"/>
            </item>
            <item>
-            <widget class="QLabel" name="label_15">
+            <widget class="QLabel" name="label_QuickTabFrontDistance">
              <property name="text">
-              <string>TextLabel</string>
+              <string>Front Distance</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_16"/>
+            <widget class="QLineEdit" name="lineEdit_QuickTabFrontDistance"/>
            </item>
            <item>
             <widget class="QLabel" name="label_16">
@@ -670,7 +754,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>599</width>
+     <width>647</width>
      <height>21</height>
     </rect>
    </property>
