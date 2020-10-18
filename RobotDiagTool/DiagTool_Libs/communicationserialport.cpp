@@ -3,7 +3,7 @@
 #include <QDebug>
 
 CommunicationSerialPort::CommunicationSerialPort(QString               portName,
-                                                 qint32                baudRate,
+                                                 QSerialPort::BaudRate baudRate,
                                                  QSerialPort::DataBits dataBits,
                                                  QSerialPort::Parity   parity,
                                                  QSerialPort::StopBits stopBits)
