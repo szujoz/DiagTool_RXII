@@ -1,9 +1,9 @@
-#include "diagtoolappcontrol.h"
-#include "mainwindow.h"
 #include <QSerialPort>
 #include <QDir>
 #include <QApplication>
 
+#include "diagtoolappcontrol.h"
+#include "mainwindow.h"
 
 DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 {
@@ -21,6 +21,11 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 
     communication->connect();
 
+    if (communication->isConnected())
+    {
+        mainWindow->DisplaySerialState(true);
+    }
+
     ThreadTest();
     ThreadTest();
     ThreadTest();
@@ -28,7 +33,14 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
     ThreadTest();
     ThreadTest();
 
-    mainWindow->on_widget_NewDataToDisplay(2);
+    mainWindow->ScopeInit();
+
+//    scopeBuffer.append(QPointF(1,2));
+//    scopeBuffer.append(QPointF(2,3));
+//    scopeBuffer.append(QPointF(3,3));
+//    scopeBuffer.append(QPointF(4,5));
+//    scopeBuffer.append(QPointF(5,1));
+    mainWindow->DisplayScopeData(scopeBuffer);
 
     ConnectSignalsToSlots();
 
@@ -56,7 +68,7 @@ void DiagToolAppControl::OpenSerialDialog()
     settingsWindow->show();
 
     connect(settingsWindow.get(), &SerialSettingsDialog::SettingsChanged,
-            this, &DiagToolAppControl::SettingsArrived);
+            this, &DiagToolAppControl::SerialSettingsArrived);
 
     connect(this, &DiagToolAppControl::SettingsToIni,
             iniFileHandler.get(), &IniFileHandler::SettingsArrived);
@@ -66,9 +78,16 @@ void DiagToolAppControl::OpenSerialDialog()
                                           settMap.value("baud"),
                                           settMap.value("dataBit"),
                                           settMap.value("stopBit"));
+
+    QByteArray timestamp("202010242153");
+    QVector<uint32_t> meas0 = {1,2};
+    QString end = "\n";
+    communication->send(timestamp);
+    communication->send(meas0);
+    communication->send(end);
 }
 
-void DiagToolAppControl::SettingsArrived(const QString com, const QString baud, const QString dataBits, const QString stopBits)
+void DiagToolAppControl::SerialSettingsArrived(const QString com, const QString baud, const QString dataBits, const QString stopBits)
 {
     QMap<QString,QString> settMap;
     settMap.insert("COM",com);
@@ -88,7 +107,33 @@ void DiagToolAppControl::SerialConnRequestReceived()
 
 void DiagToolAppControl::SerialDisconnReqestReceived()
 {
+    communication->disconnect();
+}
 
+void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
+{
+    QString messageToBeDisplayed = "";
+    qint64 availableByteCount = 0;
+
+    availableByteCount = stream.device()->bytesAvailable();
+
+    char bytesFromStream[availableByteCount];
+
+    // Read the arravied bytes. Since it is not a const the last character is garbage.
+    // Remove the garbage and the enter before that to get the message itself with nullterminator.
+    stream.readRawData(bytesFromStream,availableByteCount);
+    bytesFromStream[availableByteCount-1] = '\0';
+
+    messageToBeDisplayed.append(bytesFromStream);
+
+    mainWindow->DisplaySerialTerminalData(messageToBeDisplayed);
+
+    // Display the measurement data on the scope. E.g. "20201024215321"
+    if (messageToBeDisplayed.contains("2020"))
+    {
+        scopeBuffer.append(QPointF(bytesFromStream[12]-0x30,bytesFromStream[13]-0x30));
+        mainWindow->DisplayScopeData(scopeBuffer);
+    }
 }
 
 void DiagToolAppControl::ConnectSignalsToSlots()
@@ -97,6 +142,6 @@ void DiagToolAppControl::ConnectSignalsToSlots()
 
     connect(mainWindow.get(), &MainWindow::SerialConnectionRequest, this, &DiagToolAppControl::SerialConnRequestReceived);
     connect(mainWindow.get(), &MainWindow::SerialDisconnectionRequest, this, &DiagToolAppControl::SerialDisconnReqestReceived);
-
+    connect(communication.get(), &CommunicationSerialPort::dataReady, this, &DiagToolAppControl::SerialDataArrived);
 
 }

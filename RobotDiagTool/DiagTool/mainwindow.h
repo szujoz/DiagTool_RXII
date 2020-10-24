@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QtCharts>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,14 +17,15 @@ public:
     ~MainWindow();
 
     void DisplaySerialState(bool const connected);
+    void DisplaySerialTerminalData(QString const str);
+
+    void ScopeInit();
+    void DisplayScopeData(QVector<QPointF>& points);
 
 signals:
     void SerialDialogNeeded();
     void SerialConnectionRequest();
     void SerialDisconnectionRequest();
-
-public slots:
-    void on_widget_NewDataToDisplay(int i);
 
 private slots:
     void on_pushButton_2_clicked();
@@ -31,10 +33,13 @@ private slots:
     void on_actionSettings_triggered();
 
     void on_btn_ToolBarConnectSerial_clicked();
-
     void on_btn_ToolBarDisconnectSerial_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
+
+    QLineSeries* lineSeries;
 };
 #endif // MAINWINDOW_H

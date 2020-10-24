@@ -23,27 +23,25 @@ public:
 
 public slots:
     void OpenSerialDialog();
-    void SettingsArrived(QString const com,
-                         QString const baud,
-                         QString const dataBits,
-                         QString const stopBits);
+    void SerialSettingsArrived(QString const com,
+                               QString const baud,
+                               QString const dataBits,
+                               QString const stopBits);
     void SerialConnRequestReceived();
-    void SerialDisconnReqestReceived(); //TODO implement disconnect
+    void SerialDisconnReqestReceived();
+    void SerialDataArrived(QDataStream& stream);
 
 signals:
     void SettingsToIni(QMap<QString,QString> params);
 
 private:
-    std::unique_ptr<CommunicationSerialPort> communication; // TODO Use parent class
+    std::unique_ptr<CommunicationSerialPort> communication;
     std::unique_ptr<IniFileHandler> iniFileHandler;
- //   RobotProxy robot;
-//    Simulator simulator;
-//    QQmlApplicationEngine engine;
-//    RobotStateHistory history;
-//    MainWindowsEventHandling handler;
 
     std::unique_ptr<MainWindow> mainWindow;
     std::unique_ptr<SerialSettingsDialog> settingsWindow;
+
+    QVector<QPointF> scopeBuffer;
 
     void ConnectSignalsToSlots();
 

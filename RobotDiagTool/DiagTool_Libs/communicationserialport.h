@@ -16,6 +16,7 @@ public:
     virtual ~CommunicationSerialPort() = default;
 
     virtual void connect();
+    virtual void disconnect();
     virtual bool isConnected() const override;
 
 protected:

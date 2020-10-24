@@ -18,15 +18,24 @@ CommunicationSerialPort::CommunicationSerialPort(QString               portName,
     qDebug() << "Port is " << serialPort.isOpen();
 
     QObject::connect(&serialPort, SIGNAL(readyRead()), this, SLOT(dataReceived()));
+
+    connectToDevice(&serialPort);
 }
 
 void CommunicationSerialPort::connect()
 {
     serialPort.open(QIODevice::ReadWrite);
 
-    qDebug() << "Port is " << serialPort.isOpen();
+    qDebug() << "Port is open = " << serialPort.isOpen();
 
-    sendBufferContent();
+    send("Hello\r");
+}
+
+void CommunicationSerialPort::disconnect()
+{
+    serialPort.close();
+
+    qDebug() << "Port is open = " << serialPort.isOpen();
 }
 
 bool CommunicationSerialPort::isConnected() const
@@ -36,7 +45,8 @@ bool CommunicationSerialPort::isConnected() const
 
 void CommunicationSerialPort::sendBufferContent()
 {
-    serialPort.write("Hello", 5);
+    serialPort.write(sendBuffer);
+    sendBuffer.clear();
 }
 
 void CommunicationSerialPort::handleError(QSerialPort::SerialPortError error)

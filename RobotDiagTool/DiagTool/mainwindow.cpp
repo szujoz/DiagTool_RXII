@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete lineSeries;
 }
 
 void MainWindow::DisplaySerialState(const bool connected)
@@ -39,31 +40,52 @@ void MainWindow::DisplaySerialState(const bool connected)
     }
 }
 
-
-void MainWindow::on_widget_NewDataToDisplay(int i)
+void MainWindow::DisplaySerialTerminalData(const QString str)
 {
-    Q_UNUSED(i);
+    ui->textEdit_SerialTerminal->append(str);
+}
 
+void MainWindow::ScopeInit()
+{
+    lineSeries = new QLineSeries();
     QChart *m_chart = new QChart();
     QChartView *chartView = new QChartView(m_chart);
     chartView->setMinimumSize(200, 100);
     QValueAxis *axisX = new QValueAxis;
-    axisX->setRange(0, 2000);
+    axisX->setRange(0, 20);
     axisX->setLabelFormat("%g");
-    axisX->setTitleText("Samples");
+    axisX->setTitleText("Time");
     QValueAxis *axisY = new QValueAxis;
     axisY->setRange(-1, 5);
-    axisY->setTitleText("Audio level");
+    axisY->setTitleText("Signal value");
     m_chart->addAxis(axisX, Qt::AlignBottom);
     m_chart->addAxis(axisY, Qt::AlignLeft);
     m_chart->legend()->hide();
-    m_chart->setTitle("Data from the microphone ");
+    m_chart->setTitle("Measurement data from the robot.");
+    m_chart->addSeries(lineSeries);
+    lineSeries->attachAxis(axisX);
+    lineSeries->attachAxis(axisY);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(chartView);
 
     ui->frame->setLayout(mainLayout);
     ui->frame->show();
+}
+
+void MainWindow::DisplayScopeData(QVector<QPointF>& points)
+{
+    // ToDo: Detect min, max changes
+    float max = 0.0;
+    for(int i = 0; i < points.size(); i++)
+    {
+        if(max < points[i].x())
+        {
+            max = points[i].x();
+        }
+    }
+
+    lineSeries->replace(points);
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -86,9 +108,16 @@ void MainWindow::on_actionSettings_triggered()
 void MainWindow::on_btn_ToolBarConnectSerial_clicked()
 {
     emit SerialConnectionRequest();
+    DisplaySerialState(true);
 }
 
 void MainWindow::on_btn_ToolBarDisconnectSerial_clicked()
 {
     emit SerialDisconnectionRequest();
+    DisplaySerialState(false);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+
 }

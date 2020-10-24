@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>647</width>
-    <height>391</height>
+    <width>989</width>
+    <height>637</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -76,17 +76,10 @@
         <number>0</number>
        </property>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="10,10,0,1,10,10">
          <property name="spacing">
           <number>0</number>
          </property>
-         <item>
-          <widget class="QLabel" name="label_ToolBarSerialStatus">
-           <property name="text">
-            <string>Disconnected</string>
-           </property>
-          </widget>
-         </item>
          <item>
           <widget class="QPushButton" name="btn_ToolBarConnectSerial">
            <property name="minimumSize">
@@ -134,6 +127,26 @@
            </property>
            <property name="autoDefault">
             <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_ToolBarSerialStatus">
+           <property name="text">
+            <string>Disconnected</string>
            </property>
           </widget>
          </item>
@@ -203,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
@@ -578,17 +591,63 @@
          </attribute>
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="0" column="0">
-           <widget class="QFrame" name="frame">
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="15,100">
+            <item>
+             <widget class="QScrollArea" name="scrollArea">
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAsNeeded</enum>
+              </property>
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents_3">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>94</width>
+                 <height>517</height>
+                </rect>
+               </property>
+               <layout class="QFormLayout" name="formLayout_2">
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="checkBox">
+                  <property name="text">
+                   <string>CheckBox</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <spacer name="verticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame">
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -596,13 +655,13 @@
          <attribute name="title">
           <string>Terminal</string>
          </attribute>
-         <widget class="QTextEdit" name="textEdit">
+         <widget class="QTextEdit" name="textEdit_SerialTerminal">
           <property name="geometry">
            <rect>
             <x>10</x>
             <y>10</y>
             <width>451</width>
-            <height>201</height>
+            <height>421</height>
            </rect>
           </property>
          </widget>
@@ -610,7 +669,7 @@
           <property name="geometry">
            <rect>
             <x>10</x>
-            <y>230</y>
+            <y>450</y>
             <width>331</width>
             <height>20</height>
            </rect>
@@ -619,8 +678,8 @@
          <widget class="QPushButton" name="pushButton">
           <property name="geometry">
            <rect>
-            <x>370</x>
-            <y>230</y>
+            <x>390</x>
+            <y>450</y>
             <width>75</width>
             <height>23</height>
            </rect>
@@ -638,30 +697,281 @@
           <string>Controllers</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_4">
-            <item row="1" column="2">
-             <widget class="QGroupBox" name="groupBox_9">
+          <item row="0" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,10,15">
+            <item>
+             <widget class="QGroupBox" name="groupBox">
               <property name="title">
-               <string>GroupBox</string>
+               <string>Controller Selector</string>
               </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout">
+                 <item>
+                  <widget class="QRadioButton" name="radioButton">
+                   <property name="text">
+                    <string>Line Follow Controller</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="radioButton_2">
+                   <property name="text">
+                    <string>Distance Follow Controller</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="radioButton_3">
+                   <property name="text">
+                    <string>Speed Controller</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="radioButton_4">
+                   <property name="text">
+                    <string>Orientation Follow Controller</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+              </layout>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item>
              <widget class="QGroupBox" name="groupBox_LineFollowController">
               <property name="title">
-               <string>GroupBox</string>
+               <string>Controller Parameters</string>
               </property>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="0" column="1">
+                <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0">
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetDefaultConstraint</enum>
+                 </property>
+                 <item row="7" column="0">
+                  <widget class="QLabel" name="label_15">
+                   <property name="text">
+                    <string>D</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="10" column="0">
+                  <widget class="QLabel" name="label_20">
+                   <property name="text">
+                    <string>Derivative</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="label_22">
+                   <property name="text">
+                    <string>I</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="9" column="0">
+                  <widget class="QLabel" name="label_24">
+                   <property name="text">
+                    <string>Integrate</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_33">
+                   <property name="text">
+                    <string>Control Value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_31">
+                   <property name="text">
+                    <string>Setpoint</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_21">
+                   <property name="text">
+                    <string>Error</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="8" column="0">
+                  <widget class="QLabel" name="label_23">
+                   <property name="text">
+                    <string>Integrate Limit</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_32">
+                   <property name="text">
+                    <string>Process Value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_14">
+                   <property name="text">
+                    <string>P</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="lineEdit_35"/>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="lineEdit_36"/>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_18">
+                   <property name="baseSize">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Actual Value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="label_19">
+                   <property name="text">
+                    <string>Forced Value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLineEdit" name="lineEdit_34"/>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="lineEdit_22"/>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="lineEdit_20"/>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QLineEdit" name="lineEdit_23"/>
+                 </item>
+                 <item row="7" column="1">
+                  <widget class="QLineEdit" name="lineEdit_19"/>
+                 </item>
+                 <item row="8" column="1">
+                  <widget class="QLineEdit" name="lineEdit_25"/>
+                 </item>
+                 <item row="10" column="1">
+                  <widget class="QLineEdit" name="lineEdit_21"/>
+                 </item>
+                 <item row="9" column="1">
+                  <widget class="QLineEdit" name="lineEdit_26"/>
+                 </item>
+                 <item row="5" column="2">
+                  <widget class="QLineEdit" name="lineEdit_15"/>
+                 </item>
+                 <item row="6" column="2">
+                  <widget class="QLineEdit" name="lineEdit_24"/>
+                 </item>
+                 <item row="7" column="2">
+                  <widget class="QLineEdit" name="lineEdit_16"/>
+                 </item>
+                 <item row="5" column="3">
+                  <widget class="QPushButton" name="pushButton_3">
+                   <property name="text">
+                    <string>Force</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="7" column="3">
+                  <widget class="QPushButton" name="pushButton_4">
+                   <property name="text">
+                    <string>Force</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="3">
+                  <widget class="QPushButton" name="pushButton_5">
+                   <property name="text">
+                    <string>Force</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="11" column="1">
+                  <spacer name="verticalSpacer_3">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+              </layout>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QGroupBox" name="groupBox_10">
+            <item>
+             <widget class="QGroupBox" name="groupBox_9">
               <property name="title">
-               <string>GroupBox</string>
+               <string>Scope</string>
               </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QFrame" name="frame_2">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
            </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Labirinty</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QSplitter" name="splitter">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <widget class="QWidget" name="verticalLayoutWidget">
+             <layout class="QVBoxLayout" name="verticalLayout_6"/>
+            </widget>
+            <widget class="QWidget" name="gridLayoutWidget">
+             <layout class="QGridLayout" name="gridLayout_4"/>
+            </widget>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -694,8 +1004,15 @@
              </property>
             </widget>
            </item>
-           <item alignment="Qt::AlignLeft|Qt::AlignTop">
-            <widget class="QLineEdit" name="lineEdit_QuickTabSpeed"/>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_QuickTabSpeed">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QLabel" name="label_QuickTabFrontDistance">
@@ -728,6 +1045,16 @@
             <widget class="QLineEdit" name="lineEdit_18"/>
            </item>
            <item>
+            <widget class="QLabel" name="label_QuckTabTrace">
+             <property name="text">
+              <string>Trace</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="textEdit_quickTabTrace"/>
+           </item>
+           <item>
             <spacer name="verticalSpacer_2">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -754,7 +1081,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>647</width>
+     <width>989</width>
      <height>21</height>
     </rect>
    </property>

@@ -1,4 +1,6 @@
 #include "communication.h"
+#include <QDebug>
+#include <QDataStream>
 
 Communication::Communication()
 {
@@ -7,55 +9,39 @@ Communication::Communication()
 
 Communication::~Communication()
 {
-
+    delete receiveStream;
 }
 
 void Communication::connectToDevice(QIODevice *device)
 {
-    Q_UNUSED(device);
+    receiveStream = new QDataStream(device);
 }
 
 QDataStream* Communication::getReceiveStream()
 {
-    return nullptr;
-}
-
-template<typename T>
-void Communication::send(const T& toSendObject)
-{
-    auto stream = getSendStream();
-
-    // Elmentjük a jelenlegi stream pozíciót
-    const qint64 startPos = stream->device()->size();
-    qint32 msgSize = 0;
-    // Ideiglenesen az elejére méretnek 0-t írunk. Majd
-    //  ha már le tudjuk mérni az üzenet hosszát, visszajövünk ide és
-    //  beírjuk a tényleges értéket.
-    *stream << msgSize;
-    // A tényleges adattartalom sorosítása
-    *stream << toSendObject;
-    const qint64 endPos = stream->device()->size();
-
-    // Visszaugrunk és beírjuk a helyes üzenet méretet.
-    stream->device()->seek(startPos);
-    msgSize = endPos - startPos;
-    *stream << msgSize;
-    // Visszaugrunk az üzenet végére
-    stream->device()->seek(endPos);
-
-    // Ténylegesen elküldjük az üzenetet.
-    //  (Ez absztrakt metódus, majd minden protokoll implementálja, ahogy kell.)
-    sendBufferContent();
+    return receiveStream;
 }
 
  std::unique_ptr<QDataStream> Communication::getSendStream()
  {
-     return NULL;
+     std::unique_ptr<QDataStream>stream = std::make_unique<QDataStream>(&sendBuffer, QIODevice::WriteOnly);
+     return stream;
  }
 
  void Communication::dataReceived()
  {
-    qDebug("Data in rx buffer");
-    auto msg = "Hello";
-    send(msg);
+     auto a = receiveStream->device()->bytesAvailable();
+     char ch[a];
+
+     receiveStream->device()->peek(ch,a);
+
+     qDebug() << "Data in rx buffer: " << ch;
+
+     for(int i = 0; i < a; i++)
+     {
+         if(ch[i] == '\r')
+         {
+             emit dataReady(*receiveStream);
+         }
+     }
  }
