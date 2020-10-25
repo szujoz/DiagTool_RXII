@@ -26,6 +26,7 @@ signals:
     void SerialDialogNeeded();
     void SerialConnectionRequest();
     void SerialDisconnectionRequest();
+    void SerialDataReady(QString const message);
 
 private slots:
     void on_pushButton_2_clicked();
@@ -38,6 +39,8 @@ private slots:
     void on_pushButton_clicked();
 
     void on_btn_ScopeSignalSelectorToggle_clicked();
+
+    void on_btn_TerminalSend_clicked();
 
 private:
     Ui::MainWindow *ui;

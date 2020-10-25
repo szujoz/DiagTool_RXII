@@ -42,7 +42,7 @@ void MainWindow::DisplaySerialState(const bool connected)
 
 void MainWindow::DisplaySerialTerminalData(const QString str)
 {
-    ui->textEdit_SerialTerminal->append(str);
+    ui->textEdit_TerminalSerialInput->append(str);
 }
 
 void MainWindow::ScopeInit()
@@ -136,4 +136,9 @@ void MainWindow::on_btn_ScopeSignalSelectorToggle_clicked()
         ui->scrollArea_ScopeSignalSelector->hide();
         ui->btn_ScopeSignalSelectorToggle->setText(">");
     }
+}
+
+void MainWindow::on_btn_TerminalSend_clicked()
+{
+    SerialDataReady(ui->lineEdit_TerminalSerialOutput->text());
 }

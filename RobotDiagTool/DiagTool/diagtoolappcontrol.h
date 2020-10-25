@@ -30,6 +30,7 @@ public slots:
     void SerialConnRequestReceived();
     void SerialDisconnReqestReceived();
     void SerialDataArrived(QDataStream& stream);
+    void SerialDataReadyToTransmit(QString const message);
 
 signals:
     void SettingsToIni(QMap<QString,QString> params);

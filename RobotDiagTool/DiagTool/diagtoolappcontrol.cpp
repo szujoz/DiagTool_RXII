@@ -136,6 +136,12 @@ void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
     }
 }
 
+void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
+{
+    QString extended_message = message + "\r\n";
+    communication->send(extended_message.toUtf8());
+}
+
 void DiagToolAppControl::ConnectSignalsToSlots()
 {
     connect(mainWindow.get(), &MainWindow::SerialDialogNeeded, this, &DiagToolAppControl::OpenSerialDialog);
@@ -143,5 +149,5 @@ void DiagToolAppControl::ConnectSignalsToSlots()
     connect(mainWindow.get(), &MainWindow::SerialConnectionRequest, this, &DiagToolAppControl::SerialConnRequestReceived);
     connect(mainWindow.get(), &MainWindow::SerialDisconnectionRequest, this, &DiagToolAppControl::SerialDisconnReqestReceived);
     connect(communication.get(), &CommunicationSerialPort::dataReady, this, &DiagToolAppControl::SerialDataArrived);
-
+    connect(mainWindow.get(), &MainWindow::SerialDataReady, this, &DiagToolAppControl::SerialDataReadyToTransmit);
 }

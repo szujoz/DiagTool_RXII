@@ -216,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
@@ -704,39 +704,24 @@
          <attribute name="title">
           <string>Terminal</string>
          </attribute>
-         <widget class="QTextEdit" name="textEdit_SerialTerminal">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>10</y>
-            <width>451</width>
-            <height>421</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="lineEdit_14">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>450</y>
-            <width>331</width>
-            <height>20</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="pushButton">
-          <property name="geometry">
-           <rect>
-            <x>390</x>
-            <y>450</y>
-            <width>75</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Send</string>
-          </property>
-         </widget>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="0" colspan="2">
+           <widget class="QTextEdit" name="textEdit_TerminalSerialInput"/>
+          </item>
+          <item row="0" column="2">
+           <layout class="QGridLayout" name="gridLayout_7"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="lineEdit_TerminalSerialOutput"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="btn_TerminalSend">
+            <property name="text">
+             <string>Send</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
         <widget class="QWidget" name="tab_Controllers">
          <property name="accessibleName">
