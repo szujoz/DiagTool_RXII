@@ -79,12 +79,12 @@ void DiagToolAppControl::OpenSerialDialog()
                                           settMap.value("dataBit"),
                                           settMap.value("stopBit"));
 
-    QByteArray timestamp("202010242153");
-    QVector<uint32_t> meas0 = {1,2};
-    QString end = "\n";
-    communication->send(timestamp);
-    communication->send(meas0);
-    communication->send(end);
+//    QByteArray timestamp("202010242153");
+//    QVector<uint32_t> meas0 = {1,2};
+//    QString end = "\n";
+//    communication->send(timestamp);
+//    communication->send(meas0);
+//    communication->send(end);
 }
 
 void DiagToolAppControl::SerialSettingsArrived(const QString com, const QString baud, const QString dataBits, const QString stopBits)

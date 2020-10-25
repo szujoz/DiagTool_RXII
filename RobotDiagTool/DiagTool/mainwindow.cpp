@@ -121,3 +121,19 @@ void MainWindow::on_pushButton_clicked()
 {
 
 }
+
+void MainWindow::on_btn_ScopeSignalSelectorToggle_clicked()
+{
+    if (ui->label_ScopeSignalSelector->isHidden())
+    {
+        ui->label_ScopeSignalSelector->show();
+        ui->scrollArea_ScopeSignalSelector->show();
+        ui->btn_ScopeSignalSelectorToggle->setText("<");
+    }
+    else
+    {
+        ui->label_ScopeSignalSelector->hide();
+        ui->scrollArea_ScopeSignalSelector->hide();
+        ui->btn_ScopeSignalSelectorToggle->setText(">");
+    }
+}
