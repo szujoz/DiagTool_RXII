@@ -88,6 +88,11 @@ void MainWindow::DisplayScopeData(QVector<QPointF>& points)
     lineSeries->replace(points);
 }
 
+void MainWindow::DisplayTraceInQuickTab(const QString text)
+{
+    ui->textEdit_quickTabTrace->append(text);
+}
+
 void MainWindow::on_pushButton_2_clicked()
 {
     if (ui->groupBox_QuickTab->isHidden())
@@ -141,4 +146,14 @@ void MainWindow::on_btn_ScopeSignalSelectorToggle_clicked()
 void MainWindow::on_btn_TerminalSend_clicked()
 {
     SerialDataReady(ui->lineEdit_TerminalSerialOutput->text());
+}
+
+void MainWindow::on_btn_QuickTabCleanTrace_clicked()
+{
+    ui->textEdit_quickTabTrace->clear();
+}
+
+void MainWindow::on_btn_TerminalClearSerialTerminal_clicked()
+{
+    ui->textEdit_TerminalSerialInput->clear();
 }

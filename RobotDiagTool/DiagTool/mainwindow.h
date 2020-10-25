@@ -22,6 +22,8 @@ public:
     void ScopeInit();
     void DisplayScopeData(QVector<QPointF>& points);
 
+    void DisplayTraceInQuickTab(QString const text);
+
 signals:
     void SerialDialogNeeded();
     void SerialConnectionRequest();
@@ -41,6 +43,10 @@ private slots:
     void on_btn_ScopeSignalSelectorToggle_clicked();
 
     void on_btn_TerminalSend_clicked();
+
+    void on_btn_QuickTabCleanTrace_clicked();
+
+    void on_btn_TerminalClearSerialTerminal_clicked();
 
 private:
     Ui::MainWindow *ui;

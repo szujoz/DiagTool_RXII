@@ -705,21 +705,29 @@
           <string>Terminal</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_8">
-          <item row="0" column="0" colspan="2">
-           <widget class="QTextEdit" name="textEdit_TerminalSerialInput"/>
-          </item>
-          <item row="0" column="2">
-           <layout class="QGridLayout" name="gridLayout_7"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_TerminalSerialOutput"/>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="btn_TerminalSend">
-            <property name="text">
-             <string>Send</string>
-            </property>
-           </widget>
+          <item row="0" column="3">
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="2" column="0">
+             <widget class="QLineEdit" name="lineEdit_TerminalSerialOutput"/>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="btn_TerminalSend">
+              <property name="text">
+               <string>Send</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QTextEdit" name="textEdit_TerminalSerialInput"/>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="btn_TerminalClearSerialTerminal">
+              <property name="text">
+               <string>Clear Terminal</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -1027,7 +1035,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,100,30">
            <property name="sizeConstraint">
             <enum>QLayout::SetDefaultConstraint</enum>
            </property>
@@ -1079,11 +1087,28 @@
             <widget class="QLineEdit" name="lineEdit_18"/>
            </item>
            <item>
-            <widget class="QLabel" name="label_QuckTabTrace">
-             <property name="text">
-              <string>Trace</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="10,0">
+             <item>
+              <widget class="QLabel" name="label_QuckTabTrace">
+               <property name="text">
+                <string>Trace</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_QuickTabCleanTrace">
+               <property name="maximumSize">
+                <size>
+                 <width>41</width>
+                 <height>23</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Clear</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <widget class="QTextEdit" name="textEdit_quickTabTrace"/>

@@ -134,6 +134,10 @@ void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
         scopeBuffer.append(QPointF(bytesFromStream[12]-0x30,bytesFromStream[13]-0x30));
         mainWindow->DisplayScopeData(scopeBuffer);
     }
+    else // Display trace
+    {
+        mainWindow->DisplayTraceInQuickTab(messageToBeDisplayed);
+    }
 }
 
 void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
