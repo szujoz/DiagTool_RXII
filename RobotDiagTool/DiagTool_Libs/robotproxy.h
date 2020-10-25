@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "encoder.h"
+
 class RobotProxy : public QObject
 {
     Q_OBJECT
@@ -14,6 +16,9 @@ public:
     uint32_t Cmd_GetFrontDistance_mm();
 
 signals:
+
+private:
+    Encoder encoder;
 
 };
 

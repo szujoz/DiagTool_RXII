@@ -16,12 +16,14 @@ CONFIG += staticlib
 SOURCES += \
         communication.cpp \
         communicationserialport.cpp \
+        encoder.cpp \
         inifilehandler.cpp \
         robotproxy.cpp
 
 HEADERS += \
     communication.h \
     communicationserialport.h \
+    encoder.h \
     inifilehandler.h \
     robotproxy.h
 

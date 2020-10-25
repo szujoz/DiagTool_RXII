@@ -35,13 +35,6 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 
     mainWindow->ScopeInit();
 
-//    scopeBuffer.append(QPointF(1,2));
-//    scopeBuffer.append(QPointF(2,3));
-//    scopeBuffer.append(QPointF(3,3));
-//    scopeBuffer.append(QPointF(4,5));
-//    scopeBuffer.append(QPointF(5,1));
-    mainWindow->DisplayScopeData(scopeBuffer);
-
     ConnectSignalsToSlots();
 
     a.exec();
@@ -78,13 +71,6 @@ void DiagToolAppControl::OpenSerialDialog()
                                           settMap.value("baud"),
                                           settMap.value("dataBit"),
                                           settMap.value("stopBit"));
-
-//    QByteArray timestamp("202010242153");
-//    QVector<uint32_t> meas0 = {1,2};
-//    QString end = "\n";
-//    communication->send(timestamp);
-//    communication->send(meas0);
-//    communication->send(end);
 }
 
 void DiagToolAppControl::SerialSettingsArrived(const QString com, const QString baud, const QString dataBits, const QString stopBits)
