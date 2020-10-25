@@ -50,8 +50,6 @@ void MainWindow::DisplaySerialTerminalData(const QString str)
 void MainWindow::ScopeInit()
 {
     lineSeries = new QLineSeries();
-    //scopeChart = std::make_unique<QChart>();
-    //chartView  = std::make_unique<QChartView>(scopeChart.get());
     scopeAxisX = new QValueAxis();
     scopeAxisY = new QValueAxis();
     scopeChartView  = std::make_unique<QChartView>();
@@ -64,14 +62,8 @@ void MainWindow::ScopeInit()
     scopeAxisX->setLabelFormat("%g");
     scopeAxisX->setTitleText("Time");
 
-    scopeAxisY->setRange(-1, 5);
+    scopeAxisY->setRange(0, 5);
     scopeAxisY->setTitleText("Signal value");
-
-//    scopeChart->addAxis(scopeAxisX.get(), Qt::AlignBottom);
-//    scopeChart->addAxis(scopeAxisY.get(), Qt::AlignLeft);
-//    scopeChart->legend()->hide();
-//    scopeChart->setTitle("Measurement data from the robot.");
-//    scopeChart->addSeries(lineSeries.get());
 
     scopeChartView.get()->chart()->addAxis(scopeAxisX, Qt::AlignBottom);
     scopeChartView.get()->chart()->addAxis(scopeAxisY, Qt::AlignLeft);
