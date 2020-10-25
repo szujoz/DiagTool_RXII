@@ -25,6 +25,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete lineSeries;
+    delete scopeAxisX;
+    delete scopeAxisY;
 }
 
 void MainWindow::DisplaySerialState(const bool connected)
@@ -48,26 +50,40 @@ void MainWindow::DisplaySerialTerminalData(const QString str)
 void MainWindow::ScopeInit()
 {
     lineSeries = new QLineSeries();
-    QChart *m_chart = new QChart();
-    QChartView *chartView = new QChartView(m_chart);
-    chartView->setMinimumSize(200, 100);
-    QValueAxis *axisX = new QValueAxis;
-    axisX->setRange(0, 20);
-    axisX->setLabelFormat("%g");
-    axisX->setTitleText("Time");
-    QValueAxis *axisY = new QValueAxis;
-    axisY->setRange(-1, 5);
-    axisY->setTitleText("Signal value");
-    m_chart->addAxis(axisX, Qt::AlignBottom);
-    m_chart->addAxis(axisY, Qt::AlignLeft);
-    m_chart->legend()->hide();
-    m_chart->setTitle("Measurement data from the robot.");
-    m_chart->addSeries(lineSeries);
-    lineSeries->attachAxis(axisX);
-    lineSeries->attachAxis(axisY);
+    //scopeChart = std::make_unique<QChart>();
+    //chartView  = std::make_unique<QChartView>(scopeChart.get());
+    scopeAxisX = new QValueAxis();
+    scopeAxisY = new QValueAxis();
+    scopeChartView  = std::make_unique<QChartView>();
+
+    nextDataIndexToBeChecked = 0;
+
+    scopeChartView->setMinimumSize(200, 100);
+
+    scopeAxisX->setRange(0, 5);
+    scopeAxisX->setLabelFormat("%g");
+    scopeAxisX->setTitleText("Time");
+
+    scopeAxisY->setRange(-1, 5);
+    scopeAxisY->setTitleText("Signal value");
+
+//    scopeChart->addAxis(scopeAxisX.get(), Qt::AlignBottom);
+//    scopeChart->addAxis(scopeAxisY.get(), Qt::AlignLeft);
+//    scopeChart->legend()->hide();
+//    scopeChart->setTitle("Measurement data from the robot.");
+//    scopeChart->addSeries(lineSeries.get());
+
+    scopeChartView.get()->chart()->addAxis(scopeAxisX, Qt::AlignBottom);
+    scopeChartView.get()->chart()->addAxis(scopeAxisY, Qt::AlignLeft);
+    scopeChartView.get()->chart()->legend()->hide();
+    scopeChartView.get()->chart()->setTitle("Measurement data from the robot.");
+    scopeChartView.get()->chart()->addSeries(lineSeries);
+
+    lineSeries->attachAxis(scopeAxisX);
+    lineSeries->attachAxis(scopeAxisY);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(chartView);
+    mainLayout->addWidget(scopeChartView.get());
 
     ui->frame->setLayout(mainLayout);
     ui->frame->show();
@@ -75,15 +91,7 @@ void MainWindow::ScopeInit()
 
 void MainWindow::DisplayScopeData(QVector<QPointF>& points)
 {
-    // ToDo: Detect min, max changes
-    float max = 0.0;
-    for(int i = 0; i < points.size(); i++)
-    {
-        if(max < points[i].x())
-        {
-            max = points[i].x();
-        }
-    }
+    ScopeDynamicResizeIfNeeded(points);
 
     lineSeries->replace(points);
 }
@@ -93,7 +101,7 @@ void MainWindow::DisplayTraceInQuickTab(const QString text)
     ui->textEdit_quickTabTrace->append(text);
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_btn_QuickTabToggle_clicked()
 {
     if (ui->groupBox_QuickTab->isHidden())
     {
@@ -156,4 +164,40 @@ void MainWindow::on_btn_QuickTabCleanTrace_clicked()
 void MainWindow::on_btn_TerminalClearSerialTerminal_clicked()
 {
     ui->textEdit_TerminalSerialInput->clear();
+}
+
+void MainWindow::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
+{
+    int   i;
+    float maxX = scopeAxisX->max()*0.8;
+    float minX = scopeAxisX->min()*0.8;
+    float maxY = scopeAxisY->max()*0.8;
+    float minY = scopeAxisY->min()*0.8;
+
+    for(i = nextDataIndexToBeChecked; i < points.size(); i++)
+    {
+        if(maxX < points[i].x())
+        {
+            maxX = points[i].x();
+        }
+
+        if(minX > points[i].x())
+        {
+            minX = points[i].x();
+        }
+
+        if(maxY < points[i].y())
+        {
+            maxY = points[i].y();
+        }
+
+        if(minY > points[i].y())
+        {
+            minY = points[i].y();
+        }
+    }
+    nextDataIndexToBeChecked = i;
+
+    scopeAxisX->setRange(minX*1.25,maxX*1.25);
+    scopeAxisY->setRange(minY*1.25,maxY*1.25);
 }

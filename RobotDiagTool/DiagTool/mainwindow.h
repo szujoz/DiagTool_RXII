@@ -31,7 +31,8 @@ signals:
     void SerialDataReady(QString const message);
 
 private slots:
-    void on_pushButton_2_clicked();
+    void on_btn_QuickTabToggle_clicked();
+    void on_btn_QuickTabCleanTrace_clicked();
 
     void on_actionSettings_triggered();
 
@@ -43,14 +44,18 @@ private slots:
     void on_btn_ScopeSignalSelectorToggle_clicked();
 
     void on_btn_TerminalSend_clicked();
-
-    void on_btn_QuickTabCleanTrace_clicked();
-
     void on_btn_TerminalClearSerialTerminal_clicked();
 
 private:
     Ui::MainWindow *ui;
 
+    std::unique_ptr<QChartView> scopeChartView;
+    // The chartview owns the following 3 pointers.
     QLineSeries* lineSeries;
+    QValueAxis*  scopeAxisX;
+    QValueAxis*  scopeAxisY;
+    uint32_t nextDataIndexToBeChecked;
+
+    void ScopeDynamicResizeIfNeeded(QVector<QPointF>& points);
 };
 #endif // MAINWINDOW_H
