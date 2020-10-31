@@ -5,6 +5,9 @@
 #include "diagtoolappcontrol.h"
 #include "mainwindow.h"
 
+#include "commandpacker.h"
+#include "robotcommand.h"
+
 DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -36,6 +39,8 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
     mainWindow->ScopeInit();
 
     ConnectSignalsToSlots();
+
+    InitMessagePacker();
 
     a.exec();
 }
@@ -114,15 +119,14 @@ void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
 
     mainWindow->DisplaySerialTerminalData(messageToBeDisplayed);
 
+    QByteArray bytes = bytesFromStream;
+    messagePacker->Unpack(bytes);
+
     // Display the measurement data on the scope. E.g. "20201024215321"
     if (messageToBeDisplayed.contains("2020"))
     {
         scopeBuffer.append(QPointF(bytesFromStream[12]-0x30,bytesFromStream[13]-0x30));
         mainWindow->DisplayScopeData(scopeBuffer);
-    }
-    else // Display trace
-    {
-        mainWindow->DisplayTraceInQuickTab(messageToBeDisplayed);
     }
 }
 
@@ -130,6 +134,11 @@ void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
 {
     QString extended_message = message + "\r\n";
     communication->send(extended_message.toUtf8());
+}
+
+void DiagToolAppControl::CmdTraceArrived(const QString message)
+{
+    mainWindow->DisplayTraceInQuickTab(message);
 }
 
 void DiagToolAppControl::ConnectSignalsToSlots()
@@ -140,4 +149,17 @@ void DiagToolAppControl::ConnectSignalsToSlots()
     connect(mainWindow.get(), &MainWindow::SerialDisconnectionRequest, this, &DiagToolAppControl::SerialDisconnReqestReceived);
     connect(communication.get(), &CommunicationSerialPort::dataReady, this, &DiagToolAppControl::SerialDataArrived);
     connect(mainWindow.get(), &MainWindow::SerialDataReady, this, &DiagToolAppControl::SerialDataReadyToTransmit);
+
+}
+
+void DiagToolAppControl::InitMessagePacker()
+{
+    messagePacker = CommandPacker::GetInstance();
+
+    auto cmd = new RobotCommand_Text();
+    messagePacker->RegisterCommand(CommandID::eText, cmd);
+    connect(cmd, &RobotCommand_Text::CmdArrived_Text, this, &DiagToolAppControl::CmdTraceArrived);
+
+    messagePacker->RegisterCommand(CommandID::eDummyData, new RobotCommand_DummyData());
+
 }

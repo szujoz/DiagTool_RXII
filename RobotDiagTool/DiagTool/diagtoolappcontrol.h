@@ -13,6 +13,8 @@
 #include "robotproxy.h"
 #include "inifilehandler.h"
 
+#include "icommandpacker.h"
+
 class DiagToolAppControl : public QObject
 {
     Q_OBJECT
@@ -32,6 +34,8 @@ public slots:
     void SerialDataArrived(QDataStream& stream);
     void SerialDataReadyToTransmit(QString const message);
 
+    void CmdTraceArrived(QString const message);
+
 signals:
     void SettingsToIni(QMap<QString,QString> params);
 
@@ -42,9 +46,12 @@ private:
     std::unique_ptr<MainWindow> mainWindow;
     std::unique_ptr<SerialSettingsDialog> settingsWindow;
 
+    ICommandPacker* messagePacker;
+
     QVector<QPointF> scopeBuffer;
 
     void ConnectSignalsToSlots();
+    void InitMessagePacker();
 
 };
 
