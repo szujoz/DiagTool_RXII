@@ -9,28 +9,35 @@
  *
  * (Lehet, hogy a \r-t is escape-elni kell, ez majd a Qt-tól fog függeni) */
 
-#define ESCAPE_CHAR           (0x55)
-#define LINEFEED_SUBSTITUTE   (0x00)
+#define ESCAPE_CHAR     (0x55)
+#define LF_SUBSTITUTE   (0x00)
+#define CR_SUBSTITUTE   (0x01)
 
 void EscapeEncoder::Encode(const uint8_t* bin, size_t binSize, uint8_t* enc, size_t& encSize)
 {
-    size_t iBin;
-    size_t iEnc = 0;
+	size_t iBin;
+	size_t iEnc = 0;
 
-    for (iBin = 0; iBin < binSize; iBin++)
-    {
+	for (iBin = 0; iBin < binSize; iBin++)
+	{
         if (bin[iBin] == '\n')
         {
             enc[iEnc] = ESCAPE_CHAR;
             iEnc++;
-            enc[iEnc] = LINEFEED_SUBSTITUTE;
+            enc[iEnc] = LF_SUBSTITUTE;
         }
-        else if (bin[iBin] == ESCAPE_CHAR)
+        else if (bin[iBin] == '\r')
         {
             enc[iEnc] = ESCAPE_CHAR;
             iEnc++;
-            enc[iEnc] = ESCAPE_CHAR;
+            enc[iEnc] = CR_SUBSTITUTE;
         }
+        else if (bin[iBin] == ESCAPE_CHAR)
+		{
+			enc[iEnc] = ESCAPE_CHAR;
+			iEnc++;
+            enc[iEnc] = ESCAPE_CHAR;
+		}
         else
         {
             enc[iEnc] = bin[iBin];
@@ -38,25 +45,29 @@ void EscapeEncoder::Encode(const uint8_t* bin, size_t binSize, uint8_t* enc, siz
         }
 
         iEnc++;
-    }
+	}
 
-    encSize = iEnc;
+	encSize = iEnc;
 }
 
 void EscapeEncoder::Decode(const uint8_t* enc, size_t encSize, uint8_t* bin, size_t& binSize)
 {
-    size_t iBin = 0;
-    size_t iEnc;
+	size_t iBin = 0;
+	size_t iEnc;
 
-    for (iEnc = 0; iEnc < encSize; iEnc++)
-    {
-        if (enc[iEnc] == ESCAPE_CHAR)
-        {
-            iEnc++;
+	for (iEnc = 0; iEnc < encSize; iEnc++)
+	{
+		if (enc[iEnc] == ESCAPE_CHAR)
+		{
+			iEnc++;
 
-            if (enc[iEnc] == LINEFEED_SUBSTITUTE)
+            if (enc[iEnc] == LF_SUBSTITUTE)
             {
                 bin[iBin] = '\n';
+            }
+            else if (enc[iEnc] == CR_SUBSTITUTE)
+            {
+                bin[iBin] = '\r';
             }
             else if (enc[iEnc] == ESCAPE_CHAR)
             {
@@ -68,13 +79,13 @@ void EscapeEncoder::Decode(const uint8_t* enc, size_t encSize, uint8_t* bin, siz
             }
 
             iBin++;
-        }
+		}
         else
         {
             bin[iBin] = enc[iEnc];
             iBin++;
         }
-    }
+	}
 
-    binSize = iBin;
+	binSize = iBin;
 }

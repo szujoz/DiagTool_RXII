@@ -17,7 +17,11 @@ SOURCES +=  tst_defaulttest.cpp \
     tst_main.cpp \
     tst_robotproxy.cpp
 
-INCLUDEPATH += $$PWD/../DiagTool_Libs
+INCLUDEPATH += \
+        $$PWD/../DiagTool_Libs \
+        $$PWD/../DiagTool_Libs/robot_modules \
+        $$PWD/../DiagTool_Libs/common/CRC \
+        $$PWD/../DiagTool_Libs/common/BinaryEncoder \
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../DiagTool_Libs/release/ -lDiagTool_Libs
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../DiagTool_Libs/debug/ -lDiagTool_Libs
