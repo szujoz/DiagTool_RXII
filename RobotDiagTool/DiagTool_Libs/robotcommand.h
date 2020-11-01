@@ -26,7 +26,7 @@ public:
 
 signals:
 
-    void CmdArrived_DummyData(uint32_t const timeStamp, QByteArray& data);
+    void CmdArrived_DummyData(uint32_t const timestamp, uint32_t const data);
 };
 
 #endif // ROBOTCOMMAND_H
