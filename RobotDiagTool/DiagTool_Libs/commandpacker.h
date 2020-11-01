@@ -4,8 +4,12 @@
 #include <QObject>
 #include <memory>
 #include <QMap>
+
 #include "icommandpacker.h"
 #include "irobotcommand.h"
+
+#include "crc8.h"
+#include "BinaryEncoder.h"
 
 class CommandFactory
 {
@@ -33,10 +37,10 @@ public:
 private:
     static CommandPacker* instance_;
     CommandFactory factory;
+    std::unique_ptr<BinaryEncoder> coder;
+    std::unique_ptr<Crc8> crc;
 
     CommandPacker();
-    ~CommandPacker();
-    // CRC class
 };
 
 #endif // COMMANDPACKER_H

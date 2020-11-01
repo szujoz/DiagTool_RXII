@@ -1,5 +1,6 @@
 #include "commandpacker.h"
 #include "robotcommand.h"
+#include "EscapeEncoder.h"
 
 CommandPacker* CommandPacker::instance_ = NULL;
 
@@ -43,21 +44,57 @@ QByteArray CommandPacker::Pack(const CommandID cmdID, QByteArray &message)
 
 void CommandPacker::Unpack(QByteArray &message)
 {
-    // Extract the command ID and get the object from the factory.
-    CommandID cmdId = static_cast<CommandID>(message[0] - 0x30);
-    IRobotCommand* cmd = factory.CreateCommand(cmdId);
+    CommandID            cmdId = CommandID::eUnknown;
+    IRobotCommand*       cmd;
+    std::vector<uint8_t> coded_message;
+    size_t               coded_size = 0;
+    std::vector<uint8_t> decoded_message;
+    size_t               decoded_size = 0;
+    bool                 isCrcOk = false;
+    QByteArray           messageToBeProcessed;
 
-    // Command object was found. Remove the Command ID byte and process the bytes.
-    if(cmd != NULL)
+    // Determine array sizes
+    coded_size = message.size();
+    decoded_size = coded_size;      // The decoded bytes will be surely shorter.
+
+    for (size_t i=0; i < coded_size; i++)
     {
-        message.remove(0,1);
-        cmd->operation(message);
+        coded_message.push_back(static_cast<uint8_t>(message[i]));
+    }
+    decoded_message.reserve(decoded_size);
+
+    // Decode the message.
+    coder.get()->Decode(coded_message.data(), coded_size, decoded_message.data(), decoded_size);
+
+    // Check CRC
+    isCrcOk = crc.get()->CheckBlockCrc(decoded_message.data(), decoded_size);
+
+    if(isCrcOk == true)
+    {
+        // Extract the command ID and get the object from the factory.
+        cmdId = static_cast<CommandID>(message[0] - 0x00);
+        cmd = factory.CreateCommand(cmdId);
+
+        for(size_t i = 0; i < decoded_size; i++)
+        {
+           messageToBeProcessed.append(decoded_message[i]);
+        }
+        messageToBeProcessed.remove(0,1);
+        messageToBeProcessed.remove(messageToBeProcessed.size()-1,1);
+
+        // Command object was found. Remove the Command ID byte and process the bytes.
+        if(cmd != NULL)
+        {
+            cmd->operation(messageToBeProcessed);
+        }
     }
 }
 
-CommandPacker::CommandPacker() {}
-
-CommandPacker::~CommandPacker() {}
+CommandPacker::CommandPacker()
+{
+    coder = std::make_unique<EscapeEncoder>();
+    crc = std::make_unique<Crc8>();
+}
 
 
 
