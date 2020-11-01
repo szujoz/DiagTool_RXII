@@ -35,6 +35,7 @@ public slots:
     void SerialDataReadyToTransmit(QString const message);
 
     void CmdTraceArrived(QString const message);
+    void CmdDummyDataArrived(uint32_t const timestamp, uint32_t const data);
 
 signals:
     void SettingsToIni(QMap<QString,QString> params);
@@ -48,7 +49,7 @@ private:
 
     ICommandPacker* messagePacker;
 
-    QVector<QPointF> scopeBuffer;
+    QVector<QPointF> scopeDummyDataBuffer;
 
     void ConnectSignalsToSlots();
     void InitMessagePacker();

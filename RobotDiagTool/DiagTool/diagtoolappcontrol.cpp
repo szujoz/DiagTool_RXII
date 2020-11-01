@@ -105,6 +105,7 @@ void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
 {
     QString messageToBeDisplayed = "";
     qint64 availableByteCount = 0;
+    uint32_t messageSize = 0;
 
     availableByteCount = stream.device()->bytesAvailable();
 
@@ -112,22 +113,21 @@ void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
 
     // Read the arravied bytes. Since it is not a const the last character is garbage.
     // Remove the garbage and the enter before that to get the message itself with nullterminator.
-    stream.readRawData(bytesFromStream,availableByteCount);
-    bytesFromStream[availableByteCount-1] = '\0';
+    //stream.readRawData(bytesFromStream,availableByteCount);
+    //bytesFromStream[availableByteCount-1] = '\0';
 
-    messageToBeDisplayed.append(bytesFromStream);
+    //messageToBeDisplayed.append(bytesFromStream);
 
+    //mainWindow->DisplaySerialTerminalData(messageToBeDisplayed);
+
+    QByteArray bytes;
+    bytes = stream.device()->readLine();
+    bytes.remove(bytes.size()-1,1);
+    messageToBeDisplayed.append(bytes);
     mainWindow->DisplaySerialTerminalData(messageToBeDisplayed);
 
-    QByteArray bytes = bytesFromStream;
+   // QByteArray bytes = bytesFromStream;
     messagePacker->Unpack(bytes);
-
-    // Display the measurement data on the scope. E.g. "20201024215321"
-    if (messageToBeDisplayed.contains("2020"))
-    {
-        scopeBuffer.append(QPointF(bytesFromStream[12]-0x30,bytesFromStream[13]-0x30));
-        mainWindow->DisplayScopeData(scopeBuffer);
-    }
 }
 
 void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
@@ -139,6 +139,12 @@ void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
 void DiagToolAppControl::CmdTraceArrived(const QString message)
 {
     mainWindow->DisplayTraceInQuickTab(message);
+}
+
+void DiagToolAppControl::CmdDummyDataArrived(const uint32_t timestamp, const uint32_t data)
+{
+    scopeDummyDataBuffer.append(QPointF(timestamp,data));
+    mainWindow->DisplayScopeData(scopeDummyDataBuffer);
 }
 
 void DiagToolAppControl::ConnectSignalsToSlots()
@@ -156,10 +162,11 @@ void DiagToolAppControl::InitMessagePacker()
 {
     messagePacker = CommandPacker::GetInstance();
 
-    auto cmd = new RobotCommand_Text();
-    messagePacker->RegisterCommand(CommandID::eText, cmd);
-    connect(cmd, &RobotCommand_Text::CmdArrived_Text, this, &DiagToolAppControl::CmdTraceArrived);
+    auto cmd00 = new RobotCommand_Text();
+    messagePacker->RegisterCommand(CommandID::eText, cmd00);
+    connect(cmd00, &RobotCommand_Text::CmdArrived_Text, this, &DiagToolAppControl::CmdTraceArrived);
 
-    messagePacker->RegisterCommand(CommandID::eDummyData, new RobotCommand_DummyData());
-
+    auto cmd01 = new RobotCommand_DummyData();
+    messagePacker->RegisterCommand(CommandID::eDummyData, cmd01);
+    connect(cmd01, &RobotCommand_DummyData::CmdArrived_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
 }
