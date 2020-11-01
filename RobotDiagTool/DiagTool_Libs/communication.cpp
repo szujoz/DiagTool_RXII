@@ -39,7 +39,7 @@ QDataStream* Communication::getReceiveStream()
 
      for(int i = 0; i < a; i++)
      {
-         if(ch[i] == '\r')
+         if(ch[i] == '\n')
          {
              emit dataReady(*receiveStream);
          }
