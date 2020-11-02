@@ -15,7 +15,7 @@ void RobotCommand_DummyData::operation(QByteArray const &message)
     ts_stream.setByteOrder(QDataStream::LittleEndian);
     ts_stream >> ts;
 
-    uint32_t    data = 0;
+    int32_t     data = 0;
     QByteArray  data_bytes = message.mid(4,4);
     QDataStream data_stream(data_bytes);
     data_stream.setByteOrder(QDataStream::LittleEndian);

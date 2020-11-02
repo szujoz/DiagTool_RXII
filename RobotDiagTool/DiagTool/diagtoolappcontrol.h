@@ -35,7 +35,7 @@ public slots:
     void SerialDataReadyToTransmit(QString const message);
 
     void CmdTraceArrived(QString const message);
-    void CmdDummyDataArrived(uint32_t const timestamp, uint32_t const data);
+    void CmdDummyDataArrived(uint32_t const timestamp, int32_t const data);
 
 signals:
     void SettingsToIni(QMap<QString,QString> params);

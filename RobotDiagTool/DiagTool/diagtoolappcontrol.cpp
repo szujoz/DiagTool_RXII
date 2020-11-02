@@ -141,7 +141,7 @@ void DiagToolAppControl::CmdTraceArrived(const QString message)
     mainWindow->DisplayTraceInQuickTab(message);
 }
 
-void DiagToolAppControl::CmdDummyDataArrived(const uint32_t timestamp, const uint32_t data)
+void DiagToolAppControl::CmdDummyDataArrived(const uint32_t timestamp, const int32_t data)
 {
     scopeDummyDataBuffer.append(QPointF(timestamp,data));
     mainWindow->DisplayScopeData(scopeDummyDataBuffer);
