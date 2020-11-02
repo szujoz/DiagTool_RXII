@@ -216,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
@@ -614,15 +614,18 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>94</width>
-                   <height>461</height>
+                   <width>108</width>
+                   <height>444</height>
                   </rect>
                  </property>
                  <layout class="QFormLayout" name="formLayout_2">
                   <item row="0" column="0">
-                   <widget class="QCheckBox" name="checkBox">
+                   <widget class="QCheckBox" name="checkBox_DummyData">
                     <property name="text">
-                     <string>CheckBox</string>
+                     <string>Dummy Data</string>
+                    </property>
+                    <property name="tristate">
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>

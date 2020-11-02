@@ -58,10 +58,7 @@ private:
 
 class HelloWorldTask : public QRunnable
 {
-    void run() override
-    {
-        qDebug() << "Hello world from thread" << QThread::currentThread();
-    }
+    void run() override;
 };
 
 #endif // DIAGTOOLAPPCONTROL_H

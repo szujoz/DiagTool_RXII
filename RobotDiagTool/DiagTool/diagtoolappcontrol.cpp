@@ -103,31 +103,19 @@ void DiagToolAppControl::SerialDisconnReqestReceived()
 
 void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
 {
-    QString messageToBeDisplayed = "";
-    qint64 availableByteCount = 0;
-    uint32_t messageSize = 0;
+    QString    textToBeDisplayed = "";
+    QByteArray messageBytes;
 
-    availableByteCount = stream.device()->bytesAvailable();
+    // Read data with readLine, but it appends a '\0' at the end, so it has to be removed.
+    messageBytes = stream.device()->readLine();
+    messageBytes.remove(messageBytes.size()-1,1);
 
-    char bytesFromStream[availableByteCount];
+    // Display the message in the terminal view.
+    textToBeDisplayed.append(messageBytes);
+    mainWindow->DisplaySerialTerminalData(textToBeDisplayed);
 
-    // Read the arravied bytes. Since it is not a const the last character is garbage.
-    // Remove the garbage and the enter before that to get the message itself with nullterminator.
-    //stream.readRawData(bytesFromStream,availableByteCount);
-    //bytesFromStream[availableByteCount-1] = '\0';
-
-    //messageToBeDisplayed.append(bytesFromStream);
-
-    //mainWindow->DisplaySerialTerminalData(messageToBeDisplayed);
-
-    QByteArray bytes;
-    bytes = stream.device()->readLine();
-    bytes.remove(bytes.size()-1,1);
-    messageToBeDisplayed.append(bytes);
-    mainWindow->DisplaySerialTerminalData(messageToBeDisplayed);
-
-   // QByteArray bytes = bytesFromStream;
-    messagePacker->Unpack(bytes);
+    // UNpack and process the message.
+    messagePacker->Unpack(messageBytes);
 }
 
 void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
@@ -169,4 +157,9 @@ void DiagToolAppControl::InitMessagePacker()
     auto cmd01 = new RobotCommand_DummyData();
     messagePacker->RegisterCommand(CommandID::eDummyData, cmd01);
     connect(cmd01, &RobotCommand_DummyData::CmdArrived_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
+}
+
+void HelloWorldTask::run()
+{
+    qDebug() << "Hello world from thread" << QThread::currentThread();
 }
