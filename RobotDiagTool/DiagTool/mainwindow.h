@@ -24,6 +24,8 @@ public:
 
     void DisplayTraceInQuickTab(QString const text);
 
+    bool IsScopeTabSelected();
+
 signals:
     void SerialDialogNeeded();
     void SerialConnectionRequest();

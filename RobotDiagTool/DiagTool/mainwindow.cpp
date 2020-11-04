@@ -93,6 +93,18 @@ void MainWindow::DisplayTraceInQuickTab(const QString text)
     ui->textEdit_quickTabTrace->append(text);
 }
 
+bool MainWindow::IsScopeTabSelected()
+{
+    bool scopeViewActive = false;
+
+    if(ui->tabWidget->currentIndex() == 1)
+    {
+        scopeViewActive = true;
+    }
+
+    return scopeViewActive;
+}
+
 void MainWindow::on_btn_QuickTabToggle_clicked()
 {
     if (ui->groupBox_QuickTab->isHidden())
