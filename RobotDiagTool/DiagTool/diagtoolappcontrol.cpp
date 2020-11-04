@@ -10,9 +10,13 @@
 
 DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication a(argc, argv);    
+
     mainWindow = std::make_unique<MainWindow>();
     mainWindow->show();
+
+    timer = std::make_unique<QTimer>();
+    timer->start(500);
 
     iniFileHandler = std::make_unique<IniFileHandler>(QDir::currentPath() + "/serial.ini");
 
@@ -37,6 +41,7 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
     ThreadTest();
 
     mainWindow->ScopeInit();
+    newDummyDataInBuffer = false;
 
     ConnectSignalsToSlots();
 
@@ -132,12 +137,14 @@ void DiagToolAppControl::CmdTraceArrived(const QString message)
 void DiagToolAppControl::CmdDummyDataArrived(const uint32_t timestamp, const int32_t data)
 {
     scopeDummyDataBuffer.append(QPointF(timestamp,data));
-    mainWindow->DisplayScopeData(scopeDummyDataBuffer);
+    newDummyDataInBuffer = true;
 }
 
 void DiagToolAppControl::ConnectSignalsToSlots()
 {
     connect(mainWindow.get(), &MainWindow::SerialDialogNeeded, this, &DiagToolAppControl::OpenSerialDialog);
+
+    connect(timer.get(), &QTimer::timeout, this, &DiagToolAppControl::TimerEventUpdateScopeView);
 
     connect(mainWindow.get(), &MainWindow::SerialConnectionRequest, this, &DiagToolAppControl::SerialConnRequestReceived);
     connect(mainWindow.get(), &MainWindow::SerialDisconnectionRequest, this, &DiagToolAppControl::SerialDisconnReqestReceived);
@@ -157,6 +164,15 @@ void DiagToolAppControl::InitMessagePacker()
     auto cmd01 = new RobotCommand_DummyData();
     messagePacker->RegisterCommand(CommandID::eDummyData, cmd01);
     connect(cmd01, &RobotCommand_DummyData::CmdArrived_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
+}
+
+void DiagToolAppControl::TimerEventUpdateScopeView()
+{
+    if (mainWindow->IsScopeTabSelected() == true && newDummyDataInBuffer == true)
+    {
+        mainWindow->DisplayScopeData(scopeDummyDataBuffer);
+        newDummyDataInBuffer = false;
+    }
 }
 
 void HelloWorldTask::run()

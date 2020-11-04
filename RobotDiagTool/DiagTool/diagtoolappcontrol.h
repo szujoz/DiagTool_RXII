@@ -5,6 +5,7 @@
 #include <memory>
 #include <QThreadPool>
 #include <QDebug>
+#include <QTimer>
 
 #include "mainwindow.h"
 #include "serialsettingsdialog.h"
@@ -41,19 +42,21 @@ signals:
     void SettingsToIni(QMap<QString,QString> params);
 
 private:
+    std::unique_ptr<MainWindow> mainWindow;
+    std::unique_ptr<SerialSettingsDialog> settingsWindow;
+    std::unique_ptr<QTimer> timer;
+
     std::unique_ptr<CommunicationSerialPort> communication;
     std::unique_ptr<IniFileHandler> iniFileHandler;
 
-    std::unique_ptr<MainWindow> mainWindow;
-    std::unique_ptr<SerialSettingsDialog> settingsWindow;
-
     ICommandPacker* messagePacker;
 
+    bool newDummyDataInBuffer;
     QVector<QPointF> scopeDummyDataBuffer;
 
     void ConnectSignalsToSlots();
     void InitMessagePacker();
-
+    void TimerEventUpdateScopeView();
 };
 
 class HelloWorldTask : public QRunnable
