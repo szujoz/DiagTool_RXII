@@ -16,11 +16,29 @@
 
 #include "icommandpacker.h"
 
-class DiagToolAppControl : public QObject
+class SerialConnectionWorker : public QObject
 {
     Q_OBJECT
 public:
+    void SetPacker(ICommandPacker& messagePacker);
+
+public slots:
+    void Work_UnpackMessage(QByteArray &message);
+
+signals:
+    void MessageUnpacked_DummyData(const uint32_t timestamp, const int32_t data);
+
+private:
+    ICommandPacker* messagePacker;
+};
+
+class DiagToolAppControl : public QObject
+{
+    Q_OBJECT
+    QThread workerThread_Serial;
+public:
     DiagToolAppControl(int argc, char *argv[]);
+    ~DiagToolAppControl();
 
     void ThreadTest();
 
@@ -38,13 +56,17 @@ public slots:
     void CmdTraceArrived(QString const message);
     void CmdDummyDataArrived(uint32_t const timestamp, int32_t const data);
 
+    void handleResults(const QString &);
+
 signals:
     void SettingsToIni(QMap<QString,QString> params);
+    void operate(const QString &);
 
 private:
     std::unique_ptr<MainWindow> mainWindow;
     std::unique_ptr<SerialSettingsDialog> settingsWindow;
     std::unique_ptr<QTimer> timer;
+    SerialConnectionWorker* workerSerial;
 
     std::unique_ptr<CommunicationSerialPort> communication;
     std::unique_ptr<IniFileHandler> iniFileHandler;
@@ -56,12 +78,8 @@ private:
 
     void ConnectSignalsToSlots();
     void InitMessagePacker();
+    void InitSerialWorkerThread();
     void TimerEventUpdateScopeView();
-};
-
-class HelloWorldTask : public QRunnable
-{
-    void run() override;
 };
 
 #endif // DIAGTOOLAPPCONTROL_H

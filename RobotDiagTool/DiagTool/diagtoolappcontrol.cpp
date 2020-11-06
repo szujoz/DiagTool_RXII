@@ -1,6 +1,7 @@
 #include <QSerialPort>
 #include <QDir>
 #include <QApplication>
+#include <QMetaType>
 
 #include "diagtoolappcontrol.h"
 #include "mainwindow.h"
@@ -10,7 +11,9 @@
 
 DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 {
-    QApplication a(argc, argv);    
+    qRegisterMetaType<uint32_t>("uint32_t");
+    qRegisterMetaType<int32_t>("int32_t");
+    QApplication a(argc, argv);
 
     mainWindow = std::make_unique<MainWindow>();
     mainWindow->show();
@@ -33,33 +36,22 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
         mainWindow->DisplaySerialState(true);
     }
 
-    ThreadTest();
-    ThreadTest();
-    ThreadTest();
-    ThreadTest();
-    ThreadTest();
-    ThreadTest();
-
     mainWindow->ScopeInit();
     newDummyDataInBuffer = false;
 
     ConnectSignalsToSlots();
 
+    InitSerialWorkerThread();
     InitMessagePacker();
 
     a.exec();
 }
 
-void DiagToolAppControl::ThreadTest()
+DiagToolAppControl::~DiagToolAppControl()
 {
-    HelloWorldTask *hello = new HelloWorldTask();
-    // QThreadPool takes ownership and deletes 'hello' automatically
-    QThreadPool::globalInstance()->start(hello);
-
-    while (QThreadPool::globalInstance()->activeThreadCount() > 0)
-    {
-
-    }
+    workerThread_Serial.quit();
+    workerThread_Serial.wait();
+    delete workerSerial;
 }
 
 void DiagToolAppControl::OpenSerialDialog()
@@ -119,8 +111,8 @@ void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
     textToBeDisplayed.append(messageBytes);
     mainWindow->DisplaySerialTerminalData(textToBeDisplayed);
 
-    // UNpack and process the message.
-    messagePacker->Unpack(messageBytes);
+    // Unpack and process the message.
+    emit workerSerial->Work_UnpackMessage(messageBytes);
 }
 
 void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
@@ -140,6 +132,11 @@ void DiagToolAppControl::CmdDummyDataArrived(const uint32_t timestamp, const int
     newDummyDataInBuffer = true;
 }
 
+void DiagToolAppControl::handleResults(const QString &)
+{
+    qDebug() << "Worker result received";
+}
+
 void DiagToolAppControl::ConnectSignalsToSlots()
 {
     connect(mainWindow.get(), &MainWindow::SerialDialogNeeded, this, &DiagToolAppControl::OpenSerialDialog);
@@ -150,7 +147,6 @@ void DiagToolAppControl::ConnectSignalsToSlots()
     connect(mainWindow.get(), &MainWindow::SerialDisconnectionRequest, this, &DiagToolAppControl::SerialDisconnReqestReceived);
     connect(communication.get(), &CommunicationSerialPort::dataReady, this, &DiagToolAppControl::SerialDataArrived);
     connect(mainWindow.get(), &MainWindow::SerialDataReady, this, &DiagToolAppControl::SerialDataReadyToTransmit);
-
 }
 
 void DiagToolAppControl::InitMessagePacker()
@@ -163,7 +159,20 @@ void DiagToolAppControl::InitMessagePacker()
 
     auto cmd01 = new RobotCommand_DummyData();
     messagePacker->RegisterCommand(CommandID::eDummyData, cmd01);
-    connect(cmd01, &RobotCommand_DummyData::CmdArrived_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
+    connect(cmd01, &RobotCommand_DummyData::CmdArrived_DummyData, workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData);
+    connect(workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
+
+    workerSerial->SetPacker(*messagePacker);
+}
+
+void DiagToolAppControl::InitSerialWorkerThread()
+{
+    workerSerial = new SerialConnectionWorker();
+    workerSerial->moveToThread(&workerThread_Serial);
+
+    connect(&workerThread_Serial, &QThread::finished, workerSerial, &QObject::deleteLater);
+
+    workerThread_Serial.start();
 }
 
 void DiagToolAppControl::TimerEventUpdateScopeView()
@@ -175,7 +184,12 @@ void DiagToolAppControl::TimerEventUpdateScopeView()
     }
 }
 
-void HelloWorldTask::run()
+void SerialConnectionWorker::SetPacker(ICommandPacker &messagePacker)
 {
-    qDebug() << "Hello world from thread" << QThread::currentThread();
+    this->messagePacker = &messagePacker;
+}
+
+void SerialConnectionWorker::Work_UnpackMessage(QByteArray &message)
+{
+    messagePacker->Unpack(message);
 }
