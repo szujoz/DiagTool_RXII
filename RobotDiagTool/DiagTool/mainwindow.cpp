@@ -212,6 +212,20 @@ void MainWindow::on_btn_ScopeResetZoom_clicked()
     scopeChartView->chart()->zoomReset();
 }
 
+void MainWindow::on_btn_ScopeToggleDrawing_clicked()
+{
+    if (allowedToDrawChart == true)
+    {
+        allowedToDrawChart = false;
+        ui->btn_ScopeToggleDrawing->setText("Start Drwaing");
+    }
+    else
+    {
+        allowedToDrawChart = true;
+        ui->btn_ScopeToggleDrawing->setText("Stop Drwaing");
+    }
+}
+
 void MainWindow::on_btn_ScopeClearData_clicked()
 {
     nextDataIndexToBeChecked = 0;
