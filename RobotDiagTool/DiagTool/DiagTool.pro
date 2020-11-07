@@ -38,3 +38,8 @@ INCLUDEPATH += \
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../DiagTool_Libs/release/ -lDiagTool_Libs
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../DiagTool_Libs/debug/ -lDiagTool_Libs
+
+DISTFILES +=
+
+RESOURCES += \
+    resource.qrc
