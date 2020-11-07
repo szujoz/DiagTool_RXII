@@ -56,8 +56,6 @@ public slots:
     void CmdTraceArrived(QString const message);
     void CmdDummyDataArrived(uint32_t const timestamp, int32_t const data);
 
-    void handleResults(const QString &);
-
 signals:
     void SettingsToIni(QMap<QString,QString> params);
     void operate(const QString &);

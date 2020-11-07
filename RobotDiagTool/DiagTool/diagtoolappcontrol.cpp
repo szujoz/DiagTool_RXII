@@ -132,11 +132,6 @@ void DiagToolAppControl::CmdDummyDataArrived(const uint32_t timestamp, const int
     newDummyDataInBuffer = true;
 }
 
-void DiagToolAppControl::handleResults(const QString &)
-{
-    qDebug() << "Worker result received";
-}
-
 void DiagToolAppControl::ConnectSignalsToSlots()
 {
     connect(mainWindow.get(), &MainWindow::SerialDialogNeeded, this, &DiagToolAppControl::OpenSerialDialog);
