@@ -8,6 +8,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+class QChartView_;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -25,6 +27,7 @@ public:
     void DisplayTraceInQuickTab(QString const text);
 
     bool IsScopeTabSelected();
+    void ScopeAllowAutoScaling(bool on);
 
 signals:
     void SerialDialogNeeded();
@@ -42,8 +45,6 @@ private slots:
     void on_btn_ToolBarConnectSerial_clicked();
     void on_btn_ToolBarDisconnectSerial_clicked();
 
-    void on_pushButton_clicked();
-
     void on_btn_ScopeSignalSelectorToggle_clicked();
     void on_btn_ScopeResetZoom_clicked();
     void on_btn_ScopeToggleDrawing_clicked();
@@ -52,16 +53,41 @@ private slots:
     void on_btn_TerminalSend_clicked();
     void on_btn_TerminalClearSerialTerminal_clicked();
 
+    void on_pushButton_clicked();
+
+
 private:
     Ui::MainWindow *ui;
 
-    std::unique_ptr<QChartView> scopeChartView;
+    std::unique_ptr<QChartView_> scopeChartView;
     // The chartview owns the following 3 pointers.
     QLineSeries* lineSeries;
     QValueAxis*  scopeAxisX;
     QValueAxis*  scopeAxisY;
     uint32_t nextDataIndexToBeChecked;
+    //
+
+    bool allowedToDrawChart;
+    bool autoScalingOn;
 
     void ScopeDynamicResizeIfNeeded(QVector<QPointF>& points);
+};
+
+class QChartView_ : public QChartView
+{
+  Q_OBJECT
+ public:
+    QChartView_(MainWindow* parent);
+    ~QChartView_() {}
+protected:
+    virtual void wheelEvent(QWheelEvent *event) override;
+    virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+
+private:
+    MainWindow* parentWindow;
+
+    QPoint lastMousePos;
 };
 #endif // MAINWINDOW_H

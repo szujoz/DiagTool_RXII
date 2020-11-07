@@ -52,7 +52,7 @@ void MainWindow::ScopeInit()
     lineSeries = new QLineSeries();
     scopeAxisX = new QValueAxis();
     scopeAxisY = new QValueAxis();
-    scopeChartView  = std::make_unique<QChartView>();
+    scopeChartView  = std::make_unique<QChartView_>(this);
 
     nextDataIndexToBeChecked = 0;
 
@@ -79,13 +79,22 @@ void MainWindow::ScopeInit()
 
     ui->frame->setLayout(mainLayout);
     ui->frame->show();
+
+    allowedToDrawChart = true;
+    autoScalingOn = true;
 }
 
 void MainWindow::DisplayScopeData(QVector<QPointF>& points)
 {
-    ScopeDynamicResizeIfNeeded(points);
+    if (allowedToDrawChart == true)
+    {
+        if (autoScalingOn == true)
+        {
+             ScopeDynamicResizeIfNeeded(points);
+        }
 
-    lineSeries->replace(points);
+        lineSeries->replace(points);
+    }
 }
 
 void MainWindow::DisplayTraceInQuickTab(const QString text)
@@ -103,6 +112,11 @@ bool MainWindow::IsScopeTabSelected()
     }
 
     return scopeViewActive;
+}
+
+void MainWindow::ScopeAllowAutoScaling(bool on)
+{
+    autoScalingOn = on;
 }
 
 void MainWindow::on_btn_QuickTabToggle_clicked()
@@ -172,13 +186,13 @@ void MainWindow::on_btn_TerminalClearSerialTerminal_clicked()
 
 void MainWindow::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
 {
-    int   i;
+    int   i = nextDataIndexToBeChecked;
     float maxX = scopeAxisX->max()*0.8;
     float minX = scopeAxisX->min()*0.8;
     float maxY = scopeAxisY->max()*0.8;
     float minY = scopeAxisY->min()*0.8;
 
-    for(i = nextDataIndexToBeChecked; i < points.size(); i++)
+    for(; i < points.size(); i++)
     {
         if(maxX < points[i].x())
         {
@@ -230,4 +244,67 @@ void MainWindow::on_btn_ScopeClearData_clicked()
 {
     nextDataIndexToBeChecked = 0;
     emit SerialClearScope();
+}
+
+QChartView_::QChartView_(MainWindow *parent) : parentWindow(parent)
+{
+    setRubberBand(QChartView::RectangleRubberBand);
+}
+
+void QChartView_::wheelEvent(QWheelEvent *event)
+{
+    if (parentWindow->IsScopeTabSelected() == true)
+    {
+        QPoint numDegrees = event->angleDelta() / 8;
+
+        parentWindow->ScopeAllowAutoScaling(false);
+
+        if(numDegrees.ry() > 0)
+        {
+            chart()->zoom(2.0);
+        }
+        else
+        {
+            chart()->zoom(0.5);
+        }
+    }
+
+    QChartView::wheelEvent(event);
+}
+
+void QChartView_::mousePressEvent(QMouseEvent *event)
+{
+    if (parentWindow->IsScopeTabSelected() == true && event->buttons() & Qt::MiddleButton)
+    {
+        QApplication::setOverrideCursor(QCursor(Qt::SizeAllCursor));
+        lastMousePos = event->pos();
+        event->accept();
+
+        parentWindow->ScopeAllowAutoScaling(false);
+    }
+
+    QChartView::mousePressEvent(event);
+}
+
+void QChartView_::mouseMoveEvent(QMouseEvent *event)
+{
+    if (parentWindow->IsScopeTabSelected() == true && event->buttons() & Qt::MiddleButton)
+    {
+        auto dPos = event->pos() - lastMousePos;
+        chart()->scroll(-dPos.x(), dPos.y());
+        lastMousePos = event->pos();
+        event->accept();
+    }
+
+    QChartView::mouseMoveEvent(event);
+}
+
+void QChartView_::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (parentWindow->IsScopeTabSelected() == true)
+    {
+        QApplication::restoreOverrideCursor();
+    }
+
+    QChartView::mouseReleaseEvent(event);
 }
