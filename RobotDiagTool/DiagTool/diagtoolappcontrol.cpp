@@ -19,7 +19,7 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
     mainWindow->show();
 
     timer = std::make_unique<QTimer>();
-    timer->start(500);
+    timer->start(50);
 
     iniFileHandler = std::make_unique<IniFileHandler>(QDir::currentPath() + "/serial.ini");
 
