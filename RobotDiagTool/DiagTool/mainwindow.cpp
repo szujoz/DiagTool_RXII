@@ -205,6 +205,13 @@ void MainWindow::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
     scopeAxisX->setRange(minX*1.25,maxX*1.25);
     scopeAxisY->setRange(minY*1.25,maxY*1.25);
 }
+
+void MainWindow::on_btn_ScopeResetZoom_clicked()
+{
+    autoScalingOn = true;
+    scopeChartView->chart()->zoomReset();
+}
+
 void MainWindow::on_btn_ScopeClearData_clicked()
 {
     nextDataIndexToBeChecked = 0;

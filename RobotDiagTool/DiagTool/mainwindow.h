@@ -45,6 +45,7 @@ private slots:
     void on_pushButton_clicked();
 
     void on_btn_ScopeSignalSelectorToggle_clicked();
+    void on_btn_ScopeResetZoom_clicked();
     void on_btn_ScopeClearData_clicked();
 
     void on_btn_TerminalSend_clicked();
