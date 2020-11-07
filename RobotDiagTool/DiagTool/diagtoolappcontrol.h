@@ -53,6 +53,8 @@ public slots:
     void SerialDataArrived(QDataStream& stream);
     void SerialDataReadyToTransmit(QString const message);
 
+    void HandleScopeClear();
+
     void CmdTraceArrived(QString const message);
     void CmdDummyDataArrived(uint32_t const timestamp, int32_t const data);
 

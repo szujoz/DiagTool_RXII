@@ -121,6 +121,11 @@ void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
     communication->send(extended_message.toUtf8());
 }
 
+void DiagToolAppControl::HandleScopeClear()
+{
+    scopeDummyDataBuffer.clear();
+}
+
 void DiagToolAppControl::CmdTraceArrived(const QString message)
 {
     mainWindow->DisplayTraceInQuickTab(message);
@@ -142,6 +147,7 @@ void DiagToolAppControl::ConnectSignalsToSlots()
     connect(mainWindow.get(), &MainWindow::SerialDisconnectionRequest, this, &DiagToolAppControl::SerialDisconnReqestReceived);
     connect(communication.get(), &CommunicationSerialPort::dataReady, this, &DiagToolAppControl::SerialDataArrived);
     connect(mainWindow.get(), &MainWindow::SerialDataReady, this, &DiagToolAppControl::SerialDataReadyToTransmit);
+    connect(mainWindow.get(), &MainWindow::SerialClearScope, this, &DiagToolAppControl::HandleScopeClear);
 }
 
 void DiagToolAppControl::InitMessagePacker()

@@ -31,6 +31,7 @@ signals:
     void SerialConnectionRequest();
     void SerialDisconnectionRequest();
     void SerialDataReady(QString const message);
+    void SerialClearScope();
 
 private slots:
     void on_btn_QuickTabToggle_clicked();
@@ -44,6 +45,7 @@ private slots:
     void on_pushButton_clicked();
 
     void on_btn_ScopeSignalSelectorToggle_clicked();
+    void on_btn_ScopeClearData_clicked();
 
     void on_btn_TerminalSend_clicked();
     void on_btn_TerminalClearSerialTerminal_clicked();

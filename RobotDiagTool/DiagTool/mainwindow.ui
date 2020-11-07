@@ -615,7 +615,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>108</width>
-                   <height>444</height>
+                   <height>461</height>
                   </rect>
                  </property>
                  <layout class="QFormLayout" name="formLayout_2">
@@ -641,6 +641,13 @@
                      </size>
                     </property>
                    </spacer>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QPushButton" name="btn_ScopeClearData">
+                    <property name="text">
+                     <string>Clear Scope</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </widget>
