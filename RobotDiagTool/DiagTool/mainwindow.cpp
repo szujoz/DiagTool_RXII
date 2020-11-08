@@ -57,6 +57,8 @@ void MainWindow::ScopeInit()
 
     nextDataIndexToBeChecked = 0;
 
+    connect(scopeAxisX, &QValueAxis::rangeChanged, this, &MainWindow::handle_AxisXRangeChange);
+    connect(scopeAxisY, &QValueAxis::rangeChanged, this, &MainWindow::handle_AxisYRangeChange);
     scopeChartView->setMinimumSize(200, 100);
 
     scopeAxisX->setRange(0, 5);
@@ -370,3 +372,140 @@ void QChartView_::mouseReleaseEvent(QMouseEvent *event)
 
     QChartView::mouseReleaseEvent(event);
 }
+
+void MainWindow::on_btn_ScopeYUpperBoundIncr_pressed()
+{
+    auto y_min = scopeAxisY->min();
+    auto y_max = scopeAxisY->max();
+    auto y_diff = y_max - y_min;
+
+    scopeAxisY->setMax(y_max + 0.10*y_diff);
+    ScopeAllowAutoScaling(false);
+}
+
+void MainWindow::on_btn_ScopeYUpperBoundDecr_pressed()
+{
+    auto y_min = scopeAxisY->min();
+    auto y_max = scopeAxisY->max();
+    auto y_diff = y_max - y_min;
+
+    scopeAxisY->setMax(y_max - 0.10*y_diff);
+    ScopeAllowAutoScaling(false);
+}
+
+void MainWindow::on_btn_ScopeYLowerBoundIncr_pressed()
+{
+    auto y_min = scopeAxisY->min();
+    auto y_max = scopeAxisY->max();
+    auto y_diff = y_max - y_min;
+
+    scopeAxisY->setMin(y_min - 0.10*y_diff);
+    ScopeAllowAutoScaling(false);
+}
+
+void MainWindow::on_btn_ScopeYLowerBoundDecr_pressed()
+{
+    auto y_min = scopeAxisY->min();
+    auto y_max = scopeAxisY->max();
+    auto y_diff = y_max - y_min;
+
+    scopeAxisY->setMin(y_min + 0.10*y_diff);
+    ScopeAllowAutoScaling(false);
+}
+
+void MainWindow::on_btn_ScopeXUpperBoundIncr_pressed()
+{
+    auto x_min = scopeAxisX->min();
+    auto x_max = scopeAxisX->max();
+    auto x_diff = x_max - x_min;
+
+    scopeAxisX->setMax(x_max + 0.10*x_diff);
+    ScopeAllowAutoScaling(false);
+}
+
+void MainWindow::on_btn_ScopeXUpperBoundDecr_pressed()
+{
+    auto x_min = scopeAxisX->min();
+    auto x_max = scopeAxisX->max();
+    auto x_diff = x_max - x_min;
+
+    scopeAxisX->setMax(x_max - 0.10*x_diff);
+    ScopeAllowAutoScaling(false);
+}
+
+void MainWindow::on_btn_ScopeXLowerBoundIncr_pressed()
+{
+    auto x_min = scopeAxisX->min();
+    auto x_max = scopeAxisX->max();
+    auto x_diff = x_max - x_min;
+
+    scopeAxisX->setMin(x_min - 0.10*x_diff);
+    ScopeAllowAutoScaling(false);
+}
+
+void MainWindow::on_btn_ScopeXLowerBoundDecr_pressed()
+{
+    auto x_min = scopeAxisX->min();
+    auto x_max = scopeAxisX->max();
+    auto x_diff = x_max - x_min;
+
+    scopeAxisX->setMin(x_min + 0.10*x_diff);
+    ScopeAllowAutoScaling(false);
+}
+
+void MainWindow::on_lineEdit_ScopeYUpperBound_editingFinished()
+{
+    bool convSuccess = false;
+    qreal y_max = ui->lineEdit_ScopeYUpperBound->text().toFloat(&convSuccess);
+    if(convSuccess == true)
+    {
+        scopeAxisY->setMax(y_max);
+        ScopeAllowAutoScaling(false);
+    }
+}
+
+void MainWindow::on_lineEdit_ScopeYLowerBound_editingFinished()
+{
+    bool convSuccess = false;
+    qreal y_min = ui->lineEdit_ScopeYLowerBound->text().toFloat(&convSuccess);
+    if(convSuccess == true)
+    {
+        scopeAxisY->setMin(y_min);
+        ScopeAllowAutoScaling(false);
+    }
+}
+
+void MainWindow::on_lineEdit_ScopeXUpperBound_editingFinished()
+{
+    bool convSuccess = false;
+    qreal x_max = ui->lineEdit_ScopeXUpperBound->text().toFloat(&convSuccess);
+    if(convSuccess == true)
+    {
+        scopeAxisX->setMax(x_max);
+        ScopeAllowAutoScaling(false);
+    }
+}
+
+void MainWindow::on_lineEdit_ScopeXLowerBound_editingFinished()
+{
+    bool convSuccess = false;
+    qreal x_min = ui->lineEdit_ScopeXLowerBound->text().toFloat(&convSuccess);
+    if(convSuccess == true)
+    {
+        scopeAxisX->setMin(x_min);
+        ScopeAllowAutoScaling(false);
+    }
+}
+
+void MainWindow::handle_AxisXRangeChange(qreal min, qreal max)
+{
+    ui->lineEdit_ScopeXUpperBound->setText(QString::number(max));
+    ui->lineEdit_ScopeXLowerBound->setText(QString::number(min));
+}
+
+void MainWindow::handle_AxisYRangeChange(qreal min, qreal max)
+{
+    ui->lineEdit_ScopeYUpperBound->setText(QString::number(max));
+    ui->lineEdit_ScopeYLowerBound->setText(QString::number(min));
+}
+

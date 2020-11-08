@@ -55,6 +55,23 @@ private slots:
     void on_btn_TerminalSend_clicked();
     void on_btn_TerminalClearSerialTerminal_clicked();
 
+    void on_btn_ScopeYUpperBoundIncr_pressed();
+    void on_btn_ScopeYUpperBoundDecr_pressed();
+    void on_btn_ScopeYLowerBoundIncr_pressed();
+    void on_btn_ScopeYLowerBoundDecr_pressed();
+    void on_btn_ScopeXUpperBoundIncr_pressed();
+    void on_btn_ScopeXUpperBoundDecr_pressed();
+    void on_btn_ScopeXLowerBoundIncr_pressed();
+    void on_btn_ScopeXLowerBoundDecr_pressed();
+
+    void on_lineEdit_ScopeYUpperBound_editingFinished();
+    void on_lineEdit_ScopeYLowerBound_editingFinished();
+    void on_lineEdit_ScopeXUpperBound_editingFinished();
+    void on_lineEdit_ScopeXLowerBound_editingFinished();
+
+    void handle_AxisXRangeChange(qreal min, qreal max);
+    void handle_AxisYRangeChange(qreal min, qreal max);
+
 private:
     Ui::MainWindow *ui;
 
