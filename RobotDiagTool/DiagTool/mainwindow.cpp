@@ -290,12 +290,12 @@ void MainWindow::on_btn_ScopeToggleDrawing_clicked()
     if (allowedToDrawChart == true)
     {
         allowedToDrawChart = false;
-        ui->btn_ScopeToggleDrawing->setText("Start Drwaing");
+        ui->btn_ScopeToggleDrawing->setText("Cont");
     }
     else
     {
         allowedToDrawChart = true;
-        ui->btn_ScopeToggleDrawing->setText("Stop Drwaing");
+        ui->btn_ScopeToggleDrawing->setText("Stop");
     }
 }
 

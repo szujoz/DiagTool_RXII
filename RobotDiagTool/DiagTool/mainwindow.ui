@@ -593,7 +593,7 @@
           <item row="0" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,100">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,1000,1,0">
+             <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,1000,1,1,0">
               <item>
                <widget class="QLabel" name="label_ScopeSignalSelector">
                 <property name="text">
@@ -615,7 +615,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>108</width>
-                   <height>461</height>
+                   <height>430</height>
                   </rect>
                  </property>
                  <layout class="QFormLayout" name="formLayout_2">
@@ -642,27 +642,6 @@
                     </property>
                    </spacer>
                   </item>
-                  <item row="4" column="0">
-                   <widget class="QPushButton" name="btn_ScopeClearData">
-                    <property name="text">
-                     <string>Clear Scope</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QPushButton" name="btn_ScopeToggleDrawing">
-                    <property name="text">
-                     <string>Stop Drawing</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QPushButton" name="btn_ScopeResetZoom">
-                    <property name="text">
-                     <string>Reset Zoom</string>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </widget>
                </widget>
@@ -679,6 +658,76 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item>
+               <layout class="QGridLayout" name="gridLayout_9">
+                <item row="0" column="1">
+                 <widget class="QPushButton" name="btn_ScopeResetZoom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>30</width>
+                    <height>23</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>23</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Reset the Zoom to Original view.</string>
+                  </property>
+                  <property name="text">
+                   <string>Rst</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QPushButton" name="btn_ScopeClearData">
+                  <property name="minimumSize">
+                   <size>
+                    <width>30</width>
+                    <height>23</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>23</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Clear the scope view.</string>
+                  </property>
+                  <property name="text">
+                   <string>Clr</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QPushButton" name="btn_ScopeToggleDrawing">
+                  <property name="minimumSize">
+                   <size>
+                    <width>30</width>
+                    <height>23</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>23</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Stops/Continues the drawing of the data.</string>
+                  </property>
+                  <property name="text">
+                   <string>Stop</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <widget class="QPushButton" name="btn_ScopeSignalSelectorToggle">
