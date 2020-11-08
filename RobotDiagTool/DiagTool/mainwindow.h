@@ -41,6 +41,7 @@ private slots:
     void on_btn_QuickTabCleanTrace_clicked();
 
     void on_actionSettings_triggered();
+    void on_actionSave_triggered();
 
     void on_btn_ToolBarConnectSerial_clicked();
     void on_btn_ToolBarDisconnectSerial_clicked();

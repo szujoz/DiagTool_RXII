@@ -137,6 +137,35 @@ void MainWindow::on_actionSettings_triggered()
     emit SerialDialogNeeded();
 }
 
+void MainWindow::on_actionSave_triggered()
+{
+    QFileDialog dialog(this);
+    QString     fileName;
+    QStringList fileNames;
+    auto measData = lineSeries->pointsVector();
+
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("Measurement files (*.txt)"));
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setWindowTitle("Save Measurement Log");
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if(fileNames.isEmpty() != true)
+    {
+        fileName = fileNames.first();
+
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+            return;
+
+        QDataStream out(&file);
+        out << measData;
+    }
+}
+
 void MainWindow::on_btn_ToolBarConnectSerial_clicked()
 {
     emit SerialConnectionRequest();
