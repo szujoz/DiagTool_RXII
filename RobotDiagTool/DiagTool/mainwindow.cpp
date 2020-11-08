@@ -166,6 +166,37 @@ void MainWindow::on_actionSave_triggered()
     }
 }
 
+void MainWindow::on_actionLoad_triggered()
+{
+    QFileDialog dialog(this);
+    QString     fileName;
+    QStringList fileNames;
+    QVector<QPointF> logData;
+
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setNameFilter(tr("Measurement files (*.txt)"));
+    // All filter?
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setWindowTitle("Load Measurement Log");
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if(fileNames.isEmpty() != true)
+    {
+        fileName = fileNames.first();
+
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return;
+
+        QDataStream in(&file);
+        in >> logData;
+        lineSeries->replace(logData);
+    }
+}
+
 void MainWindow::on_btn_ToolBarConnectSerial_clicked()
 {
     emit SerialConnectionRequest();
