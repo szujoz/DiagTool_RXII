@@ -268,6 +268,7 @@ void MainWindow::on_btn_ScopeToggleDrawing_clicked()
 void MainWindow::on_btn_ScopeClearData_clicked()
 {
     nextDataIndexToBeChecked = 0;
+    lineSeries->clear();
     emit SerialClearScope();
 }
 
