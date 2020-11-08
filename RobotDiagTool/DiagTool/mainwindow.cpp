@@ -149,11 +149,6 @@ void MainWindow::on_btn_ToolBarDisconnectSerial_clicked()
     DisplaySerialState(false);
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-
-}
-
 void MainWindow::on_btn_ScopeSignalSelectorToggle_clicked()
 {
     if (ui->label_ScopeSignalSelector->isHidden())
