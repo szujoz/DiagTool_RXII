@@ -218,12 +218,14 @@ void MainWindow::on_btn_ScopeSignalSelectorToggle_clicked()
     {
         ui->label_ScopeSignalSelector->show();
         ui->scrollArea_ScopeSignalSelector->show();
+        ui->frame_ScopeCntrl->show();
         ui->btn_ScopeSignalSelectorToggle->setText("<");
     }
     else
     {
         ui->label_ScopeSignalSelector->hide();
         ui->scrollArea_ScopeSignalSelector->hide();
+        ui->frame_ScopeCntrl->hide();
         ui->btn_ScopeSignalSelectorToggle->setText(">");
     }
 }
