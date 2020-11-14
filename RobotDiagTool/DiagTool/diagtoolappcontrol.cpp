@@ -103,16 +103,12 @@ void DiagToolAppControl::SerialDisconnReqestReceived()
 
 void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
 {
-    QString    textToBeDisplayed = "";
-    QByteArray messageBytes;
-
     // Read data with readLine, but it appends a '\0' at the end, so it has to be removed.
-    messageBytes = stream.device()->readLine();
+    QByteArray messageBytes = stream.device()->readLine();
     messageBytes.remove(messageBytes.size()-1,1);
 
     // Display the message in the terminal view.
-    textToBeDisplayed.append(messageBytes);
-    mainWindow->DisplaySerialTerminalData(textToBeDisplayed);
+    mainWindow->DisplaySerialTerminalData(QString(messageBytes.toHex(' ')));
 
     // Unpack and process the message.
     emit workerSerial->Work_UnpackMessage(messageBytes);
