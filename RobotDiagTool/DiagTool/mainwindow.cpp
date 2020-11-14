@@ -149,7 +149,7 @@ void MainWindow::on_actionSave_triggered()
     auto measData = lineSeries->pointsVector();
 
     dialog.setFileMode(QFileDialog::AnyFile);
-    dialog.setNameFilters({"Measurement files (*.txt)",
+    dialog.setNameFilters({"Measurement files (*.csv)",
                            "Any files (*)"
                              });
     dialog.setViewMode(QFileDialog::Detail);
@@ -184,7 +184,7 @@ void MainWindow::on_actionLoad_triggered()
     QVector<QPointF> logData;
 
     dialog.setFileMode(QFileDialog::ExistingFile);
-    dialog.setNameFilters({"Measurement files (*.txt)",
+    dialog.setNameFilters({"Measurement files (*.csv)",
                            "Any files (*)"
                              });
     dialog.setViewMode(QFileDialog::Detail);
