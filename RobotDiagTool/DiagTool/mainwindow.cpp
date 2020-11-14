@@ -12,6 +12,7 @@
 #include <QtCharts/QChartGlobal>
 #include <QChart>
 #include <QTextStream>
+#include <QDateTime>
 
 using namespace QtCharts;
 
@@ -146,8 +147,17 @@ void MainWindow::on_actionSave_triggered()
     QFileDialog dialog(this);
     QString     fileName;
     QStringList fileNames;
-    auto measData = lineSeries->pointsVector();
+    QString     date;
+    QString     pref_name;
+    auto measData = lineSeries->pointsVector();     // Scope points.
 
+    // Default file name creation. Remove seconds (3 char) from iso time.
+    date = QDateTime::currentDateTime().toString(Qt::DateFormat::ISODate);
+    date.remove(date.size()-3,3);
+    date.replace(':','-');
+    pref_name = "meas_log_" + date + ".csv";
+
+    // Configure the dialog.
     dialog.setFileMode(QFileDialog::AnyFile);
     dialog.setNameFilters({"Measurement files (*.csv)",
                            "Any files (*)"
@@ -155,24 +165,35 @@ void MainWindow::on_actionSave_triggered()
     dialog.setViewMode(QFileDialog::Detail);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setWindowTitle("Save Measurement Log");
+    dialog.setDefaultSuffix(".csv");
+    dialog.selectFile(pref_name);
 
+    // Start the dialog and block untill it is closed.
     if (dialog.exec())
         fileNames = dialog.selectedFiles();
 
+    // Check if a file was selected.
     if(fileNames.isEmpty() != true)
     {
-        fileName = fileNames.first();
+        fileName = fileNames.first();   // Accept only the first file.
 
         QFile file(fileName);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             return;
 
+        // Print the log data in csv format with header
         QTextStream out(&file);
         out << "x,y\n";
         foreach(auto point, measData)
         {
             out << point.x() << "," << point.y() << "\n";
         }
+
+        file.close();
+    }
+    else
+    {
+        // Error: No file was selected.
     }
 }
 
@@ -183,6 +204,7 @@ void MainWindow::on_actionLoad_triggered()
     QStringList fileNames;
     QVector<QPointF> logData;
 
+    // Configure the dialog.
     dialog.setFileMode(QFileDialog::ExistingFile);
     dialog.setNameFilters({"Measurement files (*.csv)",
                            "Any files (*)"
@@ -191,19 +213,21 @@ void MainWindow::on_actionLoad_triggered()
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
     dialog.setWindowTitle("Load Measurement Log");
 
+    // Start the dialog and block untill it is closed.
     if (dialog.exec())
         fileNames = dialog.selectedFiles();
 
+    // Check if a file was successfully selected.
     if(fileNames.isEmpty() != true)
     {
-        fileName = fileNames.first();
+        fileName = fileNames.first();   // Accept only the first file.
 
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
-
+        // Open the file to read the csv lines and fill up the vector.
         QTextStream in(&file);
-        auto head = in.readLine();
+        auto head = in.readLine();  // read the head, it cannot be processed.
         while (!in.atEnd())
         {
             QString line = in.readLine();
@@ -217,6 +241,12 @@ void MainWindow::on_actionLoad_triggered()
                 logData.append(QPoint(x,y));
         }
         lineSeries->replace(logData);
+
+        file.close();
+    }
+    else
+    {
+        // Error: No file was selected.
     }
 }
 
