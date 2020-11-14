@@ -11,6 +11,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtCharts/QChartGlobal>
 #include <QChart>
+#include <QTextStream>
 
 using namespace QtCharts;
 
@@ -166,8 +167,12 @@ void MainWindow::on_actionSave_triggered()
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             return;
 
-        QDataStream out(&file);
-        out << measData;
+        QTextStream out(&file);
+        out << "x,y\n";
+        foreach(auto point, measData)
+        {
+            out << point.x() << "," << point.y() << "\n";
+        }
     }
 }
 
@@ -197,8 +202,20 @@ void MainWindow::on_actionLoad_triggered()
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
 
-        QDataStream in(&file);
-        in >> logData;
+        QTextStream in(&file);
+        auto head = in.readLine();
+        while (!in.atEnd())
+        {
+            QString line = in.readLine();
+            int comma_pos = line.indexOf(',');
+            bool x_conv_ok = false;
+            bool y_conv_ok = false;
+            qreal x = line.mid(0,comma_pos-1).toDouble(&x_conv_ok);
+            qreal y = line.mid(comma_pos+1,line.size()).toDouble(&y_conv_ok);
+
+            if(x_conv_ok && y_conv_ok)
+                logData.append(QPoint(x,y));
+        }
         lineSeries->replace(logData);
     }
 }
