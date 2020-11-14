@@ -194,7 +194,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="100,25">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,25">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -216,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
@@ -231,27 +231,50 @@
          <attribute name="title">
           <string>General Data</string>
          </attribute>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="0">
-           <widget class="QGroupBox" name="groupBox_2">
+         <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0">
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="groupBox_GeneralEncoder">
             <property name="title">
-             <string>Motor</string>
+             <string>Encoder</string>
             </property>
-            <widget class="QLineEdit" name="lineEdit">
+            <widget class="QLineEdit" name="lineEdit_GeneralEncoderCounter">
              <property name="geometry">
               <rect>
-               <x>62</x>
+               <x>60</x>
                <y>30</y>
                <width>81</width>
                <height>20</height>
               </rect>
              </property>
             </widget>
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="label_GeneralEncoderCounter">
              <property name="geometry">
               <rect>
                <x>10</x>
                <y>30</y>
+               <width>47</width>
+               <height>13</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Counter</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineEdit_GeneralEncoderSpeed">
+             <property name="geometry">
+              <rect>
+               <x>60</x>
+               <y>60</y>
+               <width>81</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_GeneralEncoderSpeed">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>60</y>
                <width>47</width>
                <height>13</height>
               </rect>
@@ -288,6 +311,188 @@
              </property>
              <property name="text">
               <string>FrontDistance</string>
+             </property>
+            </widget>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QGroupBox" name="groupBox_2">
+            <property name="title">
+             <string>Motor</string>
+            </property>
+            <widget class="QLineEdit" name="lineEdit">
+             <property name="geometry">
+              <rect>
+               <x>62</x>
+               <y>30</y>
+               <width>81</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>47</width>
+               <height>13</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Speed</string>
+             </property>
+            </widget>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QGroupBox" name="groupBox_GeneralRemote">
+            <property name="title">
+             <string>Remote</string>
+            </property>
+            <widget class="QLineEdit" name="lineEdit_GeneralRemoteCh1">
+             <property name="geometry">
+              <rect>
+               <x>92</x>
+               <y>20</y>
+               <width>51</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_GeneralRemoteCh1">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>20</y>
+               <width>81</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Ch1 Pulse width</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_GeneralRemoteCh2">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>50</y>
+               <width>81</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Ch2 Pulse width</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineEdit_GeneralRemoteCh2">
+             <property name="geometry">
+              <rect>
+               <x>90</x>
+               <y>50</y>
+               <width>51</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_GeneralRemoteCh3">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>80</y>
+               <width>81</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Ch3 Pulse width</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineEdit_GeneralRemoteCh3">
+             <property name="geometry">
+              <rect>
+               <x>90</x>
+               <y>80</y>
+               <width>51</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+          </item>
+          <item row="2" column="0" rowspan="2">
+           <widget class="QGroupBox" name="groupBox_6">
+            <property name="title">
+             <string>Servo</string>
+            </property>
+            <widget class="QLabel" name="label_7">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>20</y>
+               <width>71</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Wheel Angle</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineEdit_7">
+             <property name="geometry">
+              <rect>
+               <x>80</x>
+               <y>20</y>
+               <width>51</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_12">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>50</y>
+               <width>71</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Wheel offset</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineEdit_12">
+             <property name="geometry">
+              <rect>
+               <x>80</x>
+               <y>50</y>
+               <width>51</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_13">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>80</y>
+               <width>71</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Timer value</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineEdit_13">
+             <property name="geometry">
+              <rect>
+               <x>80</x>
+               <y>80</y>
+               <width>51</width>
+               <height>20</height>
+              </rect>
              </property>
             </widget>
            </widget>
@@ -394,36 +599,6 @@
             </widget>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox_8">
-            <property name="title">
-             <string>Encoder</string>
-            </property>
-            <widget class="QLineEdit" name="lineEdit_11">
-             <property name="geometry">
-              <rect>
-               <x>60</x>
-               <y>20</y>
-               <width>81</width>
-               <height>20</height>
-              </rect>
-             </property>
-            </widget>
-            <widget class="QLabel" name="label_11">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>30</y>
-               <width>47</width>
-               <height>13</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Counter</string>
-             </property>
-            </widget>
-           </widget>
-          </item>
           <item row="1" column="1" rowspan="3">
            <widget class="QGroupBox" name="groupBox_5">
             <property name="title">
@@ -431,154 +606,81 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0" rowspan="2">
-           <widget class="QGroupBox" name="groupBox_6">
+          <item row="2" column="2">
+           <widget class="QGroupBox" name="groupBox_GeneralUiBoard">
             <property name="title">
-             <string>Servo</string>
+             <string>GroupBox</string>
             </property>
-            <widget class="QLabel" name="label_7">
+            <widget class="QCheckBox" name="checkBox_GeneralUiBoardNumberForce">
              <property name="geometry">
               <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>71</width>
-               <height>16</height>
+               <x>170</x>
+               <y>40</y>
+               <width>51</width>
+               <height>17</height>
               </rect>
              </property>
              <property name="text">
-              <string>Wheel Angle</string>
+              <string>Force</string>
              </property>
             </widget>
-            <widget class="QLineEdit" name="lineEdit_7">
+            <widget class="QLineEdit" name="lineEdit_GeneralUiBoard7SegOut">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>40</y>
+               <width>31</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineEdit_GeneralUiBoard7SegIn">
              <property name="geometry">
               <rect>
                <x>80</x>
-               <y>20</y>
-               <width>51</width>
+               <y>40</y>
+               <width>31</width>
                <height>20</height>
               </rect>
              </property>
             </widget>
-            <widget class="QLabel" name="label_12">
+            <widget class="QLabel" name="label_GeneralUiBoard7Seg">
              <property name="geometry">
               <rect>
                <x>10</x>
-               <y>50</y>
-               <width>71</width>
+               <y>40</y>
+               <width>61</width>
                <height>16</height>
               </rect>
              </property>
              <property name="text">
-              <string>Wheel offset</string>
+              <string>7 seg display</string>
              </property>
             </widget>
-            <widget class="QLineEdit" name="lineEdit_12">
-             <property name="geometry">
-              <rect>
-               <x>80</x>
-               <y>50</y>
-               <width>51</width>
-               <height>20</height>
-              </rect>
-             </property>
-            </widget>
-            <widget class="QLabel" name="label_13">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>80</y>
-               <width>71</width>
-               <height>16</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Timer value</string>
-             </property>
-            </widget>
-            <widget class="QLineEdit" name="lineEdit_13">
-             <property name="geometry">
-              <rect>
-               <x>80</x>
-               <y>80</y>
-               <width>51</width>
-               <height>20</height>
-              </rect>
-             </property>
-            </widget>
-           </widget>
-          </item>
-          <item row="2" column="2" rowspan="2">
-           <widget class="QGroupBox" name="groupBox_7">
-            <property name="title">
-             <string>Remote</string>
-            </property>
-            <widget class="QLineEdit" name="lineEdit_8">
-             <property name="geometry">
-              <rect>
-               <x>92</x>
-               <y>20</y>
-               <width>51</width>
-               <height>20</height>
-              </rect>
-             </property>
-            </widget>
-            <widget class="QLabel" name="label_8">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>20</y>
-               <width>81</width>
-               <height>16</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Ch1 Pulse width</string>
-             </property>
-            </widget>
-            <widget class="QLabel" name="label_9">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>50</y>
-               <width>81</width>
-               <height>16</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Ch2 Pulse width</string>
-             </property>
-            </widget>
-            <widget class="QLineEdit" name="lineEdit_9">
+            <widget class="QLabel" name="label_GeneralUiBoard7SegIn">
              <property name="geometry">
               <rect>
                <x>90</x>
-               <y>50</y>
-               <width>51</width>
-               <height>20</height>
-              </rect>
-             </property>
-            </widget>
-            <widget class="QLabel" name="label_10">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>80</y>
-               <width>81</width>
+               <y>20</y>
+               <width>16</width>
                <height>16</height>
               </rect>
              </property>
              <property name="text">
-              <string>Ch3 Pulse width</string>
+              <string>In</string>
              </property>
             </widget>
-            <widget class="QLineEdit" name="lineEdit_10">
+            <widget class="QLabel" name="label_GeneralUiBorad7SegForce">
              <property name="geometry">
               <rect>
-               <x>90</x>
-               <y>80</y>
-               <width>51</width>
-               <height>20</height>
+               <x>130</x>
+               <y>20</y>
+               <width>21</width>
+               <height>16</height>
               </rect>
+             </property>
+             <property name="text">
+              <string>Out</string>
              </property>
             </widget>
            </widget>
@@ -593,7 +695,7 @@
           <item row="0" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,100">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,1000,0,0">
+             <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,1000,0,1,0">
               <item>
                <widget class="QLabel" name="label_ScopeSignalSelector">
                 <property name="text">
@@ -615,7 +717,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>165</width>
-                   <height>318</height>
+                   <height>312</height>
                   </rect>
                  </property>
                  <layout class="QFormLayout" name="formLayout_2">
@@ -923,6 +1025,19 @@
                  </item>
                 </layout>
                </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
               <item>
                <widget class="QPushButton" name="btn_ScopeSignalSelectorToggle">

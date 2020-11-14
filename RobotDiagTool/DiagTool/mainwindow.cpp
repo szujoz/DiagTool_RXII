@@ -564,3 +564,8 @@ void MainWindow::on_btn_QuickTabDummyDataTx_clicked()
 
     emit CmdTx_DummyData(data);
 }
+
+void MainWindow::on_checkBox_GeneralUiBoardNumberForce_stateChanged(int arg1)
+{
+
+}

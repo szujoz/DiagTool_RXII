@@ -75,6 +75,8 @@ private slots:
     void handle_AxisXRangeChange(qreal min, qreal max);
     void handle_AxisYRangeChange(qreal min, qreal max);
 
+    void on_checkBox_GeneralUiBoardNumberForce_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
 
