@@ -216,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
@@ -609,7 +609,7 @@
           <item row="2" column="2">
            <widget class="QGroupBox" name="groupBox_GeneralUiBoard">
             <property name="title">
-             <string>GroupBox</string>
+             <string>Ui Board</string>
             </property>
             <widget class="QCheckBox" name="checkBox_GeneralUiBoardNumberForce">
              <property name="geometry">
