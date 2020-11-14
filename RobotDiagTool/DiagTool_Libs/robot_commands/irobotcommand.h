@@ -9,7 +9,7 @@ class IRobotCommand : public QObject
 public:
     IRobotCommand() {};
 
-    virtual void operation(QByteArray const &message) = 0;
+    virtual void RxProcessing(QByteArray const &message) = 0;
 };
 
 #endif // IROBOTCOMMAND_H

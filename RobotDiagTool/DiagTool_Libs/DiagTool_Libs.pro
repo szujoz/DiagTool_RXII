@@ -16,33 +16,41 @@ CONFIG += staticlib
 SOURCES += \
         common/BinaryEncoder/EscapeEncoder.cpp \
         common/CRC/crc8.cpp \
+        robot_commands/commandfactory.cpp \
+        robot_commands/robotcommandbuilder.cpp \
         robot_modules/encoder.cpp \
-        commandpacker.cpp \
+        robot_commands/commandpacker.cpp \
+        robot_commands/robotcommand.cpp \
+        robot_commands/commanddirector.cpp \
         communication.cpp \
         communicationserialport.cpp \
-        inifilehandler.cpp \
-        robotcommand.cpp \
+        inifilehandler.cpp \        
         robotproxy.cpp
 
 HEADERS += \
     common/BinaryEncoder/BinaryEncoder.h \
     common/BinaryEncoder/EscapeEncoder.h \
     common/CRC/crc8.h \
+    robot_commands/commandfactory.h \
+    robot_commands/icommandbuilder.h \
+    robot_commands/robotcommandbuilder.h \
     robot_modules/encoder.h \
-    commandidconfig.h \
-    commandpacker.h \
+    robot_commands/commandidconfig.h \
+    robot_commands/commandpacker.h \
+    robot_commands/irobotcommand.h \
+    robot_commands/robotcommand.h \
+    robot_commands/icommandpacker.h \
+    robot_commands/commanddirector.h \
     communication.h \
-    communicationserialport.h \
-    icommandpacker.h \
-    inifilehandler.h \
-    irobotcommand.h \
-    robotcommand.h \
+    communicationserialport.h \    
+    inifilehandler.h \    
     robotproxy.h
 
 INCLUDEPATH += \
     common/CRC/ \
     common/BinaryEncoder/ \
-    robot_modules/
+    robot_modules/ \
+    robot_commands/
 
 # Default rules for deployment.
 unix {

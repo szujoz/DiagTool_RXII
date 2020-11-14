@@ -76,6 +76,7 @@ void MainWindow::ScopeInit()
 
     lineSeries->attachAxis(scopeAxisX);
     lineSeries->attachAxis(scopeAxisY);
+    lineSeries->setUseOpenGL(true);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(scopeChartView.get());
@@ -509,3 +510,10 @@ void MainWindow::handle_AxisYRangeChange(qreal min, qreal max)
     ui->lineEdit_ScopeYLowerBound->setText(QString::number(min));
 }
 
+void MainWindow::on_btn_QuickTabDummyDataTx_clicked()
+{
+    bool convSuccess = false;
+    int32_t data = ui->lineEdit_QuickTabDummyDataTx->text().toLong(&convSuccess);
+
+    emit CmdTx_DummyData(data);
+}

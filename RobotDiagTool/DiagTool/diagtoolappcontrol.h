@@ -6,31 +6,20 @@
 #include <QThreadPool>
 #include <QDebug>
 #include <QTimer>
+#include <QElapsedTimer>
 
 #include "mainwindow.h"
 #include "serialsettingsdialog.h"
+#include "serialconnectionworker.h"
 
 #include "communicationserialport.h"
 #include "robotproxy.h"
 #include "inifilehandler.h"
 
 #include "icommandpacker.h"
+#include "robotcommand.h"
 
-class SerialConnectionWorker : public QObject
-{
-    Q_OBJECT
-public:
-    void SetPacker(ICommandPacker& messagePacker);
-
-public slots:
-    void Work_UnpackMessage(QByteArray &message);
-
-signals:
-    void MessageUnpacked_DummyData(const uint32_t timestamp, const int32_t data);
-
-private:
-    ICommandPacker* messagePacker;
-};
+class CommandDirector;
 
 class DiagToolAppControl : public QObject
 {
@@ -52,19 +41,23 @@ public slots:
     void SerialDisconnReqestReceived();
     void SerialDataArrived(QDataStream& stream);
     void SerialDataReadyToTransmit(QString const message);
+    void SerialCmdTransmitting(QByteArray bytes);
 
     void HandleScopeClear();
 
     void CmdTraceArrived(QString const message);
     void CmdDummyDataArrived(uint32_t const timestamp, int32_t const data);
+    void CmdDummyDataTransmit(int32_t const data);
 
 signals:
     void SettingsToIni(QMap<QString,QString> params);
-    void operate(const QString &);
+
+    void CmdDummyDataReady(uint32_t const timestamp, int32_t const data);
 
 private:
     std::unique_ptr<MainWindow> mainWindow;
     std::unique_ptr<SerialSettingsDialog> settingsWindow;
+    std::unique_ptr<QElapsedTimer> clockpiece;
     std::unique_ptr<QTimer> timer;
     SerialConnectionWorker* workerSerial;
 

@@ -4,21 +4,6 @@
 
 CommandPacker* CommandPacker::instance_ = NULL;
 
-CommandFactory::CommandFactory()
-{
-    registeredCommands = std::make_unique<QMap<CommandID,IRobotCommand*>>();
-}
-
-void CommandFactory::RegisterCommand(const CommandID id, IRobotCommand* cmd)
-{
-    registeredCommands.get()->insert(id, cmd);
-}
-
-IRobotCommand* CommandFactory::CreateCommand(const CommandID id)
-{
-    return registeredCommands.get()->value(id);
-}
-
 CommandPacker *CommandPacker::GetInstance()
 {
     if(instance_ == NULL)
@@ -34,12 +19,38 @@ void CommandPacker::RegisterCommand(const CommandID id, IRobotCommand *cmd)
     factory.RegisterCommand(id, cmd);
 }
 
-QByteArray CommandPacker::Pack(const CommandID cmdID, QByteArray &message)
+QByteArray CommandPacker::Pack(QByteArray &message)
 {
-    IRobotCommand* cmd = factory.CreateCommand(cmdID);
-    Q_UNUSED(message);
-    Q_UNUSED(cmdID);
-    //return cmd.
+    QByteArray           msg = message;
+    QByteArray           enc_msg;
+    std::vector<uint8_t> orig_message;
+    std::vector<uint8_t> encoded_message;
+    uint8_t              temp[msg.size()*2];
+
+    // CRC
+    for (size_t i = 0; i < (size_t)msg.size(); i++)
+    {
+        orig_message.push_back(static_cast<uint8_t>(msg.at(i)));
+    }
+
+    orig_message.push_back(crc->GetBlockCrc(orig_message.data(), orig_message.size()));
+
+    // Encode
+    size_t enc_size = encoded_message.size();
+    encoded_message.reserve(orig_message.size()*2);
+    coder->Encode(orig_message.data(),    orig_message.size(),
+                  temp, enc_size);
+
+    // \n
+   // encoded_message.push_back('\n');
+
+    for (size_t i = 0; i < enc_size; i++)
+    {
+        enc_msg.append(temp[i]);
+    }
+    enc_msg.append('\n');
+
+    return enc_msg;
 }
 
 void CommandPacker::Unpack(QByteArray &message)
@@ -85,7 +96,7 @@ void CommandPacker::Unpack(QByteArray &message)
         // Command object was found. Remove the Command ID byte and process the bytes.
         if(cmd != NULL)
         {
-            cmd->operation(messageToBeProcessed);
+            cmd->RxProcessing(messageToBeProcessed);
         }
     }
 }

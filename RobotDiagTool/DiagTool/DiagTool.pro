@@ -14,11 +14,13 @@ SOURCES += \
     diagtoolappcontrol.cpp \
     main.cpp \
     mainwindow.cpp \
+    serialconnectionworker.cpp \
     serialsettingsdialog.cpp
 
 HEADERS += \
     diagtoolappcontrol.h \
     mainwindow.h \
+    serialconnectionworker.h \
     serialsettingsdialog.h
 
 FORMS += \
@@ -33,6 +35,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 INCLUDEPATH += \
         $$PWD/../DiagTool_Libs \
         $$PWD/../DiagTool_Libs/robot_modules \
+        $$PWD/../DiagTool_Libs/robot_commands \
         $$PWD/../DiagTool_Libs/common/CRC \
         $$PWD/../DiagTool_Libs/common/BinaryEncoder \
 

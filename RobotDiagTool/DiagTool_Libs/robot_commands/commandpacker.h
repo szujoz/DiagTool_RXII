@@ -3,26 +3,13 @@
 
 #include <QObject>
 #include <memory>
-#include <QMap>
 
 #include "icommandpacker.h"
 #include "irobotcommand.h"
 
 #include "crc8.h"
 #include "BinaryEncoder.h"
-
-class CommandFactory
-{
-public:
-    CommandFactory();
-
-    void RegisterCommand(CommandID const id, IRobotCommand* cmd);
-
-    IRobotCommand* CreateCommand(CommandID const id);
-
-private:
-    std::unique_ptr<QMap<CommandID,IRobotCommand*>> registeredCommands;
-};
+#include "commandfactory.h"
 
 class CommandPacker : public ICommandPacker
 {
@@ -31,7 +18,7 @@ public:
     static CommandPacker *GetInstance();
 
     virtual void RegisterCommand(CommandID const id, IRobotCommand* cmd) override;
-    virtual QByteArray Pack(CommandID const cmdID, QByteArray& message) override;
+    virtual QByteArray Pack(QByteArray& message) override;
     virtual void Unpack(QByteArray& message) override;
 
 private:
