@@ -194,7 +194,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,25">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="100,25">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
