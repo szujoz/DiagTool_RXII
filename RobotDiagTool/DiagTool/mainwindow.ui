@@ -216,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
@@ -1345,14 +1345,37 @@
             <widget class="QLineEdit" name="lineEdit_QuickTabFrontDistance"/>
            </item>
            <item>
-            <widget class="QLabel" name="label_16">
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <item>
+              <widget class="QLabel" name="label_QuckTabDummyDataTx">
+               <property name="text">
+                <string>Dummy Data</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_QuickTabDummyDataTx">
+               <property name="minimumSize">
+                <size>
+                 <width>41</width>
+                 <height>23</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>41</width>
+                 <height>23</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Send</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_17"/>
+            <widget class="QLineEdit" name="lineEdit_QuickTabDummyDataTx"/>
            </item>
            <item>
             <widget class="QLabel" name="label_17">

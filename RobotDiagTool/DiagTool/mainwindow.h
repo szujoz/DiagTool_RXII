@@ -36,9 +36,12 @@ signals:
     void SerialDataReady(QString const message);
     void SerialClearScope();
 
+    void CmdTx_DummyData(int32_t const data);
+
 private slots:
     void on_btn_QuickTabToggle_clicked();
     void on_btn_QuickTabCleanTrace_clicked();
+    void on_btn_QuickTabDummyDataTx_clicked();
 
     void on_actionSettings_triggered();
     void on_actionSave_triggered();
