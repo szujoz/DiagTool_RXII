@@ -7,7 +7,7 @@
 #include "mainwindow.h"
 
 #include "commandpacker.h"
-#include "robotcommand.h"
+#include "commanddirector.h"
 
 DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 {
@@ -17,6 +17,9 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 
     mainWindow = std::make_unique<MainWindow>();
     mainWindow->show();
+
+    clockpiece = std::make_unique<QElapsedTimer>();
+    clockpiece->start();
 
     timer = std::make_unique<QTimer>();
     timer->start(50);
@@ -121,6 +124,11 @@ void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
     communication->send(extended_message.toUtf8());
 }
 
+void DiagToolAppControl::SerialCmdTransmitting(QByteArray bytes)
+{
+    communication->send(bytes);
+}
+
 void DiagToolAppControl::HandleScopeClear()
 {
     scopeDummyDataBuffer.clear();
@@ -135,6 +143,21 @@ void DiagToolAppControl::CmdDummyDataArrived(const uint32_t timestamp, const int
 {
     scopeDummyDataBuffer.append(QPointF(timestamp,data));
     newDummyDataInBuffer = true;
+}
+
+void DiagToolAppControl::CmdDummyDataTransmit(int32_t const data)
+{
+    uint32_t time = 0;
+    int32_t  dummy_data = data;
+    QByteArray serial_message = "";
+
+    time = (uint32_t)clockpiece.get()->elapsed();
+
+    workerSerial->director->BuildMessage_DummyData(time, dummy_data);
+    serial_message = workerSerial->builder->getProduct();
+    serial_message = messagePacker->Pack(serial_message);
+
+    communication->send(serial_message);
 }
 
 void DiagToolAppControl::ConnectSignalsToSlots()
@@ -153,15 +176,17 @@ void DiagToolAppControl::ConnectSignalsToSlots()
 void DiagToolAppControl::InitMessagePacker()
 {
     messagePacker = CommandPacker::GetInstance();
+    connect(workerSerial, &SerialConnectionWorker::SerialMessageReady, this, &DiagToolAppControl::SerialCmdTransmitting);
 
     auto cmd00 = new RobotCommand_Text();
     messagePacker->RegisterCommand(CommandID::eText, cmd00);
-    connect(cmd00, &RobotCommand_Text::CmdArrived_Text, this, &DiagToolAppControl::CmdTraceArrived);
+    connect(cmd00, &RobotCommand_Text::CmdArrived, this, &DiagToolAppControl::CmdTraceArrived);
 
     auto cmd01 = new RobotCommand_DummyData();
     messagePacker->RegisterCommand(CommandID::eDummyData, cmd01);
-    connect(cmd01, &RobotCommand_DummyData::CmdArrived_DummyData, workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData);
+    connect(cmd01, &RobotCommand_DummyData::CmdArrived, workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData);
     connect(workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
+    connect(mainWindow.get(), &MainWindow::CmdTx_DummyData, this, &DiagToolAppControl::CmdDummyDataTransmit);
 
     workerSerial->SetPacker(*messagePacker);
 }
@@ -183,14 +208,4 @@ void DiagToolAppControl::TimerEventUpdateScopeView()
         mainWindow->DisplayScopeData(scopeDummyDataBuffer);
         newDummyDataInBuffer = false;
     }
-}
-
-void SerialConnectionWorker::SetPacker(ICommandPacker &messagePacker)
-{
-    this->messagePacker = &messagePacker;
-}
-
-void SerialConnectionWorker::Work_UnpackMessage(QByteArray &message)
-{
-    messagePacker->Unpack(message);
 }
