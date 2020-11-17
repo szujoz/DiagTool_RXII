@@ -8,31 +8,25 @@
 
 #include "commandidconfig.h"
 #include "robotcommand.h"
-#include "commanddirector.h"
-#include "robotcommandbuilder.h"
 
 class SerialConnectionWorker : public QObject
 {
     Q_OBJECT
 public:
-    SerialConnectionWorker();
-
-    std::unique_ptr<CommandDirector> director;
-    std::unique_ptr<RobotCommandBuilder> builder;
+    SerialConnectionWorker() {};
 
     void SetPacker(ICommandPacker& messagePacker);
 
 public slots:
     void Work_UnpackMessage(QByteArray &message);
-    QByteArray Work_PackMessage(QByteArray data);
+    void Work_PackMessage(QByteArray const command);
 
 signals:
+    void MessagePacked(QByteArray const message);
     void MessageUnpacked_DummyData(const uint32_t timestamp, const int32_t data);
-    void SerialMessageReady(QByteArray bytes);
 
 private:
     ICommandPacker* messagePacker;
-
 };
 
 

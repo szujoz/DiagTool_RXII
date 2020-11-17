@@ -76,6 +76,20 @@ void DiagToolAppControl::OpenSerialDialog()
                                           settMap.value("baud"),
                                           settMap.value("dataBit"),
                                           settMap.value("stopBit"));
+
+    CommandDirector* dir = new CommandDirector();
+    RobotCommandBuilder* build = new RobotCommandBuilder();
+    dir->SetBuilder(build);
+
+    dir->BuildMessage_DummyData(10, -5);
+    QByteArray cmd = build->getProduct();
+    QByteArray msg = messagePacker->Pack(cmd);
+    messagePacker->Unpack(msg.remove(msg.size()-1,1));
+
+    dir->BuildMessage_DummyData(15, 5);
+    cmd = build->getProduct();
+    msg = messagePacker->Pack(cmd);
+    messagePacker->Unpack(msg.remove(msg.size()-1,1));
 }
 
 void DiagToolAppControl::SerialSettingsArrived(const QString com, const QString baud, const QString dataBits, const QString stopBits)
@@ -130,6 +144,26 @@ void DiagToolAppControl::HandleScopeClear()
     scopeDummyDataBuffer.clear();
 }
 
+void DiagToolAppControl::HandleTx_7SegNum(uint8_t const number)
+{
+    if (number <= 99)
+    {
+        QByteArray message;
+        CommandDirector     dir;
+        RobotCommandBuilder builder;
+        dir.SetBuilder(&builder);
+
+        dir.BuildMessage_ConfigParam_7SegNum(number);
+        message = builder.getProduct();
+
+        workerSerial->Work_PackMessage(message);
+    }
+    else
+    {
+        qDebug() << "7 segment number is out of range: " << number << "\n";
+    }
+}
+
 void DiagToolAppControl::CmdTraceArrived(const QString message)
 {
     mainWindow->DisplayTraceInQuickTab(message);
@@ -146,14 +180,16 @@ void DiagToolAppControl::CmdDummyDataTransmit(int32_t const data)
     uint32_t time = 0;
     int32_t  dummy_data = data;
     QByteArray serial_message = "";
+    CommandDirector     dir;
+    RobotCommandBuilder builder;
+    dir.SetBuilder(&builder);
 
     time = (uint32_t)clockpiece.get()->elapsed();
 
-    workerSerial->director->BuildMessage_DummyData(time, dummy_data);
-    serial_message = workerSerial->builder->getProduct();
-    serial_message = messagePacker->Pack(serial_message);
+    dir.BuildMessage_DummyData(time, dummy_data);
+    serial_message = builder.getProduct();
 
-    communication->send(serial_message);
+    workerSerial->Work_PackMessage(serial_message);
 }
 
 void DiagToolAppControl::ConnectSignalsToSlots()
@@ -167,12 +203,13 @@ void DiagToolAppControl::ConnectSignalsToSlots()
     connect(communication.get(), &CommunicationSerialPort::dataReady, this, &DiagToolAppControl::SerialDataArrived);
     connect(mainWindow.get(), &MainWindow::SerialDataReady, this, &DiagToolAppControl::SerialDataReadyToTransmit);
     connect(mainWindow.get(), &MainWindow::SerialClearScope, this, &DiagToolAppControl::HandleScopeClear);
+
+    connect(mainWindow.get(), &MainWindow::CmdTx_7SegNum, this, &DiagToolAppControl::HandleTx_7SegNum);
 }
 
 void DiagToolAppControl::InitMessagePacker()
 {
     messagePacker = CommandPacker::GetInstance();
-    connect(workerSerial, &SerialConnectionWorker::SerialMessageReady, this, &DiagToolAppControl::SerialCmdTransmitting);
 
     auto cmd00 = new RobotCommand_Text();
     messagePacker->RegisterCommand(CommandID::eText, cmd00);
@@ -193,6 +230,8 @@ void DiagToolAppControl::InitSerialWorkerThread()
     workerSerial->moveToThread(&workerThread_Serial);
 
     connect(&workerThread_Serial, &QThread::finished, workerSerial, &QObject::deleteLater);
+    connect(this, &DiagToolAppControl::TransmitMessage, workerSerial, &SerialConnectionWorker::Work_PackMessage);
+    connect(workerSerial, &SerialConnectionWorker::MessagePacked, this, &DiagToolAppControl::SerialCmdTransmitting);
 
     workerThread_Serial.start();
 }

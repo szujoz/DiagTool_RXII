@@ -45,13 +45,22 @@ public slots:
 
     void HandleScopeClear();
 
+    // Comm TX
+    void CmdDummyDataTransmit(int32_t const data);
+    void HandleTx_7SegNum(uint8_t const number);
+
+    // Comm RX
     void CmdTraceArrived(QString const message);
     void CmdDummyDataArrived(uint32_t const timestamp, int32_t const data);
-    void CmdDummyDataTransmit(int32_t const data);
+
 
 signals:
     void SettingsToIni(QMap<QString,QString> params);
 
+    // Com TX
+    void TransmitMessage(QByteArray const message);
+
+    // Com RX
     void CmdDummyDataReady(uint32_t const timestamp, int32_t const data);
 
 private:
@@ -61,7 +70,7 @@ private:
     std::unique_ptr<QTimer> timer;
     SerialConnectionWorker* workerSerial;
 
-    std::unique_ptr<CommunicationSerialPort> communication;
+    std::shared_ptr<CommunicationSerialPort> communication;
     std::unique_ptr<IniFileHandler> iniFileHandler;
 
     ICommandPacker* messagePacker;
