@@ -76,20 +76,6 @@ void DiagToolAppControl::OpenSerialDialog()
                                           settMap.value("baud"),
                                           settMap.value("dataBit"),
                                           settMap.value("stopBit"));
-
-    CommandDirector* dir = new CommandDirector();
-    RobotCommandBuilder* build = new RobotCommandBuilder();
-    dir->SetBuilder(build);
-
-    dir->BuildMessage_DummyData(10, -5);
-    QByteArray cmd = build->getProduct();
-    QByteArray msg = messagePacker->Pack(cmd);
-    messagePacker->Unpack(msg.remove(msg.size()-1,1));
-
-    dir->BuildMessage_DummyData(15, 5);
-    cmd = build->getProduct();
-    msg = messagePacker->Pack(cmd);
-    messagePacker->Unpack(msg.remove(msg.size()-1,1));
 }
 
 void DiagToolAppControl::SerialSettingsArrived(const QString com, const QString baud, const QString dataBits, const QString stopBits)
