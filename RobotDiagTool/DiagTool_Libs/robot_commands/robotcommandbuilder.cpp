@@ -10,6 +10,11 @@ void RobotCommandBuilder::set_uint8_data(uint8_t byte)
     command_bytes.append(serializer<uint8_t>(byte));
 }
 
+void RobotCommandBuilder::set_uint16_data(uint16_t ushort)
+{
+    command_bytes.append(serializer<uint16_t>(ushort));
+}
+
 void RobotCommandBuilder::set_uint32_data(uint32_t ulong)
 {
     command_bytes.append(serializer<uint32_t>(ulong));

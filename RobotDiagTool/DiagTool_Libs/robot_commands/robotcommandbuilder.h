@@ -13,6 +13,7 @@ public:
     RobotCommandBuilder();
 
     virtual void set_uint8_data(uint8_t byte) override;
+    virtual void set_uint16_data(uint16_t ushort) override;
     virtual void set_uint32_data(uint32_t ulong) override;
     virtual void set_int32_data(int32_t _long) override;
     virtual void set_text_data(QString str) override;
