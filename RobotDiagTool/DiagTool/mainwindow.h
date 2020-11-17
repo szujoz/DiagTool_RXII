@@ -36,7 +36,13 @@ signals:
     void SerialDataReady(QString const message);
     void SerialClearScope();
 
+    // Command TX
     void CmdTx_DummyData(int32_t const data);
+    void CmdTx_7SegNum(uint8_t const number);
+
+    // Command RX
+
+
 
 private slots:
     void on_btn_QuickTabToggle_clicked();
@@ -76,6 +82,9 @@ private slots:
     void handle_AxisYRangeChange(qreal min, qreal max);
 
     void on_checkBox_GeneralUiBoardNumberForce_stateChanged(int arg1);
+
+
+    void on_lineEdit_GeneralUiBoard7SegOut_editingFinished();
 
 private:
     Ui::MainWindow *ui;

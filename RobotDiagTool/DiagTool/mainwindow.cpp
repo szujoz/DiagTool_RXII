@@ -13,6 +13,7 @@
 #include <QChart>
 #include <QTextStream>
 #include <QDateTime>
+#include <QDebug>
 
 using namespace QtCharts;
 
@@ -567,5 +568,41 @@ void MainWindow::on_btn_QuickTabDummyDataTx_clicked()
 
 void MainWindow::on_checkBox_GeneralUiBoardNumberForce_stateChanged(int arg1)
 {
+    if (ui->checkBox_GeneralUiBoardNumberForce->checkState() == Qt::CheckState::Checked)
+    {
+        bool successful_conversion = false;
+        uint16_t number = ui->lineEdit_GeneralUiBoard7SegOut->text().toUShort(&successful_conversion);
+        if (successful_conversion == true)
+        {
+            if (number > 255u)
+                number = 255u;
 
+            emit CmdTx_7SegNum(static_cast<uint8_t>(number));
+        }
+        else
+        {
+            qDebug() << "Invalid 7segment number: " << ui->lineEdit_GeneralUiBoard7SegOut->text() << "\n";
+        }
+    }
+}
+
+
+void MainWindow::on_lineEdit_GeneralUiBoard7SegOut_editingFinished()
+{
+    if (ui->checkBox_GeneralUiBoardNumberForce->checkState() == Qt::CheckState::Checked)
+    {
+        bool successful_conversion = false;
+        uint16_t number = ui->lineEdit_GeneralUiBoard7SegOut->text().toUShort(&successful_conversion);
+        if (successful_conversion == true)
+        {
+            if (number > 255u)
+                number = 255u;
+
+            emit CmdTx_7SegNum(static_cast<uint8_t>(number));
+        }
+        else
+        {
+            qDebug() << "Invalid 7segment number: " << ui->lineEdit_GeneralUiBoard7SegOut->text() << "\n";
+        }
+    }
 }
