@@ -1,9 +1,10 @@
 #include "serialconnectionworker.h"
 #include "robotcommand.h"
+#include "commandpacker.h"
 
-void SerialConnectionWorker::SetPacker(ICommandPacker &messagePacker)
+SerialConnectionWorker::SerialConnectionWorker()
 {
-    this->messagePacker = &messagePacker;
+    messagePacker = CommandPacker::GetInstance();
 }
 
 void SerialConnectionWorker::Work_UnpackMessage(QByteArray &message)

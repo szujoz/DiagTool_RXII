@@ -13,9 +13,7 @@ class SerialConnectionWorker : public QObject
 {
     Q_OBJECT
 public:
-    SerialConnectionWorker() {};
-
-    void SetPacker(ICommandPacker& messagePacker);
+    SerialConnectionWorker();
 
 public slots:
     void Work_UnpackMessage(QByteArray &message);
