@@ -6,6 +6,15 @@ Encoder::Encoder()
     distanceList.clear();
 }
 
+QList<QList<QPointF> > Encoder::GetAllSeries()
+{
+    QList<QList<QPointF>> series;
+    series.append(speedList);
+    series.append(distanceList);
+
+    return series;
+}
+
 void Encoder::SetSpeed(const float v, const uint32_t t)
 {
     speedList.push_back(QPointF(v, (float)t));

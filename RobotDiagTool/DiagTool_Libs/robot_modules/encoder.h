@@ -1,14 +1,14 @@
 #ifndef ENCODER_H
 #define ENCODER_H
 
-#include <QObject>
+#include "irobotmodule.h"
 
-#include <QPointF>
-
-class Encoder
+class Encoder : public IRobotModule
 {
 public:
     Encoder();
+
+    virtual QList<QList<QPointF>> GetAllSeries() override;
 
     void SetSpeed(float const v, uint32_t const t);
     void SetDistance(float const s, uint32_t const t);
