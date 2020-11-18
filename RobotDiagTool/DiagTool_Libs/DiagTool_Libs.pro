@@ -24,8 +24,9 @@ SOURCES += \
         robot_commands/commanddirector.cpp \
         communication.cpp \
         communicationserialport.cpp \
-        inifilehandler.cpp \        
-        robotproxy.cpp
+        inifilehandler.cpp \
+        robot_modules/remote.cpp \
+        robotproxy.cpp \
 
 HEADERS += \
     common/BinaryEncoder/BinaryEncoder.h \
@@ -42,9 +43,11 @@ HEADERS += \
     robot_commands/icommandpacker.h \
     robot_commands/commanddirector.h \
     communication.h \
-    communicationserialport.h \    
-    inifilehandler.h \    
-    robotproxy.h
+    communicationserialport.h \
+    robot_modules/irobotmodule.h \
+    inifilehandler.h \
+    robot_modules/remote.h \
+    robotproxy.h \
 
 INCLUDEPATH += \
     common/CRC/ \
