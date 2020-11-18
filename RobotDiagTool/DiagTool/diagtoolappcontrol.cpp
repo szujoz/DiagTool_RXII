@@ -207,7 +207,7 @@ void DiagToolAppControl::InitMessagePacker()
     connect(workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
     connect(mainWindow.get(), &MainWindow::CmdTx_DummyData, this, &DiagToolAppControl::CmdDummyDataTransmit);
 
-    workerSerial->SetPacker(*messagePacker);
+
 }
 
 void DiagToolAppControl::InitSerialWorkerThread()
