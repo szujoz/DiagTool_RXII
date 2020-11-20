@@ -27,8 +27,6 @@ void CommunicationSerialPort::connect()
     serialPort.open(QIODevice::ReadWrite);
 
     qDebug() << "Port is open = " << serialPort.isOpen();
-
-    send("Hello\r");
 }
 
 void CommunicationSerialPort::disconnect()
