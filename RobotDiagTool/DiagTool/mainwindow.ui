@@ -711,7 +711,10 @@
                 <property name="widgetResizable">
                  <bool>true</bool>
                 </property>
-                <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+                <widget class="QWidget" name="scrollAreaWidgetContents_ScopeSignalSelector">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
@@ -720,8 +723,8 @@
                    <height>312</height>
                   </rect>
                  </property>
-                 <layout class="QFormLayout" name="formLayout_2">
-                  <item row="0" column="0">
+                 <layout class="QVBoxLayout" name="verticalLayout_13">
+                  <item>
                    <widget class="QCheckBox" name="checkBox_ScopeDummyData">
                     <property name="text">
                      <string>Dummy Data</string>
@@ -731,48 +734,35 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="0">
-                   <spacer name="verticalSpacer">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item row="1" column="0">
+                  <item>
                    <widget class="QCheckBox" name="checkBox_ScopeEncoderSpeed">
                     <property name="text">
                      <string>Encoder Speed</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="2" column="0">
+                  <item>
                    <widget class="QCheckBox" name="checkBox_ScopeEncoderCounter">
                     <property name="text">
                      <string>Encoder Counter</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="0">
+                  <item>
                    <widget class="QCheckBox" name="checkBox_ScopeRemoteCh1">
                     <property name="text">
                      <string>Remote Ch1</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="4" column="0">
+                  <item>
                    <widget class="QCheckBox" name="checkBox_ScopeRemoteCh2">
                     <property name="text">
                      <string>Remote Ch2</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="5" column="0">
+                  <item>
                    <widget class="QCheckBox" name="checkBox_ScopeRemoteCh3">
                     <property name="text">
                      <string>Remote Ch3</string>

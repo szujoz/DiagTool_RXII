@@ -81,14 +81,41 @@ void MainWindow::ScopeInit()
     lineSeries->attachAxis(scopeAxisY);
     lineSeries->setUseOpenGL(true);
 
+    lineSeries2 = new QLineSeries();
+    scopeChartView->chart()->addSeries(lineSeries2);
+    lineSeries2->attachAxis(scopeAxisX);
+    lineSeries2->attachAxis(scopeAxisY);
+
+    lineSeries3 = new QLineSeries();
+    scopeChartView->chart()->addSeries(lineSeries3);
+    lineSeries3->attachAxis(scopeAxisX);
+    lineSeries3->attachAxis(scopeAxisY);
+
+    lineSeries4 = new QLineSeries();
+    scopeChartView->chart()->addSeries(lineSeries4);
+    lineSeries4->attachAxis(scopeAxisX);
+    lineSeries4->attachAxis(scopeAxisY);
+
+    lineSeries5 = new QLineSeries();
+    scopeChartView->chart()->addSeries(lineSeries5);
+    lineSeries5->attachAxis(scopeAxisX);
+    lineSeries5->attachAxis(scopeAxisY);
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(scopeChartView.get());
 
     ui->frame->setLayout(mainLayout);
     ui->frame->show();
+    ui->checkBox_ScopeDummyData->setChecked(true);
 
     allowedToDrawChart = true;
     autoScalingOn = true;
+
+    RegisterLineSeries();
+    CheckScopeCheckBoxes();
+
+    scopeSignalSelector = std::make_unique<ScopeSignalSelector>(ui, scopeChartView.get(), scopeAxisX, scopeAxisY);
+
 }
 
 void MainWindow::DisplayScopeData(QVector<QPointF>& points)
@@ -124,6 +151,20 @@ bool MainWindow::IsScopeTabSelected()
 void MainWindow::ScopeAllowAutoScaling(bool on)
 {
     autoScalingOn = on;
+}
+
+void MainWindow::DisplayRemoteChData(const uint8_t ch1, const uint8_t ch2, const uint8_t ch3)
+{
+    ui->lineEdit_GeneralRemoteCh1->setText(QString(ch1));
+    ui->lineEdit_GeneralRemoteCh2->setText(QString(ch2));
+    ui->lineEdit_GeneralRemoteCh3->setText(QString(ch3));
+}
+
+void MainWindow::DisplayEncoderData(const int32_t speed, const int32_t counter)
+{
+    ui->lineEdit_QuickTabSpeed->setText(QString(speed));
+    ui->lineEdit_GeneralEncoderSpeed->setText(QString(speed));
+    ui->lineEdit_GeneralEncoderCounter->setText(QString(counter));
 }
 
 void MainWindow::on_btn_QuickTabToggle_clicked()
@@ -330,6 +371,29 @@ void MainWindow::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
 
     scopeAxisX->setRange(minX*1.25,maxX*1.25);
     scopeAxisY->setRange(minY*1.25,maxY*1.25);
+}
+
+void MainWindow::RegisterLineSeries()
+{
+    int max_signal_number = 5;
+    for(int i = 0; i < max_signal_number; i++)
+    {
+        lineSeriesList.append(new QLineSeries);
+    }
+}
+
+void MainWindow::CheckScopeCheckBoxes()
+{
+    QObjectList children = ui->scrollAreaWidgetContents_ScopeSignalSelector->children();
+
+    foreach(auto elem, children)
+    {
+        QCheckBox* box = qobject_cast<QCheckBox*>(elem);
+        if (box != NULL)
+        {
+            box->setCheckState(Qt::Checked);
+        }
+    }
 }
 
 void MainWindow::on_btn_ScopeResetZoom_clicked()
@@ -605,4 +669,118 @@ void MainWindow::on_lineEdit_GeneralUiBoard7SegOut_editingFinished()
             qDebug() << "Invalid 7segment number: " << ui->lineEdit_GeneralUiBoard7SegOut->text() << "\n";
         }
     }
+}
+
+ScopeSignalSelector::ScopeSignalSelector(Ui::MainWindow* ui,
+                                         QChartView_* chartview,
+                                         QValueAxis* axisX,
+                                         QValueAxis* axisY)
+{
+    this->ui = ui;
+    this->chartView = chartview;
+    this->axisX = axisX;
+    this->axisY = axisY;
+}
+
+void ScopeSignalSelector::RegisterLineSignal(const QString name)
+{
+    SignalInfo item;
+    item._name = name;
+    item._series = new QLineSeries();
+    item._points = new QVector<QPointF>();
+    item._visible = false;
+    item._chartViewSeriesID = chartView->chart()->series().count();
+    signalSeries.append(item);
+
+    SignalInfo* signal = &signalSeries.last();
+    AttachSignalToChartview(signal);
+    AddCheckboxToUi(name);
+}
+
+bool ScopeSignalSelector::UpdateSignalPoints(const QString name, QVector<QPointF>& points)
+{
+    bool updateSuccess = false;
+    bool signalFound = false;
+    SignalInfo* signal;
+
+    signalFound = FindSignalByName(name, &signal);
+    if (signalFound == true)
+    {
+        signal->_points = &points;
+        signal->_series->replace(*(signal->_points));
+        updateSuccess = true;
+    }
+
+    return updateSuccess;
+}
+
+void ScopeSignalSelector::AttachSignalToChartview(SignalInfo* signal)
+{
+    // if not NULL
+    chartView->chart()->addSeries(signal->_series);
+    signal->_series->attachAxis(axisX);
+    signal->_series->attachAxis(axisY);
+}
+
+bool ScopeSignalSelector::FindSignalByName(QString const name, SignalInfo** signal)
+{
+    bool signalFound = false;
+
+    for (int i = 0; i < signalSeries.count(); i++)
+    {
+        if(signalSeries[i]._name == name)
+        {
+            *signal = &signalSeries[i];
+            signalFound = true;
+            break;
+        }
+    }
+
+    return signalFound;
+}
+
+QString ScopeSignalSelector::GetUiItemNameBySignalName(const QString name)
+{
+    return "checkBox_Scope" + name;
+}
+
+QString ScopeSignalSelector::GetSignalNameByUiItemName(const QString itemName)
+{
+    QString name = itemName.mid(14, itemName.size()-14);
+    return name;
+}
+
+void ScopeSignalSelector::AddCheckboxToUi(const QString name)
+{
+    QCheckBox* box = new QCheckBox();
+    box->setObjectName(GetUiItemNameBySignalName(name));
+    box->setText(name);
+    ui->scrollAreaWidgetContents_ScopeSignalSelector->layout()->addWidget(box);
+
+    connect(box, &QCheckBox::stateChanged, this, &ScopeSignalSelector::StateChanged);
+}
+
+void ScopeSignalSelector::StateChanged(int state)
+{
+    bool drawAllowed = false;
+    QString name = GetSignalNameByUiItemName(QObject::sender()->objectName());
+    SignalInfo* signal;
+    FindSignalByName(name, &signal);
+
+    if (state == 0) // means unchecked
+    {
+        chartView->chart()->series().at(signal->_chartViewSeriesID)->hide();
+    }
+    else if (state == 2) // means checked
+    {
+        drawAllowed = true;
+        chartView->chart()->series().at(signal->_chartViewSeriesID)->show();
+    }
+    else
+    {
+        // Error, invalid state.
+    }
+
+    signal->_visible = drawAllowed;
+    emit SignalToBeDisplayed(name, drawAllowed);
 }

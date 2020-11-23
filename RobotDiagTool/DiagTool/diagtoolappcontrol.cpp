@@ -207,7 +207,27 @@ void DiagToolAppControl::InitMessagePacker()
     connect(workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
     connect(mainWindow.get(), &MainWindow::CmdTx_DummyData, this, &DiagToolAppControl::CmdDummyDataTransmit);
 
+    mainWindow->scopeSignalSelector->RegisterLineSignal("egy");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("ketto");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("harom");
 
+    QVector<QPointF> test;
+    test.append(QPointF(5, 10));
+    test.append(QPointF(6, 11));
+    test.append(QPointF(10,20));
+
+    QVector<QPointF> test1;
+    test1.append(QPointF(1, 10));
+    test1.append(QPointF(2, 11));
+    test1.append(QPointF(6,20));
+
+    QVector<QPointF> test2;
+    test2.append(QPointF(6, 20));
+    test2.append(QPointF(10, 20));
+
+    mainWindow->scopeSignalSelector->UpdateSignalPoints("egy", test);
+    mainWindow->scopeSignalSelector->UpdateSignalPoints("ketto", test1);
+    mainWindow->scopeSignalSelector->UpdateSignalPoints("harom", test2);
 }
 
 void DiagToolAppControl::InitSerialWorkerThread()

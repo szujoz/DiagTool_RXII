@@ -3,12 +3,14 @@
 
 #include <QMainWindow>
 #include <QtCharts>
+#include <QMap>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class QChartView_;
+class ScopeSignalSelector;
 
 class MainWindow : public QMainWindow
 {
@@ -17,6 +19,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    std::unique_ptr<ScopeSignalSelector> scopeSignalSelector;
 
     void DisplaySerialState(bool const connected);
     void DisplaySerialTerminalData(QString const str);
@@ -28,6 +32,9 @@ public:
 
     bool IsScopeTabSelected();
     void ScopeAllowAutoScaling(bool on);
+
+    void DisplayRemoteChData(uint8_t const ch1, uint8_t const ch2, uint8_t const ch3);
+    void DisplayEncoderData(int32_t const speed, int32_t const counter);
 
 signals:
     void SerialDialogNeeded();
@@ -83,7 +90,6 @@ private slots:
 
     void on_checkBox_GeneralUiBoardNumberForce_stateChanged(int arg1);
 
-
     void on_lineEdit_GeneralUiBoard7SegOut_editingFinished();
 
 private:
@@ -92,6 +98,12 @@ private:
     std::unique_ptr<QChartView_> scopeChartView;
     // The chartview owns the following 3 pointers.
     QLineSeries* lineSeries;
+    QLineSeries* lineSeries2;
+    QLineSeries* lineSeries3;
+    QLineSeries* lineSeries4;
+    QLineSeries* lineSeries5;
+    QList<QLineSeries*> lineSeriesList;
+
     QValueAxis*  scopeAxisX;
     QValueAxis*  scopeAxisY;
     uint32_t nextDataIndexToBeChecked;
@@ -101,6 +113,9 @@ private:
     bool autoScalingOn;
 
     void ScopeDynamicResizeIfNeeded(QVector<QPointF>& points);
+    void RegisterLineSeries();
+    void CheckScopeCheckBoxes();
+
 };
 
 class QChartView_ : public QChartView
@@ -120,4 +135,47 @@ private:
 
     QPoint lastMousePos;
 };
+
+typedef struct
+{
+    int               _chartViewSeriesID;
+    QString           _name;
+    QLineSeries*      _series;
+    QVector<QPointF>* _points;
+    bool              _visible;
+
+} SignalInfo;
+
+class ScopeSignalSelector : public QObject // Bridge class for diagtoolapp
+{
+    Q_OBJECT
+public:
+    ScopeSignalSelector(Ui::MainWindow*  ui,
+                        QChartView_* chartview,
+                        QValueAxis*  axisX,
+                        QValueAxis*  axisY);
+
+    void RegisterLineSignal(QString const name);
+    bool UpdateSignalPoints(QString const name, QVector<QPointF>& points);
+
+signals:
+    void SignalToBeDisplayed(QString const name, bool const drawAllowed);
+
+private:
+    QList<SignalInfo> signalSeries;
+    Ui::MainWindow*  ui;
+    QChartView_* chartView;
+    QValueAxis*  axisX;
+    QValueAxis*  axisY;
+
+    void AttachSignalToChartview(SignalInfo* signal);
+    bool FindSignalByName(QString const name, SignalInfo** signal);
+    QString GetUiItemNameBySignalName(QString const name);
+    QString GetSignalNameByUiItemName(QString const itemName);
+    void AddCheckboxToUi(QString const name);
+
+private slots:
+    void StateChanged(int state);
+};
+
 #endif // MAINWINDOW_H
