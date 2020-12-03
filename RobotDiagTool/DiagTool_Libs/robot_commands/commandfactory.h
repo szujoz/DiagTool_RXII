@@ -1,23 +1,29 @@
 #ifndef COMMANDFACTORY_H
 #define COMMANDFACTORY_H
 
-#include <memory>
-#include <QMap>
-
-#include "commandidconfig.h"
 #include "irobotcommand.h"
+
+typedef struct
+{
+    QString        name;       // Name of the command, must be unique.
+    IRobotCommand* command;
+} CommandInfo;
 
 class CommandFactory
 {
 public:
     CommandFactory();
 
-    void RegisterCommand(CommandID const id, IRobotCommand* cmd);
+    bool RegisterCommand(IRobotCommand* command, QString const name);
 
-    IRobotCommand* CreateCommand(CommandID const id);
+    IRobotCommand* CreateCommand(bool* success, QByteArray const message);
+    IRobotCommand* CreateCommand(bool* success, QString    const name);
 
 private:
-    std::unique_ptr<QMap<CommandID,IRobotCommand*>> registeredCommands;
+    std::vector<CommandInfo> registeredCommands;
+
+    IRobotCommand* FindCommandByNameInRegisteredCommands(bool* found, QString    const name);
+    IRobotCommand* FindCommandThatRecogniseTheMessageIDs(bool* found, QByteArray const message);
 };
 
 #endif // COMMANDFACTORY_H

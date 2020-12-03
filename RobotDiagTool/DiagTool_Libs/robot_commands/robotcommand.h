@@ -5,30 +5,108 @@
 #include "irobotcommand.h"
 #include "commandidconfig.h"
 
-class RobotCommand_Text : public IRobotCommand
+// Base Class
+class RobotCommand_Base
+{
+public:
+    CommandID cmdId;
+
+    CommandID GetCommandId();
+    bool IsCommandIdMatch(QByteArray const &message);
+};
+
+class RobotCommand_Telemetry_Base : public RobotCommand_Base
+{
+public:
+    TelemetryID telemId;
+
+    TelemetryID GetTelemetryId();
+    bool IsTelemetryIdMatch(QByteArray const &message);
+};
+
+class RobotCommand_ConfigParam_Base : public RobotCommand_Base
+{
+public:
+    ConfigParamID cparamId;
+
+    ConfigParamID GetConfigParamId();
+    bool IsConfigParamIdMatch(QByteArray const &message);
+};
+
+
+// Specific Command Classes
+class RobotCommand_Text : public IRobotCommand, public RobotCommand_Base
 {
     Q_OBJECT
 public:
-    RobotCommand_Text() {};
-
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
     virtual void RxProcessing(QByteArray const &message) override;
+
+    RobotCommand_Text() {   cmdId = eText;  };
 
 signals:
     void CmdArrived(QString const txt);
 };
 
-class RobotCommand_DummyData : public IRobotCommand
+
+class RobotCommand_DummyData : public IRobotCommand, public RobotCommand_Base
 {
     Q_OBJECT
 public:
-    RobotCommand_DummyData() {};
-
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
     virtual void RxProcessing(QByteArray const &message) override;
-    QByteArray CmdTxProcess(uint32_t const timestamp, int32_t const data);
+
+    RobotCommand_DummyData() {  cmdId = eDummyData; };
 
 signals:
     void CmdArrived(uint32_t const timestamp, int32_t const data);
-    void ReadyToPack(CommandID const cmdID, QByteArray const &message);
+};
+
+
+class RobotCommand_TelemetryEncoder : public IRobotCommand, public RobotCommand_Telemetry_Base
+{
+    Q_OBJECT
+public:
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
+    virtual void RxProcessing(QByteArray const &message) override;
+
+    RobotCommand_TelemetryEncoder() {   cmdId = eTelemetry; telemId = eEncoderSpeed;    };
+
+signals:
+    void CmdArrived(uint32_t const timestamp, int32_t const speed, int32_t const distance);
+};
+
+
+class RobotCommand_TelemetryRemote : public IRobotCommand, public RobotCommand_Telemetry_Base
+{
+    Q_OBJECT
+public:
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
+    virtual void RxProcessing(QByteArray const &message) override;
+
+    RobotCommand_TelemetryRemote() {   cmdId = eTelemetry; telemId = eRemoteChannels;    };
+
+signals:
+    void CmdArrived(uint32_t const timestamp, int8_t const ch1, int8_t const ch2, int8_t const ch3);
+};
+
+
+class RobotCommand_CfgParam7SegNum : public IRobotCommand, public RobotCommand_ConfigParam_Base
+{
+    Q_OBJECT
+public:
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
+    virtual void RxProcessing(QByteArray const &message) override;
+
+    RobotCommand_CfgParam7SegNum(){     cmdId = eConfigParam;   cparamId = e7SegNum;    };
+
+signals:
+    void CmdArrived(uint8_t const _7SegNumber);
 };
 
 #endif // ROBOTCOMMAND_H

@@ -15,9 +15,14 @@ CommandPacker *CommandPacker::GetInstance()
     return instance_;
 }
 
-void CommandPacker::RegisterCommand(const CommandID id, IRobotCommand *cmd)
+bool CommandPacker::RegisterCommand(IRobotCommand *command, const QString name)
 {
-    factory.RegisterCommand(id, cmd);
+    return factory.RegisterCommand(command, name);
+}
+
+IRobotCommand* CommandPacker::GetCommand(bool* found, const QString name)
+{
+    return factory.CreateCommand(found, name);
 }
 
 QByteArray CommandPacker::Pack(QByteArray &command_bytes)
@@ -108,25 +113,19 @@ QByteArray CommandPacker::Conv_U8Vector_To_QByteArray(std::vector<uint8_t>& vect
 
 QByteArray CommandPacker::ExtractPayload(bool* success, IRobotCommand** cmd, QByteArray const bytes)
 {
-    QByteArray     commandBytes = bytes;
-    CommandID      commandId = CommandID::eUnknownCommand;
+    QByteArray commandBytes = bytes;
 
-    // Extract the command ID and get the object from the factory.
-    commandId = static_cast<CommandID>(commandBytes[0] - 0x00);
-    *cmd = factory.CreateCommand(commandId);
+    *cmd = factory.CreateCommand(success, commandBytes);
 
-    if(*cmd != NULL)
+    if(*success == true)
     {
-        *success = true;
-
         // Remove the Command ID and the CRC bytes.
         commandBytes.remove(0,1);
         commandBytes.remove(commandBytes.size()-1,1);
     }
     else
     {
-        *success = false;
-        qDebug() << "Unknown Command ID: " << commandId;
+        qDebug() << "Unknown Command: " << QString(commandBytes.toHex(' '));
     }
 
     return commandBytes;

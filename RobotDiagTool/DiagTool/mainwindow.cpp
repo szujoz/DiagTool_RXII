@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete lineSeries;
+//    delete lineSeries;
     delete scopeAxisX;
     delete scopeAxisY;
 }
@@ -53,7 +53,6 @@ void MainWindow::DisplaySerialTerminalData(const QString str)
 
 void MainWindow::ScopeInit()
 {
-    lineSeries = new QLineSeries();
     scopeAxisX = new QValueAxis();
     scopeAxisY = new QValueAxis();
     scopeChartView  = std::make_unique<QChartView_>(this);
@@ -75,60 +74,18 @@ void MainWindow::ScopeInit()
     scopeChartView.get()->chart()->addAxis(scopeAxisY, Qt::AlignLeft);
     scopeChartView.get()->chart()->legend()->hide();
     scopeChartView.get()->chart()->setTitle("Measurement data from the robot.");
-    scopeChartView.get()->chart()->addSeries(lineSeries);
-
-    lineSeries->attachAxis(scopeAxisX);
-    lineSeries->attachAxis(scopeAxisY);
-    lineSeries->setUseOpenGL(true);
-
-    lineSeries2 = new QLineSeries();
-    scopeChartView->chart()->addSeries(lineSeries2);
-    lineSeries2->attachAxis(scopeAxisX);
-    lineSeries2->attachAxis(scopeAxisY);
-
-    lineSeries3 = new QLineSeries();
-    scopeChartView->chart()->addSeries(lineSeries3);
-    lineSeries3->attachAxis(scopeAxisX);
-    lineSeries3->attachAxis(scopeAxisY);
-
-    lineSeries4 = new QLineSeries();
-    scopeChartView->chart()->addSeries(lineSeries4);
-    lineSeries4->attachAxis(scopeAxisX);
-    lineSeries4->attachAxis(scopeAxisY);
-
-    lineSeries5 = new QLineSeries();
-    scopeChartView->chart()->addSeries(lineSeries5);
-    lineSeries5->attachAxis(scopeAxisX);
-    lineSeries5->attachAxis(scopeAxisY);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(scopeChartView.get());
 
     ui->frame->setLayout(mainLayout);
     ui->frame->show();
-    ui->checkBox_ScopeDummyData->setChecked(true);
+    //ui->checkBox_ScopeDummyData->setChecked(true);
 
     allowedToDrawChart = true;
     autoScalingOn = true;
 
-    RegisterLineSeries();
-    CheckScopeCheckBoxes();
-
     scopeSignalSelector = std::make_unique<ScopeSignalSelector>(ui, scopeChartView.get(), scopeAxisX, scopeAxisY);
-
-}
-
-void MainWindow::DisplayScopeData(QVector<QPointF>& points)
-{
-    if (allowedToDrawChart == true)
-    {
-        if (autoScalingOn == true)
-        {
-             ScopeDynamicResizeIfNeeded(points);
-        }
-
-        lineSeries->replace(points);
-    }
 }
 
 void MainWindow::DisplayTraceInQuickTab(const QString text)
@@ -191,7 +148,20 @@ void MainWindow::on_actionSave_triggered()
     QStringList fileNames;
     QString     date;
     QString     pref_name;
-    auto measData = lineSeries->pointsVector();     // Scope points.
+    QString     csvHeaderString = "";
+    QVector<QString> csvHeaderSingalNames;
+    QVector<QVector<QPointF>> measDataList;
+
+    // Scope points with checked selectboxes.
+    measDataList = scopeSignalSelector->GetAllSelectedSingalPoints();
+
+    // Create header
+    csvHeaderSingalNames = scopeSignalSelector->GetAllSelectedSignalNames();
+    for(int i=0; i < csvHeaderSingalNames.size(); i++)
+    {
+        csvHeaderString += "t," + csvHeaderSingalNames[i] + ",";
+    }
+    csvHeaderString += "\n";
 
     // Default file name creation. Remove seconds (3 char) from iso time.
     date = QDateTime::currentDateTime().toString(Qt::DateFormat::ISODate);
@@ -225,10 +195,21 @@ void MainWindow::on_actionSave_triggered()
 
         // Print the log data in csv format with header
         QTextStream out(&file);
-        out << "x,y\n";
-        foreach(auto point, measData)
+        out << csvHeaderString;
+//        int i = 0;
+//        int j = 0;
+//        for(j = 0; j < measDataList[i].size(); j++)
+//        {
+//            for(i = 0; i < measDataList.size(); i++)
+//            {
+//                out << measDataList[i][j].x() << "," << measDataList[i][j].y() << ",";
+//            }
+//            out << "\n";
+//            i = 0;
+//        }
+        foreach(auto signal, measDataList[0])
         {
-            out << point.x() << "," << point.y() << "\n";
+            out << signal.x() << "," << signal.y() << "\n";
         }
 
         file.close();
@@ -244,7 +225,9 @@ void MainWindow::on_actionLoad_triggered()
     QFileDialog dialog(this);
     QString     fileName;
     QStringList fileNames;
-    QVector<QPointF> logData;
+    QString     csvHeaderString = "";
+    QStringList csvHeaderSingalNames;
+    QVector<QVector<QPointF>> logData;
 
     // Configure the dialog.
     dialog.setFileMode(QFileDialog::ExistingFile);
@@ -269,20 +252,45 @@ void MainWindow::on_actionLoad_triggered()
             return;
         // Open the file to read the csv lines and fill up the vector.
         QTextStream in(&file);
-        auto head = in.readLine();  // read the head, it cannot be processed.
+        csvHeaderString = in.readLine();
+        csvHeaderSingalNames = csvHeaderString.split(",");
+        logData.push_back(QVector<QPointF>());
         while (!in.atEnd())
         {
             QString line = in.readLine();
+//            QStringList linePoints = line.split(',');
+
+//            for(int i = 0; i < linePoints.size()-1; i+=2)
+//            {
+//                bool x_conv_ok = false;
+//                bool y_conv_ok = false;
+//                qreal x = linePoints[i].toDouble(&x_conv_ok);
+//                qreal y = linePoints[i+1].toDouble(&y_conv_ok);
+
+//                if(x_conv_ok && y_conv_ok)
+//                {
+//                    logData[i].append(QPointF(x,y));
+//                }
+//            }
+
             int comma_pos = line.indexOf(',');
             bool x_conv_ok = false;
             bool y_conv_ok = false;
-            qreal x = line.mid(0,comma_pos-1).toDouble(&x_conv_ok);
+            qreal x = line.mid(0,comma_pos).toDouble(&x_conv_ok);
             qreal y = line.mid(comma_pos+1,line.size()).toDouble(&y_conv_ok);
 
             if(x_conv_ok && y_conv_ok)
-                logData.append(QPoint(x,y));
+            {
+                logData[0].append(QPoint(x,y));
+            }
+
         }
-        lineSeries->replace(logData);
+        scopeSignalSelector->UpdateSignalPoints(csvHeaderSingalNames[1],logData[0]);
+
+//        for (int i = 0; i < logData.size() ; i++)
+//        {
+//            scopeSignalSelector->UpdateSignalPoints(csvHeaderSingalNames[i*2],logData[i]);
+//        }
 
         file.close();
     }
@@ -373,29 +381,6 @@ void MainWindow::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
     scopeAxisY->setRange(minY*1.25,maxY*1.25);
 }
 
-void MainWindow::RegisterLineSeries()
-{
-    int max_signal_number = 5;
-    for(int i = 0; i < max_signal_number; i++)
-    {
-        lineSeriesList.append(new QLineSeries);
-    }
-}
-
-void MainWindow::CheckScopeCheckBoxes()
-{
-    QObjectList children = ui->scrollAreaWidgetContents_ScopeSignalSelector->children();
-
-    foreach(auto elem, children)
-    {
-        QCheckBox* box = qobject_cast<QCheckBox*>(elem);
-        if (box != NULL)
-        {
-            box->setCheckState(Qt::Checked);
-        }
-    }
-}
-
 void MainWindow::on_btn_ScopeResetZoom_clicked()
 {
     autoScalingOn = true;
@@ -419,7 +404,7 @@ void MainWindow::on_btn_ScopeToggleDrawing_clicked()
 void MainWindow::on_btn_ScopeClearData_clicked()
 {
     nextDataIndexToBeChecked = 0;
-    lineSeries->clear();
+    scopeSignalSelector->ClearAllPoints();
     emit SerialClearScope();
 }
 
@@ -687,14 +672,17 @@ void ScopeSignalSelector::RegisterLineSignal(const QString name)
     SignalInfo item;
     item._name = name;
     item._series = new QLineSeries();
+    item._series->setUseOpenGL(true);
     item._points = new QVector<QPointF>();
     item._visible = false;
     item._chartViewSeriesID = chartView->chart()->series().count();
-    signalSeries.append(item);
+    signalSeriesList.append(item);
 
-    SignalInfo* signal = &signalSeries.last();
+    SignalInfo* signal = &signalSeriesList.last();
     AttachSignalToChartview(signal);
     AddCheckboxToUi(name);
+
+    chartView->chart()->series().at(signal->_chartViewSeriesID)->hide();
 }
 
 bool ScopeSignalSelector::UpdateSignalPoints(const QString name, QVector<QPointF>& points)
@@ -714,6 +702,61 @@ bool ScopeSignalSelector::UpdateSignalPoints(const QString name, QVector<QPointF
     return updateSuccess;
 }
 
+void ScopeSignalSelector::ClearAllPoints()
+{
+    for(int i = 0; i < signalSeriesList.count(); i++)
+    {
+        signalSeriesList[i]._series->clear();
+    }
+}
+
+QVector<QVector<QPointF>> ScopeSignalSelector::GetAllSelectedSingalPoints()
+{
+    QVector<QVector<QPointF>> pointList;
+
+    for(int i = 0; i < signalSeriesList.size(); i++)
+    {
+        if(signalSeriesList[i]._visible == true)
+        {
+            pointList.push_back(signalSeriesList[i]._series->pointsVector());
+        }
+    }
+
+    return pointList;
+}
+
+QVector<QString> ScopeSignalSelector::GetAllSelectedSignalNames()
+{
+    QVector<QString> signalNames;
+
+    for(int i = 0; i < signalSeriesList.size(); i++)
+    {
+        if(signalSeriesList[i]._visible == true)
+        {
+            signalNames.push_back(signalSeriesList[i]._name);
+        }
+    }
+
+    return signalNames;
+}
+
+SignalInfo *ScopeSignalSelector::GetSignalInfoByName(bool* found, const QString name)
+{
+    SignalInfo* info = NULL;
+    *found = false;
+
+    for(size_t i = 0; i < signalSeriesList.size(); i++)
+    {
+        if(signalSeriesList[i]._name == name)
+        {
+            *found = true;
+            info = &signalSeriesList[i];
+        }
+    }
+
+    return info;
+}
+
 void ScopeSignalSelector::AttachSignalToChartview(SignalInfo* signal)
 {
     // if not NULL
@@ -726,11 +769,11 @@ bool ScopeSignalSelector::FindSignalByName(QString const name, SignalInfo** sign
 {
     bool signalFound = false;
 
-    for (int i = 0; i < signalSeries.count(); i++)
+    for (int i = 0; i < signalSeriesList.count(); i++)
     {
-        if(signalSeries[i]._name == name)
+        if(signalSeriesList[i]._name == name)
         {
-            *signal = &signalSeries[i];
+            *signal = &signalSeriesList[i];
             signalFound = true;
             break;
         }

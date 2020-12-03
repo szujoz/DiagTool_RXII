@@ -13,7 +13,8 @@ class ICommandPacker : public QObject
 public:
     ICommandPacker() {};
 
-    virtual void RegisterCommand(CommandID const id, IRobotCommand* cmd) = 0;
+    virtual bool RegisterCommand(IRobotCommand* command, QString const name) = 0;
+    virtual IRobotCommand* GetCommand(bool* found, QString const name) = 0;
     virtual QByteArray Pack(QByteArray& message) = 0;
     virtual void Unpack(QByteArray& message) = 0;
 };

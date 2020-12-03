@@ -26,7 +26,6 @@ public:
     void DisplaySerialTerminalData(QString const str);
 
     void ScopeInit();
-    void DisplayScopeData(QVector<QPointF>& points);
 
     void DisplayTraceInQuickTab(QString const text);
 
@@ -97,12 +96,7 @@ private:
 
     std::unique_ptr<QChartView_> scopeChartView;
     // The chartview owns the following 3 pointers.
-    QLineSeries* lineSeries;
-    QLineSeries* lineSeries2;
-    QLineSeries* lineSeries3;
-    QLineSeries* lineSeries4;
-    QLineSeries* lineSeries5;
-    QList<QLineSeries*> lineSeriesList;
+    //QLineSeries* lineSeries;
 
     QValueAxis*  scopeAxisX;
     QValueAxis*  scopeAxisY;
@@ -113,9 +107,6 @@ private:
     bool autoScalingOn;
 
     void ScopeDynamicResizeIfNeeded(QVector<QPointF>& points);
-    void RegisterLineSeries();
-    void CheckScopeCheckBoxes();
-
 };
 
 class QChartView_ : public QChartView
@@ -157,12 +148,16 @@ public:
 
     void RegisterLineSignal(QString const name);
     bool UpdateSignalPoints(QString const name, QVector<QPointF>& points);
+    void ClearAllPoints();
+    QVector<QVector<QPointF>> GetAllSelectedSingalPoints();
+    QVector<QString> GetAllSelectedSignalNames();
+    SignalInfo* GetSignalInfoByName(bool* found, QString const name);
 
 signals:
     void SignalToBeDisplayed(QString const name, bool const drawAllowed);
 
 private:
-    QList<SignalInfo> signalSeries;
+    QList<SignalInfo> signalSeriesList;
     Ui::MainWindow*  ui;
     QChartView_* chartView;
     QValueAxis*  axisX;

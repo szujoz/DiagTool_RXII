@@ -2,15 +2,70 @@
 
 CommandFactory::CommandFactory()
 {
-    registeredCommands = std::make_unique<QMap<CommandID,IRobotCommand*>>();
+    registeredCommands.clear();
 }
 
-void CommandFactory::RegisterCommand(const CommandID id, IRobotCommand* cmd)
+bool CommandFactory::RegisterCommand(IRobotCommand *command, const QString name)
 {
-    registeredCommands->insert(id, cmd);
+    CommandInfo cInfo;
+    bool isRegistered = false;
+    bool isAlreadyIn  = false;
+
+    FindCommandByNameInRegisteredCommands(&isAlreadyIn, name);
+
+    if(isAlreadyIn == false)
+    {
+        cInfo.name    = name;
+        cInfo.command = command;
+        registeredCommands.push_back(cInfo);
+        isRegistered = true;
+    }
+
+    return isRegistered;
 }
 
-IRobotCommand* CommandFactory::CreateCommand(const CommandID id)
+IRobotCommand* CommandFactory::CreateCommand(bool *success, const QByteArray message)
 {
-    return registeredCommands->value(id, NULL);
+    return FindCommandThatRecogniseTheMessageIDs(success, message);
+}
+
+IRobotCommand* CommandFactory::CreateCommand(bool* success, const QString name)
+{
+    return FindCommandByNameInRegisteredCommands(success, name);
+}
+
+IRobotCommand* CommandFactory::FindCommandByNameInRegisteredCommands(bool* found, const QString name)
+{
+    IRobotCommand* command = NULL;
+    *found = false;
+
+    for(size_t i = 0; i < registeredCommands.size(); i++)
+    {
+        if(registeredCommands[i].name == name)
+        {
+            *found = true;
+            command = registeredCommands[i].command;
+            break;
+        }
+    }
+
+    return command;
+}
+
+IRobotCommand* CommandFactory::FindCommandThatRecogniseTheMessageIDs(bool *found, const QByteArray message)
+{
+    IRobotCommand* command = NULL;
+    *found = false;
+
+    for(size_t i = 0; i < registeredCommands.size(); i++)
+    {
+        if(registeredCommands[i].command->IsIdMatch(message))
+        {
+            *found = true;
+            command = registeredCommands[i].command;
+            break;
+        }
+    }
+
+    return command;
 }

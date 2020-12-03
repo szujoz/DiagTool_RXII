@@ -198,15 +198,28 @@ void DiagToolAppControl::InitMessagePacker()
     messagePacker = CommandPacker::GetInstance();
 
     auto cmd00 = new RobotCommand_Text();
-    messagePacker->RegisterCommand(CommandID::eText, cmd00);
+    messagePacker->RegisterCommand(cmd00, "Text");
     connect(cmd00, &RobotCommand_Text::CmdArrived, this, &DiagToolAppControl::CmdTraceArrived);
 
     auto cmd01 = new RobotCommand_DummyData();
-    messagePacker->RegisterCommand(CommandID::eDummyData, cmd01);
+    mainWindow->scopeSignalSelector->RegisterLineSignal("DummyData");
+    messagePacker->RegisterCommand(cmd01,"DummyData");
     connect(cmd01, &RobotCommand_DummyData::CmdArrived, workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData);
     connect(workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
     connect(mainWindow.get(), &MainWindow::CmdTx_DummyData, this, &DiagToolAppControl::CmdDummyDataTransmit);
 
+
+    auto cmd_encoder_speed = new RobotCommand_TelemetryEncoder();
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Encoder Speed");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Encoder Counter");
+    messagePacker->RegisterCommand(cmd_encoder_speed, "Encoder Speed");
+    // add message packer functions
+
+
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Remote Ch1");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Remote Ch2");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Remote Ch3");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("7segment number");
     mainWindow->scopeSignalSelector->RegisterLineSignal("egy");
     mainWindow->scopeSignalSelector->RegisterLineSignal("ketto");
     mainWindow->scopeSignalSelector->RegisterLineSignal("harom");
@@ -246,7 +259,8 @@ void DiagToolAppControl::TimerEventUpdateScopeView()
 {
     if (mainWindow->IsScopeTabSelected() == true && newDummyDataInBuffer == true)
     {
-        mainWindow->DisplayScopeData(scopeDummyDataBuffer);
+        //mainWindow->DisplayScopeData(scopeDummyDataBuffer);
         newDummyDataInBuffer = false;
+        mainWindow->scopeSignalSelector->UpdateSignalPoints("DummyData", scopeDummyDataBuffer);
     }
 }

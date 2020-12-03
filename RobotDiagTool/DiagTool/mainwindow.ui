@@ -723,53 +723,7 @@
                    <height>312</height>
                   </rect>
                  </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_13">
-                  <item>
-                   <widget class="QCheckBox" name="checkBox_ScopeDummyData">
-                    <property name="text">
-                     <string>Dummy Data</string>
-                    </property>
-                    <property name="tristate">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="checkBox_ScopeEncoderSpeed">
-                    <property name="text">
-                     <string>Encoder Speed</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="checkBox_ScopeEncoderCounter">
-                    <property name="text">
-                     <string>Encoder Counter</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="checkBox_ScopeRemoteCh1">
-                    <property name="text">
-                     <string>Remote Ch1</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="checkBox_ScopeRemoteCh2">
-                    <property name="text">
-                     <string>Remote Ch2</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="checkBox_ScopeRemoteCh3">
-                    <property name="text">
-                     <string>Remote Ch3</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
+                 <layout class="QVBoxLayout" name="verticalLayout_13"/>
                 </widget>
                </widget>
               </item>

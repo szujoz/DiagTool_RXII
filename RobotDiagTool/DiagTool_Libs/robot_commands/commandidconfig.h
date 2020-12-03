@@ -22,6 +22,8 @@ enum TelemetryID
 enum ConfigParamID
 {
     e7SegNum = 0x0001,
+
+    eUnknownConfigParam = 0xFF
 };
 
 #endif // COMMANDIDCONFIG_H

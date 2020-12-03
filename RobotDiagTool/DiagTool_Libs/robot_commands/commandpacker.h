@@ -20,7 +20,8 @@ class CommandPacker : public ICommandPacker
 public:
     static CommandPacker *GetInstance();
 
-    virtual void RegisterCommand(CommandID const id, IRobotCommand* cmd) override;
+    virtual bool RegisterCommand(IRobotCommand* command, QString const name) override;
+    virtual IRobotCommand* GetCommand(bool* found, QString const name) override;
     virtual QByteArray Pack(QByteArray& command_bytes) override;
     virtual void Unpack(QByteArray& message) override;
 
