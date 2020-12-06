@@ -28,7 +28,7 @@ bool RobotCommand_Telemetry_Base::IsTelemetryIdMatch(const QByteArray &message)
 {
     bool match = false;
 
-    if (message.mid(1,2).toUInt() == cmdId)
+    if (message.mid(1,2).toUInt() == telemId)
     {
         match = true;
     }
@@ -45,7 +45,7 @@ bool RobotCommand_ConfigParam_Base::IsConfigParamIdMatch(const QByteArray &messa
 {
     bool match = false;
 
-    if (message.mid(1,4).toULong() == cmdId)
+    if (message.mid(1,4).toULong() == cparamId)
     {
         match = true;
     }
@@ -112,8 +112,11 @@ bool RobotCommand_TelemetryEncoder::IsIdMatch(const QByteArray &message)
 
 void RobotCommand_TelemetryEncoder::RxProcessing(const QByteArray &message)
 {
-    Q_UNUSED(message);
-    // todo
+    uint32_t timeStamp = Deserializer<uint32_t>(message ,1, 4);
+    int32_t  speed = Deserializer<int32_t>(message, 5, 4);
+    int32_t  distance = Deserializer<int32_t>(message, 9, 4);
+
+    emit CmdArrived(timeStamp, speed, distance);
 }
 
 
@@ -129,8 +132,12 @@ bool RobotCommand_TelemetryRemote::IsIdMatch(const QByteArray &message)
 
 void RobotCommand_TelemetryRemote::RxProcessing(const QByteArray &message)
 {
-    Q_UNUSED(message);
-    // todo
+    uint32_t timeStamp = Deserializer<uint32_t>(message ,1, 4);
+    int8_t  ch1 = Deserializer<int8_t>(message, 5, 1);
+    int8_t  ch2 = Deserializer<int8_t>(message, 6, 1);
+    int8_t  ch3 = Deserializer<int8_t>(message, 7, 1);
+
+    emit CmdArrived(timeStamp, ch1, ch2, ch3);
 }
 
 CommandID RobotCommand_CfgParam7SegNum::GetCommandId()
@@ -145,6 +152,7 @@ bool RobotCommand_CfgParam7SegNum::IsIdMatch(const QByteArray &message)
 
 void RobotCommand_CfgParam7SegNum::RxProcessing(const QByteArray &message)
 {
-    Q_UNUSED(message);
-    // todo
+    uint8_t number = Deserializer<uint8_t>(message, 3, 1);
+
+    emit CmdArrived(number);
 }

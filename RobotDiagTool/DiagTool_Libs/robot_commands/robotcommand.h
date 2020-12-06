@@ -2,6 +2,8 @@
 #define ROBOTCOMMAND_H
 
 #include <QObject>
+#include <QDataStream>
+
 #include "irobotcommand.h"
 #include "commandidconfig.h"
 
@@ -13,6 +15,17 @@ public:
 
     CommandID GetCommandId();
     bool IsCommandIdMatch(QByteArray const &message);
+
+    template<class T>
+    T Deserializer(const QByteArray& bytes, int const start_index, int const length)
+    {
+        T data = 0;
+        QByteArray  data_bytes = bytes.mid(start_index, length);
+        QDataStream data_stream(data_bytes);
+        data_stream.setByteOrder(QDataStream::LittleEndian);
+        data_stream >> data;
+        return data;
+    }
 };
 
 class RobotCommand_Telemetry_Base : public RobotCommand_Base
