@@ -12,3 +12,8 @@ QList<QList<QPointF> > SevenSegUi::GetAllSeries()
 
     return series;
 }
+
+void SevenSegUi::SetUiNumber(uint32_t const time, const uint8_t number)
+{
+    numberList.push_back(QPointF(time, number));
+}
