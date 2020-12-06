@@ -141,7 +141,7 @@ void MainWindow::DisplayEncoderData(const int32_t speed, const int32_t counter)
 
 void MainWindow::Display7SegNumber(const uint8_t number)
 {
-    ui->lineEdit_GeneralUiBoard7SegIn->setText(QString(number));
+    ui->lineEdit_GeneralUiBoard7SegIn->setText(QString::number(number));
 }
 
 void MainWindow::on_btn_QuickTabToggle_clicked()

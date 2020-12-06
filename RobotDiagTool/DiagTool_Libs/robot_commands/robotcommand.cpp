@@ -44,8 +44,12 @@ ConfigParamID RobotCommand_ConfigParam_Base::GetConfigParamId()
 bool RobotCommand_ConfigParam_Base::IsConfigParamIdMatch(const QByteArray &message)
 {
     bool match = false;
+    uint16_t cpId;
+    QDataStream ds(message.mid(1,2));
+    ds.setByteOrder(QDataStream::LittleEndian);
+    ds >> cpId;
 
-    if (message.mid(1,4).toULong() == cparamId)
+    if (cpId == cparamId)
     {
         match = true;
     }
@@ -152,7 +156,7 @@ bool RobotCommand_CfgParam7SegNum::IsIdMatch(const QByteArray &message)
 
 void RobotCommand_CfgParam7SegNum::RxProcessing(const QByteArray &message)
 {
-    uint8_t number = Deserializer<uint8_t>(message, 3, 1);
+    uint8_t number = Deserializer<uint8_t>(message, 2, 1);
 
     emit CmdArrived(number);
 }
