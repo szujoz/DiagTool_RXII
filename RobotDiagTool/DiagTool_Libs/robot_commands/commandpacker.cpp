@@ -149,7 +149,10 @@ bool CRC8_F::IsCrcValid(std::vector<uint8_t> const crc_bytes)
 {
     bool isCrcOk = false;
 
-    isCrcOk = crc->CheckBlockCrc(crc_bytes.data(), crc_bytes.size());
+    if (!crc_bytes.empty())
+    {
+        isCrcOk = crc->CheckBlockCrc(crc_bytes.data(), crc_bytes.size());
+    }
 
     return isCrcOk;
 }
