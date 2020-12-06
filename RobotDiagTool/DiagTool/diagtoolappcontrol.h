@@ -41,7 +41,7 @@ public slots:
     void SerialDisconnReqestReceived();
     void SerialDataArrived(QDataStream& stream);
     void SerialDataReadyToTransmit(QString const message);
-    void SerialCmdTransmitting(QByteArray bytes);
+    void SerialCmdTransmitting(QByteArray const bytes);
 
     void HandleScopeClear();
 

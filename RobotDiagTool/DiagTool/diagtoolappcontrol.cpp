@@ -123,9 +123,12 @@ void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
     communication->send(extended_message.toUtf8());
 }
 
-void DiagToolAppControl::SerialCmdTransmitting(QByteArray bytes)
+void DiagToolAppControl::SerialCmdTransmitting(QByteArray const bytes)
 {
-    communication->send(bytes);
+    for(int i = 0; i < bytes.size(); i++)
+    {
+        communication->send(quint8(bytes.at(i)));
+    }
 }
 
 void DiagToolAppControl::HandleScopeClear()
