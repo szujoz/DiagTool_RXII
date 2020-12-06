@@ -175,12 +175,23 @@ void DiagToolAppControl::CmdEncoderSpeedArrived(const uint32_t timestamp, const 
 
 void DiagToolAppControl::CmdRemoteArrived(const uint32_t timestamp, const int8_t ch1, const int8_t ch2, const int8_t ch3)
 {
+    robot.remote.SetCh1(timestamp, ch1);
+    robot.remote.SetCh2(timestamp, ch2);
+    robot.remote.SetCh3(timestamp, ch3);
 
+    auto channels = robot.remote.GetAllSeries();
+    auto ch1Vec = channels[0].toVector();
+    auto ch2Vec = channels[1].toVector();
+    auto ch3Vec = channels[2].toVector();
+
+    mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch1", ch1Vec);
+    mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch2", ch2Vec);
+    mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch3", ch3Vec);
 }
 
 void DiagToolAppControl::Cmd7SegNumArrived(const uint8_t number)
 {
-
+    robot.SevenSeg.SetUiNumber((uint32_t)clockpiece.get()->elapsed(), number);
 }
 
 void DiagToolAppControl::CmdDummyDataTransmit(int32_t const data)
@@ -230,18 +241,25 @@ void DiagToolAppControl::InitMessagePacker()
     connect(workerSerial, &SerialConnectionWorker::MessageUnpacked_DummyData, this, &DiagToolAppControl::CmdDummyDataArrived);
     connect(mainWindow.get(), &MainWindow::CmdTx_DummyData, this, &DiagToolAppControl::CmdDummyDataTransmit);
 
-
     auto cmd_encoder_speed = new RobotCommand_TelemetryEncoder();
     mainWindow->scopeSignalSelector->RegisterLineSignal("Encoder Speed");
     mainWindow->scopeSignalSelector->RegisterLineSignal("Encoder Counter");
     messagePacker->RegisterCommand(cmd_encoder_speed, "Encoder Speed");
     connect(cmd_encoder_speed, &RobotCommand_TelemetryEncoder::CmdArrived, this, &DiagToolAppControl::CmdEncoderSpeedArrived);
 
-
+    auto cmd_remote = new RobotCommand_TelemetryRemote();
     mainWindow->scopeSignalSelector->RegisterLineSignal("Remote Ch1");
     mainWindow->scopeSignalSelector->RegisterLineSignal("Remote Ch2");
     mainWindow->scopeSignalSelector->RegisterLineSignal("Remote Ch3");
+    messagePacker->RegisterCommand(cmd_remote, "Telemetry/Remote");
+    connect(cmd_remote, &RobotCommand_TelemetryRemote::CmdArrived, this, &DiagToolAppControl::CmdRemoteArrived);
+
+    auto cmd_7SegNum = new RobotCommand_CfgParam7SegNum();
     mainWindow->scopeSignalSelector->RegisterLineSignal("7segment number");
+    messagePacker->RegisterCommand(cmd_7SegNum, "Config/UI number");
+    connect(cmd_7SegNum, &RobotCommand_CfgParam7SegNum::CmdArrived, this, &DiagToolAppControl::Cmd7SegNumArrived);
+
+    // Example code.
     mainWindow->scopeSignalSelector->RegisterLineSignal("egy");
     mainWindow->scopeSignalSelector->RegisterLineSignal("ketto");
     mainWindow->scopeSignalSelector->RegisterLineSignal("harom");
@@ -263,6 +281,7 @@ void DiagToolAppControl::InitMessagePacker()
     mainWindow->scopeSignalSelector->UpdateSignalPoints("egy", test);
     mainWindow->scopeSignalSelector->UpdateSignalPoints("ketto", test1);
     mainWindow->scopeSignalSelector->UpdateSignalPoints("harom", test2);
+    // End of example code.
 }
 
 void DiagToolAppControl::InitSerialWorkerThread()
