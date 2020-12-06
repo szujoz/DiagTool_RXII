@@ -82,7 +82,6 @@ void MainWindow::ScopeInit()
     ui->frame->show();
     //ui->checkBox_ScopeDummyData->setChecked(true);
 
-    allowedToDrawChart = true;
     autoScalingOn = true;
 
     scopeSignalSelector = std::make_unique<ScopeSignalSelector>(ui, scopeChartView.get(), scopeAxisX, scopeAxisY);
@@ -410,14 +409,14 @@ void MainWindow::on_btn_ScopeResetZoom_clicked()
 
 void MainWindow::on_btn_ScopeToggleDrawing_clicked()
 {
-    if (allowedToDrawChart == true)
+    if (scopeSignalSelector->IsAllowedToDraw() == true)
     {
-        allowedToDrawChart = false;
+        scopeSignalSelector->DisableDrawing();
         ui->btn_ScopeToggleDrawing->setText("Cont");
     }
     else
     {
-        allowedToDrawChart = true;
+        scopeSignalSelector->EnableDrawing();
         ui->btn_ScopeToggleDrawing->setText("Stop");
     }
 }
@@ -686,6 +685,7 @@ ScopeSignalSelector::ScopeSignalSelector(Ui::MainWindow* ui,
     this->chartView = chartview;
     this->axisX = axisX;
     this->axisY = axisY;
+    allowedToDrawChart = true;
 }
 
 void ScopeSignalSelector::RegisterLineSignal(const QString name)
@@ -716,7 +716,10 @@ bool ScopeSignalSelector::UpdateSignalPoints(const QString name, QVector<QPointF
     if (signalFound == true)
     {
         signal->_points = &points;
-        signal->_series->replace(*(signal->_points));
+        if (allowedToDrawChart == true)
+        {
+            signal->_series->replace(*(signal->_points));
+        }
         updateSuccess = true;
     }
 
@@ -776,6 +779,21 @@ SignalInfo *ScopeSignalSelector::GetSignalInfoByName(bool* found, const QString 
     }
 
     return info;
+}
+
+bool ScopeSignalSelector::IsAllowedToDraw()
+{
+    return allowedToDrawChart;
+}
+
+void ScopeSignalSelector::EnableDrawing()
+{
+    allowedToDrawChart = true;
+}
+
+void ScopeSignalSelector::DisableDrawing()
+{
+    allowedToDrawChart = false;
 }
 
 void ScopeSignalSelector::AttachSignalToChartview(SignalInfo* signal)

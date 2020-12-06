@@ -105,7 +105,6 @@ private:
     uint32_t nextDataIndexToBeChecked;
     //
 
-    bool allowedToDrawChart;
     bool autoScalingOn;
 
     void ScopeDynamicResizeIfNeeded(QVector<QPointF>& points);
@@ -154,6 +153,9 @@ public:
     QVector<QVector<QPointF>> GetAllSelectedSingalPoints();
     QVector<QString> GetAllSelectedSignalNames();
     SignalInfo* GetSignalInfoByName(bool* found, QString const name);
+    bool IsAllowedToDraw();
+    void EnableDrawing();
+    void DisableDrawing();
 
 signals:
     void SignalToBeDisplayed(QString const name, bool const drawAllowed);
@@ -164,6 +166,7 @@ private:
     QChartView_* chartView;
     QValueAxis*  axisX;
     QValueAxis*  axisY;
+    bool allowedToDrawChart;
 
     void AttachSignalToChartview(SignalInfo* signal);
     bool FindSignalByName(QString const name, SignalInfo** signal);
