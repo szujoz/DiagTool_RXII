@@ -82,6 +82,9 @@ private:
     QVector<QPointF> scopeDummyDataBuffer;
 
     RobotProxy robot;
+    bool newTelemetryEncodeInBuffer;
+    bool newTelemetyRemoteInBuffer;
+    bool newConfigUiNumberInBuffer;
 
     void ConnectSignalsToSlots();
     void InitMessagePacker();

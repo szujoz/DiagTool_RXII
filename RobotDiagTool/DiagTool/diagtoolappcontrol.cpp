@@ -41,6 +41,9 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 
     mainWindow->ScopeInit();
     newDummyDataInBuffer = false;
+    newTelemetryEncodeInBuffer = false;
+    newTelemetyRemoteInBuffer = false;
+    newConfigUiNumberInBuffer = false;
 
     ConnectSignalsToSlots();
 
@@ -165,12 +168,7 @@ void DiagToolAppControl::CmdEncoderSpeedArrived(const uint32_t timestamp, const 
 {
     robot.encoder.SetSpeed(speed, timestamp);
     robot.encoder.SetDistance(distance, timestamp);
-
-    auto speedData    = robot.encoder.GetAllSeries()[0].toVector();
-    auto distanceData = robot.encoder.GetAllSeries()[1].toVector();
-
-    mainWindow->scopeSignalSelector->UpdateSignalPoints("Encoder Speed", speedData);
-    mainWindow->scopeSignalSelector->UpdateSignalPoints("Encoder Counter", distanceData);
+    newTelemetryEncodeInBuffer = true;
 }
 
 void DiagToolAppControl::CmdRemoteArrived(const uint32_t timestamp, const int8_t ch1, const int8_t ch2, const int8_t ch3)
@@ -178,20 +176,13 @@ void DiagToolAppControl::CmdRemoteArrived(const uint32_t timestamp, const int8_t
     robot.remote.SetCh1(timestamp, ch1);
     robot.remote.SetCh2(timestamp, ch2);
     robot.remote.SetCh3(timestamp, ch3);
-
-    auto channels = robot.remote.GetAllSeries();
-    auto ch1Vec = channels[0].toVector();
-    auto ch2Vec = channels[1].toVector();
-    auto ch3Vec = channels[2].toVector();
-
-    mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch1", ch1Vec);
-    mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch2", ch2Vec);
-    mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch3", ch3Vec);
+    newTelemetyRemoteInBuffer = true;
 }
 
 void DiagToolAppControl::Cmd7SegNumArrived(const uint8_t number)
 {
     robot.SevenSeg.SetUiNumber((uint32_t)clockpiece.get()->elapsed(), number);
+    newConfigUiNumberInBuffer = true;
 }
 
 void DiagToolAppControl::CmdDummyDataTransmit(int32_t const data)
@@ -300,8 +291,68 @@ void DiagToolAppControl::TimerEventUpdateScopeView()
 {
     if (mainWindow->IsScopeTabSelected() == true && newDummyDataInBuffer == true)
     {
-        //mainWindow->DisplayScopeData(scopeDummyDataBuffer);
         newDummyDataInBuffer = false;
         mainWindow->scopeSignalSelector->UpdateSignalPoints("DummyData", scopeDummyDataBuffer);
+    }
+
+    if (newTelemetryEncodeInBuffer == true)
+    {
+        auto speedData    = robot.encoder.GetAllSeries()[0].toVector();
+        auto distanceData = robot.encoder.GetAllSeries()[1].toVector();
+
+        mainWindow->DisplayQickTabSpeed(speedData.last().y());
+
+        if (mainWindow->IsScopeTabSelected() == true)
+        {
+            newTelemetryEncodeInBuffer = false;
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Encoder Speed", speedData);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Encoder Counter", distanceData);
+        }
+        else if (mainWindow->IsGeneralTabSelected() == true)
+        {
+            newTelemetryEncodeInBuffer = false;
+            mainWindow->DisplayEncoderData(speedData.last().y(), distanceData.last().y());
+        }
+        else
+        {
+            // Nowhere to display.
+        }
+
+    }
+
+    if (newTelemetyRemoteInBuffer == true)
+    {
+        auto channels = robot.remote.GetAllSeries();
+        auto ch1Vec = channels[0].toVector();
+        auto ch2Vec = channels[1].toVector();
+        auto ch3Vec = channels[2].toVector();
+
+        if (mainWindow->IsScopeTabSelected() == true)
+        {
+            newTelemetyRemoteInBuffer = false;
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch1", ch1Vec);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch2", ch2Vec);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Remote Ch3", ch3Vec);
+        }
+        else if (mainWindow->IsGeneralTabSelected() == true)
+        {
+            newTelemetyRemoteInBuffer = false;
+            mainWindow->DisplayRemoteChData(ch1Vec.last().y(), ch2Vec.last().y(), ch3Vec.last().y());
+        }
+        else
+        {
+            // Nowhere to display.
+        }
+    }
+
+    if (newConfigUiNumberInBuffer == true)
+    {
+        if (mainWindow->IsGeneralTabSelected() == true)
+        {
+            uint8_t number = robot.SevenSeg.GetAllSeries()[0].last().y();
+
+            newConfigUiNumberInBuffer = false;
+            mainWindow->Display7SegNumber(number);
+        }
     }
 }

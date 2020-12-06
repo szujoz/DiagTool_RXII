@@ -93,6 +93,18 @@ void MainWindow::DisplayTraceInQuickTab(const QString text)
     ui->textEdit_quickTabTrace->append(text);
 }
 
+bool MainWindow::IsGeneralTabSelected()
+{
+    bool generalViewActive = false;
+
+    if (ui->tabWidget->currentIndex() == 0)
+    {
+        generalViewActive = true;
+    }
+
+    return generalViewActive;
+}
+
 bool MainWindow::IsScopeTabSelected()
 {
     bool scopeViewActive = false;
@@ -110,18 +122,27 @@ void MainWindow::ScopeAllowAutoScaling(bool on)
     autoScalingOn = on;
 }
 
+void MainWindow::DisplayQickTabSpeed(const float speed)
+{
+    ui->lineEdit_QuickTabSpeed->setText(QString::number(speed));
+}
+
 void MainWindow::DisplayRemoteChData(const uint8_t ch1, const uint8_t ch2, const uint8_t ch3)
 {
-    ui->lineEdit_GeneralRemoteCh1->setText(QString(ch1));
-    ui->lineEdit_GeneralRemoteCh2->setText(QString(ch2));
-    ui->lineEdit_GeneralRemoteCh3->setText(QString(ch3));
+    ui->lineEdit_GeneralRemoteCh1->setText(QString::number(ch1));
+    ui->lineEdit_GeneralRemoteCh2->setText(QString::number(ch2));
+    ui->lineEdit_GeneralRemoteCh3->setText(QString::number(ch3));
 }
 
 void MainWindow::DisplayEncoderData(const int32_t speed, const int32_t counter)
 {
-    ui->lineEdit_QuickTabSpeed->setText(QString(speed));
-    ui->lineEdit_GeneralEncoderSpeed->setText(QString(speed));
-    ui->lineEdit_GeneralEncoderCounter->setText(QString(counter));
+    ui->lineEdit_GeneralEncoderSpeed->setText(QString::number(speed));
+    ui->lineEdit_GeneralEncoderCounter->setText(QString::number(counter));
+}
+
+void MainWindow::Display7SegNumber(const uint8_t number)
+{
+    ui->lineEdit_GeneralUiBoard7SegIn->setText(QString(number));
 }
 
 void MainWindow::on_btn_QuickTabToggle_clicked()
@@ -615,9 +636,9 @@ void MainWindow::on_btn_QuickTabDummyDataTx_clicked()
     emit CmdTx_DummyData(data);
 }
 
-void MainWindow::on_checkBox_GeneralUiBoardNumberForce_stateChanged(int arg1)
+void MainWindow::on_checkBox_GeneralUiBoardNumberForce_stateChanged(int newState)
 {
-    if (ui->checkBox_GeneralUiBoardNumberForce->checkState() == Qt::CheckState::Checked)
+    if (newState == Qt::CheckState::Checked)
     {
         bool successful_conversion = false;
         uint16_t number = ui->lineEdit_GeneralUiBoard7SegOut->text().toUShort(&successful_conversion);
@@ -745,7 +766,7 @@ SignalInfo *ScopeSignalSelector::GetSignalInfoByName(bool* found, const QString 
     SignalInfo* info = NULL;
     *found = false;
 
-    for(size_t i = 0; i < signalSeriesList.size(); i++)
+    for(int i = 0; i < signalSeriesList.size(); i++)
     {
         if(signalSeriesList[i]._name == name)
         {

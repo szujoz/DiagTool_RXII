@@ -29,11 +29,14 @@ public:
 
     void DisplayTraceInQuickTab(QString const text);
 
+    bool IsGeneralTabSelected();
     bool IsScopeTabSelected();
     void ScopeAllowAutoScaling(bool on);
 
+    void DisplayQickTabSpeed(float const speed);
     void DisplayRemoteChData(uint8_t const ch1, uint8_t const ch2, uint8_t const ch3);
     void DisplayEncoderData(int32_t const speed, int32_t const counter);
+    void Display7SegNumber(uint8_t const number);
 
 signals:
     void SerialDialogNeeded();
@@ -87,8 +90,7 @@ private slots:
     void handle_AxisXRangeChange(qreal min, qreal max);
     void handle_AxisYRangeChange(qreal min, qreal max);
 
-    void on_checkBox_GeneralUiBoardNumberForce_stateChanged(int arg1);
-
+    void on_checkBox_GeneralUiBoardNumberForce_stateChanged(int newState);
     void on_lineEdit_GeneralUiBoard7SegOut_editingFinished();
 
 private:
