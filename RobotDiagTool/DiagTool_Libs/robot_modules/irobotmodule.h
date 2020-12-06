@@ -10,6 +10,8 @@ class IRobotModule : public QObject
 public:
     virtual QList<QList<QPointF>> GetAllSeries() = 0;
 
+    virtual void EmptyAllLists() = 0;
+
 signals:
 
 };

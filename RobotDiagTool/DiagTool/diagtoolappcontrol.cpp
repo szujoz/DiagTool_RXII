@@ -131,6 +131,11 @@ void DiagToolAppControl::SerialCmdTransmitting(QByteArray bytes)
 void DiagToolAppControl::HandleScopeClear()
 {
     scopeDummyDataBuffer.clear();
+    robot.EmptyAllBuffers();
+    newDummyDataInBuffer = false;
+    newTelemetryEncodeInBuffer = false;
+    newTelemetyRemoteInBuffer = false;
+    newConfigUiNumberInBuffer = false;
 }
 
 void DiagToolAppControl::HandleTx_7SegNum(uint8_t const number)
@@ -181,7 +186,7 @@ void DiagToolAppControl::CmdRemoteArrived(const uint32_t timestamp, const int8_t
 
 void DiagToolAppControl::Cmd7SegNumArrived(const uint8_t number)
 {
-    robot.SevenSeg.SetUiNumber((uint32_t)clockpiece.get()->elapsed(), number);
+    robot.sevenSeg.SetUiNumber((uint32_t)clockpiece.get()->elapsed(), number);
     newConfigUiNumberInBuffer = true;
 }
 
@@ -349,7 +354,7 @@ void DiagToolAppControl::TimerEventUpdateScopeView()
     {
         if (mainWindow->IsGeneralTabSelected() == true)
         {
-            uint8_t number = robot.SevenSeg.GetAllSeries()[0].last().y();
+            uint8_t number = robot.sevenSeg.GetAllSeries()[0].last().y();
 
             newConfigUiNumberInBuffer = false;
             mainWindow->Display7SegNumber(number);

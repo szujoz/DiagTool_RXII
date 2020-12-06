@@ -2,7 +2,7 @@
 
 SevenSegUi::SevenSegUi()
 {
-    numberList.clear();
+    EmptyAllLists();
 }
 
 QList<QList<QPointF> > SevenSegUi::GetAllSeries()
@@ -11,6 +11,11 @@ QList<QList<QPointF> > SevenSegUi::GetAllSeries()
     series.append(numberList);
 
     return series;
+}
+
+void SevenSegUi::EmptyAllLists()
+{
+    numberList.clear();
 }
 
 void SevenSegUi::SetUiNumber(uint32_t const time, const uint8_t number)

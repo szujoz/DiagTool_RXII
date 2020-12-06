@@ -10,6 +10,8 @@ public:
 
     virtual QList<QList<QPointF>> GetAllSeries() override;
 
+    virtual void EmptyAllLists() override;
+
     void SetSpeed(float const v, uint32_t const t);
     void SetDistance(float const s, uint32_t const t);
 

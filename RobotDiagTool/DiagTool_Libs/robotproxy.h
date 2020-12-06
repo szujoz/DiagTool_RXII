@@ -15,7 +15,9 @@ public:
 
     Encoder encoder;
     Remote remote;
-    SevenSegUi SevenSeg;
+    SevenSegUi sevenSeg;
+
+    void EmptyAllBuffers();
 
 signals:
 };

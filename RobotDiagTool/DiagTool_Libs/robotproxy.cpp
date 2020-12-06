@@ -4,3 +4,10 @@ RobotProxy::RobotProxy()
 {
 
 }
+
+void RobotProxy::EmptyAllBuffers()
+{
+    encoder.EmptyAllLists();
+    remote.EmptyAllLists();
+    sevenSeg.EmptyAllLists();
+}

@@ -11,6 +11,8 @@ public:
 
     virtual QList<QList<QPointF>> GetAllSeries() override;
 
+    virtual void EmptyAllLists() override;
+
     void SetCh1(uint32_t const time, int8_t const ch1);
     void SetCh2(uint32_t const time, int8_t const ch2);
     void SetCh3(uint32_t const time, int8_t const ch3);

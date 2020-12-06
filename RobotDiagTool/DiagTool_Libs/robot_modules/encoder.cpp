@@ -2,8 +2,7 @@
 
 Encoder::Encoder()
 {
-    speedList.clear();
-    distanceList.clear();
+    EmptyAllLists();
 }
 
 QList<QList<QPointF> > Encoder::GetAllSeries()
@@ -13,6 +12,12 @@ QList<QList<QPointF> > Encoder::GetAllSeries()
     series.append(distanceList);
 
     return series;
+}
+
+void Encoder::EmptyAllLists()
+{
+    speedList.clear();
+    distanceList.clear();
 }
 
 void Encoder::SetSpeed(const float v, const uint32_t t)

@@ -11,6 +11,8 @@ public:
 
     virtual QList<QList<QPointF>> GetAllSeries() override;
 
+    virtual void EmptyAllLists() override;
+
     void SetUiNumber(uint32_t const time, uint8_t const number);
 
 signals:

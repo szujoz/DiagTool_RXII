@@ -2,9 +2,7 @@
 
 Remote::Remote()
 {
-    ch1List.clear();
-    ch2List.clear();
-    ch3List.clear();
+    EmptyAllLists();
 }
 
 QList<QList<QPointF> > Remote::GetAllSeries()
@@ -15,6 +13,13 @@ QList<QList<QPointF> > Remote::GetAllSeries()
     series.append(ch3List);
 
     return series;
+}
+
+void Remote::EmptyAllLists()
+{
+    ch1List.clear();
+    ch2List.clear();
+    ch3List.clear();
 }
 
 void Remote::SetCh1(const uint32_t time, const int8_t ch1)
