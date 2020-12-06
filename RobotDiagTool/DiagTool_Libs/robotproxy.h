@@ -5,6 +5,7 @@
 
 #include "encoder.h"
 #include "remote.h"
+#include "sevensegui.h"
 
 class RobotProxy : public QObject
 {
@@ -12,12 +13,11 @@ class RobotProxy : public QObject
 public:
     RobotProxy();
 
-signals:
-
-private:
     Encoder encoder;
     Remote remote;
+    SevenSegUi SevenSeg;
 
+signals:
 };
 
 #endif // ROBOTPROXY_H

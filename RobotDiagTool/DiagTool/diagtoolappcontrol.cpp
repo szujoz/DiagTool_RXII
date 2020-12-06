@@ -161,6 +161,28 @@ void DiagToolAppControl::CmdDummyDataArrived(const uint32_t timestamp, const int
     newDummyDataInBuffer = true;
 }
 
+void DiagToolAppControl::CmdEncoderSpeedArrived(const uint32_t timestamp, const int32_t speed, const int32_t distance)
+{
+    robot.encoder.SetSpeed(speed, timestamp);
+    robot.encoder.SetDistance(distance, timestamp);
+
+    auto speedData    = robot.encoder.GetAllSeries()[0].toVector();
+    auto distanceData = robot.encoder.GetAllSeries()[1].toVector();
+
+    mainWindow->scopeSignalSelector->UpdateSignalPoints("Encoder Speed", speedData);
+    mainWindow->scopeSignalSelector->UpdateSignalPoints("Encoder Counter", distanceData);
+}
+
+void DiagToolAppControl::CmdRemoteArrived(const uint32_t timestamp, const int8_t ch1, const int8_t ch2, const int8_t ch3)
+{
+
+}
+
+void DiagToolAppControl::Cmd7SegNumArrived(const uint8_t number)
+{
+
+}
+
 void DiagToolAppControl::CmdDummyDataTransmit(int32_t const data)
 {
     uint32_t time = 0;
@@ -213,7 +235,7 @@ void DiagToolAppControl::InitMessagePacker()
     mainWindow->scopeSignalSelector->RegisterLineSignal("Encoder Speed");
     mainWindow->scopeSignalSelector->RegisterLineSignal("Encoder Counter");
     messagePacker->RegisterCommand(cmd_encoder_speed, "Encoder Speed");
-    // add message packer functions
+    connect(cmd_encoder_speed, &RobotCommand_TelemetryEncoder::CmdArrived, this, &DiagToolAppControl::CmdEncoderSpeedArrived);
 
 
     mainWindow->scopeSignalSelector->RegisterLineSignal("Remote Ch1");

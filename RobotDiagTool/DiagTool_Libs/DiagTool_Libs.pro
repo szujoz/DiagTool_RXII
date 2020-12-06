@@ -26,6 +26,7 @@ SOURCES += \
         communicationserialport.cpp \
         inifilehandler.cpp \
         robot_modules/remote.cpp \
+    robot_modules/sevensegui.cpp \
         robotproxy.cpp \
 
 HEADERS += \
@@ -47,6 +48,7 @@ HEADERS += \
     robot_modules/irobotmodule.h \
     inifilehandler.h \
     robot_modules/remote.h \
+    robot_modules/sevensegui.h \
     robotproxy.h \
 
 INCLUDEPATH += \

@@ -52,6 +52,9 @@ public slots:
     // Comm RX
     void CmdTraceArrived(QString const message);
     void CmdDummyDataArrived(uint32_t const timestamp, int32_t const data);
+    void CmdEncoderSpeedArrived(uint32_t const timestamp, int32_t const speed, int32_t const distance);
+    void CmdRemoteArrived(uint32_t const timestamp, int8_t const ch1, int8_t const ch2, int8_t const ch3);
+    void Cmd7SegNumArrived(uint8_t const number);
 
 
 signals:
@@ -77,6 +80,8 @@ private:
 
     bool newDummyDataInBuffer;
     QVector<QPointF> scopeDummyDataBuffer;
+
+    RobotProxy robot;
 
     void ConnectSignalsToSlots();
     void InitMessagePacker();

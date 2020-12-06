@@ -2,7 +2,9 @@
 
 Remote::Remote()
 {
-
+    ch1.clear();
+    ch2.clear();
+    ch3.clear();
 }
 
 QList<QList<QPointF> > Remote::GetAllSeries()

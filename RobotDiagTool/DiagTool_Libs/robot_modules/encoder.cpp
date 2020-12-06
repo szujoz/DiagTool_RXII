@@ -17,10 +17,10 @@ QList<QList<QPointF> > Encoder::GetAllSeries()
 
 void Encoder::SetSpeed(const float v, const uint32_t t)
 {
-    speedList.push_back(QPointF(v, (float)t));
+    speedList.push_back(QPointF((float)t, v));
 }
 
 void Encoder::SetDistance(const float s, const uint32_t t)
 {
-    distanceList.push_back(QPointF(s, (float)t));
+    distanceList.push_back(QPointF((float)t, s));
 }
