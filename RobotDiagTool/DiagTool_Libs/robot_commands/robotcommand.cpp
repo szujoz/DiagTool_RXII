@@ -28,7 +28,7 @@ bool RobotCommand_Telemetry_Base::IsTelemetryIdMatch(const QByteArray &message)
 {
     bool match = false;
 
-    if (message.mid(1,2).toUInt() == telemId)
+    if (message[1] == telemId)
     {
         match = true;
     }
