@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowIcon(QIcon(":/images/asap-logo.png"));
+    debug->GetInstance();
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +32,11 @@ MainWindow::~MainWindow()
 //    delete lineSeries;
     delete scopeAxisX;
     delete scopeAxisY;
+}
+
+void MainWindow::DisplayDebugTrace(const QString trace)
+{
+    ui->textEdit_TerminalDebugMessages->append(trace);
 }
 
 void MainWindow::DisplaySerialState(const bool connected)
@@ -650,7 +656,9 @@ void MainWindow::on_checkBox_GeneralUiBoardNumberForce_stateChanged(int newState
         }
         else
         {
-            qDebug() << "Invalid 7segment number: " << ui->lineEdit_GeneralUiBoard7SegOut->text() << "\n";
+            QString msg = "Invalid 7segment number: " + ui->lineEdit_GeneralUiBoard7SegOut->text();
+            qDebug() << msg;
+            debug->Trace(msg);
         }
     }
 }
@@ -671,7 +679,9 @@ void MainWindow::on_lineEdit_GeneralUiBoard7SegOut_editingFinished()
         }
         else
         {
-            qDebug() << "Invalid 7segment number: " << ui->lineEdit_GeneralUiBoard7SegOut->text() << "\n";
+            QString msg = "Invalid 7segment number: " + ui->lineEdit_GeneralUiBoard7SegOut->text();
+            qDebug() << msg;
+            debug->Trace(msg);
         }
     }
 }

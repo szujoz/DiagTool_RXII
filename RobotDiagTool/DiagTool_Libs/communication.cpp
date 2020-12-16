@@ -4,7 +4,7 @@
 
 Communication::Communication()
 {
-
+    debug->GetInstance();
 }
 
 Communication::~Communication()

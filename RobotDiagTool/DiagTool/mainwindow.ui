@@ -1069,8 +1069,14 @@
          <layout class="QGridLayout" name="gridLayout_8">
           <item row="0" column="3">
            <layout class="QGridLayout" name="gridLayout_7">
+            <property name="horizontalSpacing">
+             <number>10</number>
+            </property>
             <item row="2" column="0">
              <widget class="QLineEdit" name="lineEdit_TerminalSerialOutput"/>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QTextEdit" name="textEdit_TerminalSerialInput"/>
             </item>
             <item row="2" column="1">
              <widget class="QPushButton" name="btn_TerminalSend">
@@ -1079,13 +1085,27 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="2">
-             <widget class="QTextEdit" name="textEdit_TerminalSerialInput"/>
+            <item row="1" column="2">
+             <widget class="QTextEdit" name="textEdit_TerminalDebugMessages"/>
             </item>
             <item row="0" column="1">
              <widget class="QPushButton" name="btn_TerminalClearSerialTerminal">
               <property name="text">
                <string>Clear Terminal</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_TerminalCommandInputLabel">
+              <property name="text">
+               <string>Command Interface</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_TerminalDebugMessages">
+              <property name="text">
+               <string>Debug Messages</string>
               </property>
              </widget>
             </item>

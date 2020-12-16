@@ -4,6 +4,7 @@
 #include <memory>
 #include <QDataStream>
 #include <QDateTime>
+#include "debugtrace.h"
 
 class Communication : public QObject
 {
@@ -36,6 +37,7 @@ signals:
 protected:
     QDataStream *receiveStream;
     QByteArray  sendBuffer;
+    DebugTrace* debug;
 
     std::unique_ptr<QDataStream> getSendStream();
 

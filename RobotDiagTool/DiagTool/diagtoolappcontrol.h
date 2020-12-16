@@ -19,6 +19,8 @@
 #include "icommandpacker.h"
 #include "robotcommand.h"
 
+#include "debugtrace.h"
+
 class CommandDirector;
 
 class DiagToolAppControl : public QObject
@@ -77,6 +79,8 @@ private:
     std::unique_ptr<IniFileHandler> iniFileHandler;
 
     ICommandPacker* messagePacker;
+
+    DebugTrace* terminal;
 
     bool newDummyDataInBuffer;
     QVector<QPointF> scopeDummyDataBuffer;

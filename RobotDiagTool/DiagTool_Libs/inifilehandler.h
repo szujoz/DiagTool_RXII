@@ -6,6 +6,8 @@
 #include <QSettings>
 #include <QMap>
 
+#include "debugtrace.h"
+
 class IniFileHandler : public QObject
 {
     Q_OBJECT
@@ -28,6 +30,7 @@ private:
     std::unique_ptr<QSettings> settings;
     QString iniPath;
 
+    DebugTrace* trace;
 };
 
 #endif // INIHANDLER_H

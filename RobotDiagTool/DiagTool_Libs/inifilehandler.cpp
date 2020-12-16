@@ -4,16 +4,19 @@ IniFileHandler::IniFileHandler(QString const path)
 {
     settings = std::make_unique<QSettings>(path + "/serial_line.ini", QSettings::IniFormat);
     settings->sync();
+    trace->GetInstance();
 }
 
 void IniFileHandler::SaveSettings()
 {
     settings->sync();
+    trace->Trace("Serial setting saved to ini file (/serial_line.ini)\n");
 }
 
 void IniFileHandler::LoadSettings()
 {
     settings->sync();
+    trace->Trace("Serial settings are loaded from ini file (/serial_line.ini)\n");
 }
 
 QMap<QString, QString> IniFileHandler::GetSettings()

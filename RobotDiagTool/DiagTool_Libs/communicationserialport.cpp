@@ -16,6 +16,7 @@ CommunicationSerialPort::CommunicationSerialPort(QString               portName,
     serialPort.setStopBits(stopBits);
 
     qDebug() << "Port is " << serialPort.isOpen();
+    debug->Trace("Serial port is 1 (open) or 0 (closed): " + QString::number(serialPort.isOpen()));
 
     QObject::connect(&serialPort, SIGNAL(readyRead()), this, SLOT(dataReceived()));
 
@@ -27,6 +28,7 @@ void CommunicationSerialPort::connect()
     serialPort.open(QIODevice::ReadWrite);
 
     qDebug() << "Port is open = " << serialPort.isOpen();
+    debug->Trace("Serial port is 1 (open) or 0 (closed): " + QString::number(serialPort.isOpen()));
 }
 
 void CommunicationSerialPort::disconnect()
@@ -34,6 +36,7 @@ void CommunicationSerialPort::disconnect()
     serialPort.close();
 
     qDebug() << "Port is open = " << serialPort.isOpen();
+    debug->Trace("Serial port is 1 (open) or 0 (closed): " + QString::number(serialPort.isOpen()));
 }
 
 bool CommunicationSerialPort::isConnected() const

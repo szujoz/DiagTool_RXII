@@ -5,6 +5,8 @@
 #include <QtCharts>
 #include <QMap>
 
+#include "debugtrace.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -21,6 +23,8 @@ public:
     ~MainWindow();
 
     std::unique_ptr<ScopeSignalSelector> scopeSignalSelector;
+
+    void DisplayDebugTrace(QString const trace);
 
     void DisplaySerialState(bool const connected);
     void DisplaySerialTerminalData(QString const str);
@@ -95,6 +99,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    DebugTrace* debug;
 
     std::unique_ptr<QChartView_> scopeChartView;
     // The chartview owns the following 3 pointers.

@@ -13,6 +13,7 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
 {
     qRegisterMetaType<uint32_t>("uint32_t");
     qRegisterMetaType<int32_t>("int32_t");
+    qRegisterMetaType<uint32_t>("uint16_t");
     QApplication a(argc, argv);
 
     mainWindow = std::make_unique<MainWindow>();
@@ -45,6 +46,8 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
     newTelemetyRemoteInBuffer = false;
     newConfigUiNumberInBuffer = false;
 
+    terminal->GetInstance();
+
     ConnectSignalsToSlots();
 
     InitSerialWorkerThread();
@@ -68,11 +71,8 @@ void DiagToolAppControl::OpenSerialDialog()
     settingsWindow->setAttribute(Qt::WA_QuitOnClose, false);
     settingsWindow->show();
 
-    connect(settingsWindow.get(), &SerialSettingsDialog::SettingsChanged,
-            this, &DiagToolAppControl::SerialSettingsArrived);
-
-    connect(this, &DiagToolAppControl::SettingsToIni,
-            iniFileHandler.get(), &IniFileHandler::SettingsArrived);
+    connect(settingsWindow.get(), &SerialSettingsDialog::SettingsChanged, this, &DiagToolAppControl::SerialSettingsArrived);
+    connect(this, &DiagToolAppControl::SettingsToIni, iniFileHandler.get(), &IniFileHandler::SettingsArrived);
 
     settMap = iniFileHandler->GetSettings();
     settingsWindow->DisplaySerialSettings(settMap.value("COM"),
@@ -125,6 +125,8 @@ void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
 
 void DiagToolAppControl::SerialCmdTransmitting(QByteArray const bytes)
 {
+    // Have to send by bytes, unless the QDataByte serializer will append additional info.
+    // This additional info would violate the communication link specification byte order.
     for(int i = 0; i < bytes.size(); i++)
     {
         communication->send(quint8(bytes.at(i)));
@@ -157,7 +159,9 @@ void DiagToolAppControl::HandleTx_7SegNum(uint8_t const number)
     }
     else
     {
-        qDebug() << "7 segment number is out of range: " << number << "\n";
+        QString msg =  "7 segment number is out of range: " + QString::number(number) + "\n";
+        qDebug() << msg;
+        terminal->Trace(msg);
     }
 }
 
@@ -257,30 +261,6 @@ void DiagToolAppControl::InitMessagePacker()
     mainWindow->scopeSignalSelector->RegisterLineSignal("7segment number");
     messagePacker->RegisterCommand(cmd_7SegNum, "Config/UI number");
     connect(cmd_7SegNum, &RobotCommand_CfgParam7SegNum::CmdArrived, this, &DiagToolAppControl::Cmd7SegNumArrived);
-
-    // Example code.
-    mainWindow->scopeSignalSelector->RegisterLineSignal("egy");
-    mainWindow->scopeSignalSelector->RegisterLineSignal("ketto");
-    mainWindow->scopeSignalSelector->RegisterLineSignal("harom");
-
-    QVector<QPointF> test;
-    test.append(QPointF(5, 10));
-    test.append(QPointF(6, 11));
-    test.append(QPointF(10,20));
-
-    QVector<QPointF> test1;
-    test1.append(QPointF(1, 10));
-    test1.append(QPointF(2, 11));
-    test1.append(QPointF(6,20));
-
-    QVector<QPointF> test2;
-    test2.append(QPointF(6, 20));
-    test2.append(QPointF(10, 20));
-
-    mainWindow->scopeSignalSelector->UpdateSignalPoints("egy", test);
-    mainWindow->scopeSignalSelector->UpdateSignalPoints("ketto", test1);
-    mainWindow->scopeSignalSelector->UpdateSignalPoints("harom", test2);
-    // End of example code.
 }
 
 void DiagToolAppControl::InitSerialWorkerThread()
@@ -296,7 +276,7 @@ void DiagToolAppControl::InitSerialWorkerThread()
 }
 
 void DiagToolAppControl::TimerEventUpdateScopeView()
-{
+{    
     if (mainWindow->IsScopeTabSelected() == true && newDummyDataInBuffer == true)
     {
         newDummyDataInBuffer = false;
@@ -362,5 +342,10 @@ void DiagToolAppControl::TimerEventUpdateScopeView()
             newConfigUiNumberInBuffer = false;
             mainWindow->Display7SegNumber(number);
         }
+    }
+
+    if (terminal->IsNewTraceAvailable() == true)
+    {
+        mainWindow->DisplayDebugTrace(terminal->GetNotReadTraces());
     }
 }

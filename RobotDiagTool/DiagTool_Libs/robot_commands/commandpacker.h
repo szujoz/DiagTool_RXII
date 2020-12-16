@@ -11,6 +11,8 @@
 #include "BinaryEncoder.h"
 #include "commandfactory.h"
 
+#include "debugtrace.h"
+
 class CRC8_F;
 class EscapeEncoder_F;
 
@@ -30,6 +32,8 @@ private:
     CommandFactory factory;
     std::unique_ptr<EscapeEncoder_F> coder;
     std::unique_ptr<CRC8_F> crc;
+
+    DebugTrace* terminal;
 
     CommandPacker();
 

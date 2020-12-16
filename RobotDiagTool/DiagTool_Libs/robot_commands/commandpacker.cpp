@@ -75,7 +75,9 @@ void CommandPacker::Unpack(QByteArray &message)
     }
     else
     {
-        qDebug() << "Message crc error: " << QString(decodedMessage.toHex(' '));
+        QString msg = "Message crc error: " + QString(decodedMessage.toHex(' '));
+        qDebug() << msg;
+        terminal->Trace(msg);
     }
 }
 
@@ -83,6 +85,7 @@ CommandPacker::CommandPacker()
 {
     coder = std::make_unique<EscapeEncoder_F>();
     crc = std::make_unique<CRC8_F>();
+    terminal->GetInstance();
 }
 
 std::vector<uint8_t> CommandPacker::Conv_QByteArray_To_U8Vector(QByteArray& bytes)
@@ -125,7 +128,9 @@ QByteArray CommandPacker::ExtractPayload(bool* success, IRobotCommand** cmd, QBy
     }
     else
     {
-        qDebug() << "Unknown Command: " << QString(commandBytes.toHex(' '));
+        QString msg = "Unknown Command: " + QString(commandBytes.toHex(' '));
+        qDebug() << msg;
+        terminal->Trace(msg);
     }
 
     return commandBytes;

@@ -16,8 +16,10 @@ CONFIG += staticlib
 SOURCES += \
         common/BinaryEncoder/EscapeEncoder.cpp \
         common/CRC/crc8.cpp \
+    debugtrace.cpp \
         robot_commands/commandfactory.cpp \
         robot_commands/robotcommandbuilder.cpp \
+    robot_modules/distancesensor.cpp \
         robot_modules/encoder.cpp \
         robot_commands/commandpacker.cpp \
         robot_commands/robotcommand.cpp \
@@ -27,15 +29,18 @@ SOURCES += \
         inifilehandler.cpp \
         robot_modules/remote.cpp \
     robot_modules/sevensegui.cpp \
+    robot_modules/speedcontroller.cpp \
         robotproxy.cpp \
 
 HEADERS += \
     common/BinaryEncoder/BinaryEncoder.h \
     common/BinaryEncoder/EscapeEncoder.h \
     common/CRC/crc8.h \
+    debugtrace.h \
     robot_commands/commandfactory.h \
     robot_commands/icommandbuilder.h \
     robot_commands/robotcommandbuilder.h \
+    robot_modules/distancesensor.h \
     robot_modules/encoder.h \
     robot_commands/commandidconfig.h \
     robot_commands/commandpacker.h \
@@ -49,6 +54,7 @@ HEADERS += \
     inifilehandler.h \
     robot_modules/remote.h \
     robot_modules/sevensegui.h \
+    robot_modules/speedcontroller.h \
     robotproxy.h \
 
 INCLUDEPATH += \
