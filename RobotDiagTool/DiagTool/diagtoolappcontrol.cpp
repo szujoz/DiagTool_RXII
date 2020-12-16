@@ -165,6 +165,71 @@ void DiagToolAppControl::HandleTx_7SegNum(uint8_t const number)
     }
 }
 
+void DiagToolAppControl::HandleTx_SpeedCntrl_SetPoint(const int32_t setPoint)
+{
+    QByteArray message;
+    CommandDirector     dir;
+    RobotCommandBuilder builder;
+    dir.SetBuilder(&builder);
+
+    dir.BuildMessage_ConfigParam_SpeedCtrlSetpoint(setPoint);
+    message = builder.getProduct();
+
+    workerSerial->Work_PackMessage(message);
+}
+
+void DiagToolAppControl::HandleTx_SpeedCntrl_P(const int32_t P)
+{
+    QByteArray message;
+    CommandDirector     dir;
+    RobotCommandBuilder builder;
+    dir.SetBuilder(&builder);
+
+    dir.BuildMessage_ConfigParam_SpeedCtrlP(P);
+    message = builder.getProduct();
+
+    workerSerial->Work_PackMessage(message);
+}
+
+void DiagToolAppControl::HandleTx_SpeedCntrl_I(const int32_t I)
+{
+    QByteArray message;
+    CommandDirector     dir;
+    RobotCommandBuilder builder;
+    dir.SetBuilder(&builder);
+
+    dir.BuildMessage_ConfigParam_SpeedCtrlI(I);
+    message = builder.getProduct();
+
+    workerSerial->Work_PackMessage(message);
+}
+
+void DiagToolAppControl::HandleTx_SpeedCntrl_D(const int32_t D)
+{
+    QByteArray message;
+    CommandDirector     dir;
+    RobotCommandBuilder builder;
+    dir.SetBuilder(&builder);
+
+    dir.BuildMessage_ConfigParam_SpeedCtrlD(D);
+    message = builder.getProduct();
+
+    workerSerial->Work_PackMessage(message);
+}
+
+void DiagToolAppControl::HandleTx_SpeedCntrl_IntegrateLimit(const int32_t integrateLimit)
+{
+    QByteArray message;
+    CommandDirector     dir;
+    RobotCommandBuilder builder;
+    dir.SetBuilder(&builder);
+
+    dir.BuildMessage_ConfigParam_SpeedCtrlILimit(integrateLimit);
+    message = builder.getProduct();
+
+    workerSerial->Work_PackMessage(message);
+}
+
 void DiagToolAppControl::CmdTraceArrived(const QString message)
 {
     mainWindow->DisplayTraceInQuickTab(message);
@@ -227,6 +292,11 @@ void DiagToolAppControl::ConnectSignalsToSlots()
     connect(mainWindow.get(), &MainWindow::SerialClearScope, this, &DiagToolAppControl::HandleScopeClear);
 
     connect(mainWindow.get(), &MainWindow::CmdTx_7SegNum, this, &DiagToolAppControl::HandleTx_7SegNum);
+    connect(mainWindow.get(), &MainWindow::CmdTx_SpeedCntrl_SetPoint, this, &DiagToolAppControl::HandleTx_SpeedCntrl_SetPoint);
+    connect(mainWindow.get(), &MainWindow::CmdTx_SpeedCntrl_P, this, &DiagToolAppControl::HandleTx_SpeedCntrl_P);
+    connect(mainWindow.get(), &MainWindow::CmdTx_SpeedCntrl_I, this, &DiagToolAppControl::HandleTx_SpeedCntrl_I);
+    connect(mainWindow.get(), &MainWindow::CmdTx_SpeedCntrl_D, this, &DiagToolAppControl::HandleTx_SpeedCntrl_D);
+    connect(mainWindow.get(), &MainWindow::CmdTx_SpeedCntrl_IntegrateLimit, this, &DiagToolAppControl::HandleTx_SpeedCntrl_IntegrateLimit);
 }
 
 void DiagToolAppControl::InitMessagePacker()

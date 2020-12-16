@@ -686,6 +686,86 @@ void MainWindow::on_lineEdit_GeneralUiBoard7SegOut_editingFinished()
     }
 }
 
+void MainWindow::on_btn_ControllersForce_SetPoint_clicked()
+{
+    bool successful_conversion = false;
+    int32_t setpoint = ui->lineEdit_ControllersForce_SetPoint->text().toLong(&successful_conversion);
+    if (successful_conversion == true)
+    {
+        emit CmdTx_SpeedCntrl_SetPoint(static_cast<int32_t>(setpoint));
+    }
+    else
+    {
+        QString msg = "Invalid speed controller setpoint: " + ui->lineEdit_ControllersForce_SetPoint->text();
+        qDebug() << msg;
+        debug->Trace(msg);
+    }
+}
+
+void MainWindow::on_btn_ControllersForce_P_clicked()
+{
+    bool successful_conversion = false;
+    int32_t P = ui->lineEdit_ControllersForce_P->text().toLong(&successful_conversion);
+    if (successful_conversion == true)
+    {
+        emit CmdTx_SpeedCntrl_P(static_cast<int32_t>(P));
+    }
+    else
+    {
+        QString msg = "Invalid speed controller P: " + ui->lineEdit_ControllersForce_P->text();
+        qDebug() << msg;
+        debug->Trace(msg);
+    }
+}
+
+void MainWindow::on_btn_ControllersForce_I_clicked()
+{
+    bool successful_conversion = false;
+    int32_t I = ui->lineEdit_ControllersForce_I->text().toLong(&successful_conversion);
+    if (successful_conversion == true)
+    {
+        emit CmdTx_SpeedCntrl_I(static_cast<int32_t>(I));
+    }
+    else
+    {
+        QString msg = "Invalid speed controller I: " + ui->lineEdit_ControllersForce_I->text();
+        qDebug() << msg;
+        debug->Trace(msg);
+    }
+}
+
+void MainWindow::on_btn_ControllersForce_D_clicked()
+{
+    bool successful_conversion = false;
+    int32_t D = ui->lineEdit_ControllersForce_D->text().toLong(&successful_conversion);
+    if (successful_conversion == true)
+    {
+        emit CmdTx_SpeedCntrl_D(static_cast<int32_t>(D));
+    }
+    else
+    {
+        QString msg = "Invalid speed controller D: " + ui->lineEdit_ControllersForce_D->text();
+        qDebug() << msg;
+        debug->Trace(msg);
+    }
+}
+
+void MainWindow::on_btn_ControllersForce_IntegrateLimit_clicked()
+{
+    bool successful_conversion = false;
+    int32_t integrateLimit = ui->lineEdit_ControllersForce_IntegrateLimit->text().toLong(&successful_conversion);
+    if (successful_conversion == true)
+    {
+        emit CmdTx_SpeedCntrl_IntegrateLimit(static_cast<int32_t>(integrateLimit));
+    }
+    else
+    {
+        QString msg = "Invalid speed controller integral limit: " + ui->lineEdit_ControllersForce_IntegrateLimit->text();
+        qDebug() << msg;
+        debug->Trace(msg);
+    }
+}
+
 ScopeSignalSelector::ScopeSignalSelector(Ui::MainWindow* ui,
                                          QChartView_* chartview,
                                          QValueAxis* axisX,

@@ -11,7 +11,6 @@ void RobotProxy::EmptyAllBuffers()
     remote.EmptyAllLists();
     sevenSeg.EmptyAllLists();
 
-    static char i = 1;
     QString str = "Clear robot proxybuffers\n";
     trace->Trace(str);
 }

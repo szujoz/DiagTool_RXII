@@ -160,3 +160,81 @@ void RobotCommand_CfgParam7SegNum::RxProcessing(const QByteArray &message)
 
     emit CmdArrived(number);
 }
+
+CommandID RobotCommand_Telemetry_DistanceSensor::GetCommandId()
+{
+    return RobotCommand_Base::GetCommandId();
+}
+
+bool RobotCommand_Telemetry_DistanceSensor::IsIdMatch(const QByteArray &message)
+{
+    return (IsCommandIdMatch(message) && IsTelemetryIdMatch(message));
+}
+
+void RobotCommand_Telemetry_DistanceSensor::RxProcessing(const QByteArray &message)
+{
+    uint32_t timeStamp = Deserializer<uint32_t>(message, 1, 4);
+    uint16_t front_distance = Deserializer<uint16_t>(message, 5, 2);
+
+    emit CmdArrived(timeStamp, front_distance);
+}
+
+CommandID RobotCommand_Telemetry_SpeedCntrlProc::GetCommandId()
+{
+    return RobotCommand_Base::GetCommandId();
+}
+
+bool RobotCommand_Telemetry_SpeedCntrlProc::IsIdMatch(const QByteArray &message)
+{
+    return (IsCommandIdMatch(message) && IsTelemetryIdMatch(message));
+}
+
+void RobotCommand_Telemetry_SpeedCntrlProc::RxProcessing(const QByteArray &message)
+{
+    uint32_t timeStamp = Deserializer<uint32_t>(message, 1, 4);
+    int32_t  setPoint = Deserializer<int32_t>(message, 5, 4);
+    int32_t  controlValue = Deserializer<int32_t>(message, 9, 4);
+    int32_t  processValue = Deserializer<int32_t>(message, 13, 4);
+
+    emit CmdArrived(timeStamp, setPoint, controlValue, processValue);
+}
+
+CommandID RobotCommand_Telemetry_SpeedCntrlPid::GetCommandId()
+{
+    return RobotCommand_Base::GetCommandId();
+}
+
+bool RobotCommand_Telemetry_SpeedCntrlPid::IsIdMatch(const QByteArray &message)
+{
+    return (IsCommandIdMatch(message) && IsTelemetryIdMatch(message));
+}
+
+void RobotCommand_Telemetry_SpeedCntrlPid::RxProcessing(const QByteArray &message)
+{
+    uint32_t timeStamp = Deserializer<uint32_t>(message, 1, 4);
+    int32_t  P = Deserializer<int32_t>(message, 5, 4);
+    int32_t  I = Deserializer<int32_t>(message, 9, 4);
+    int32_t  D = Deserializer<int32_t>(message, 13, 4);
+
+    emit CmdArrived(timeStamp, P, I, D);
+}
+
+CommandID RobotCommand_Telemetry_SpeedCntrlDetail::GetCommandId()
+{
+    return RobotCommand_Base::GetCommandId();
+}
+
+bool RobotCommand_Telemetry_SpeedCntrlDetail::IsIdMatch(const QByteArray &message)
+{
+    return (IsCommandIdMatch(message) && IsTelemetryIdMatch(message));
+}
+
+void RobotCommand_Telemetry_SpeedCntrlDetail::RxProcessing(const QByteArray &message)
+{
+    uint32_t timeStamp = Deserializer<uint32_t>(message, 1, 4);
+    int32_t  ILimit = Deserializer<int32_t>(message, 5, 4);
+    int32_t  Integr = Deserializer<int32_t>(message, 9, 4);
+    int32_t  Deriv = Deserializer<int32_t>(message, 13, 4);
+
+    emit CmdArrived(timeStamp, ILimit, Integr, Deriv);
+}

@@ -122,4 +122,64 @@ signals:
     void CmdArrived(uint8_t const _7SegNumber);
 };
 
+
+class RobotCommand_Telemetry_DistanceSensor : public IRobotCommand, public RobotCommand_Telemetry_Base
+{
+    Q_OBJECT
+public:
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
+    virtual void RxProcessing(QByteArray const &message) override;
+
+    RobotCommand_Telemetry_DistanceSensor(){    cmdId = eTelemetry, telemId = eDistanceFront;   };
+
+signals:
+    void CmdArrived(uint32_t const timestamp, uint16_t const front_distance);
+};
+
+
+class RobotCommand_Telemetry_SpeedCntrlProc : public IRobotCommand, public RobotCommand_Telemetry_Base
+{
+    Q_OBJECT
+public:
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
+    virtual void RxProcessing(QByteArray const &message) override;
+
+    RobotCommand_Telemetry_SpeedCntrlProc(){    cmdId = eTelemetry, telemId = eSpeedCntrlProc;   };
+
+signals:
+    void CmdArrived(uint32_t const timestamp, int32_t const setPoint, int32_t const controlValue, int32_t const processValue);
+};
+
+
+class RobotCommand_Telemetry_SpeedCntrlPid : public IRobotCommand, public RobotCommand_Telemetry_Base
+{
+    Q_OBJECT
+public:
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
+    virtual void RxProcessing(QByteArray const &message) override;
+
+    RobotCommand_Telemetry_SpeedCntrlPid(){    cmdId = eTelemetry, telemId = eSpeedCntrlPid;   };
+
+signals:
+    void CmdArrived(uint32_t const timestamp, int32_t const P, int32_t const I, int32_t const D);
+};
+
+
+class RobotCommand_Telemetry_SpeedCntrlDetail : public IRobotCommand, public RobotCommand_Telemetry_Base
+{
+    Q_OBJECT
+public:
+    virtual CommandID GetCommandId() override;
+    virtual bool IsIdMatch(QByteArray const &message) override;
+    virtual void RxProcessing(QByteArray const &message) override;
+
+    RobotCommand_Telemetry_SpeedCntrlDetail(){    cmdId = eTelemetry, telemId = eSpeedCntrlDetail;   };
+
+signals:
+    void CmdArrived(uint32_t const timestamp, int32_t const integralLimit, int32_t const integral, int32_t const derivative);
+};
+
 #endif // ROBOTCOMMAND_H

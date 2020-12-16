@@ -216,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
@@ -1146,7 +1146,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="radioButton_3">
+                  <widget class="QRadioButton" name="radioButton_Controllers_SpeedController">
                    <property name="text">
                     <string>Speed Controller</string>
                    </property>
@@ -1259,10 +1259,10 @@
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="lineEdit_35"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_SetPoint"/>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="lineEdit_36"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_ControlValue"/>
                  </item>
                  <item row="0" column="1">
                   <widget class="QLabel" name="label_18">
@@ -1285,54 +1285,54 @@
                   </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QLineEdit" name="lineEdit_34"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_ProcessValue"/>
                  </item>
                  <item row="4" column="1">
-                  <widget class="QLineEdit" name="lineEdit_22"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_Error"/>
                  </item>
                  <item row="5" column="1">
-                  <widget class="QLineEdit" name="lineEdit_20"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_P"/>
                  </item>
                  <item row="6" column="1">
-                  <widget class="QLineEdit" name="lineEdit_23"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_I"/>
                  </item>
                  <item row="7" column="1">
-                  <widget class="QLineEdit" name="lineEdit_19"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_D"/>
                  </item>
                  <item row="8" column="1">
-                  <widget class="QLineEdit" name="lineEdit_25"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_IntegrateLimit"/>
                  </item>
                  <item row="10" column="1">
-                  <widget class="QLineEdit" name="lineEdit_21"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_Derivative"/>
                  </item>
                  <item row="9" column="1">
-                  <widget class="QLineEdit" name="lineEdit_26"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersActual_Integrate"/>
                  </item>
                  <item row="5" column="2">
-                  <widget class="QLineEdit" name="lineEdit_15"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersForce_P"/>
                  </item>
                  <item row="6" column="2">
-                  <widget class="QLineEdit" name="lineEdit_24"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersForce_I"/>
                  </item>
                  <item row="7" column="2">
-                  <widget class="QLineEdit" name="lineEdit_16"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersForce_D"/>
                  </item>
                  <item row="5" column="3">
-                  <widget class="QPushButton" name="pushButton_3">
+                  <widget class="QPushButton" name="btn_ControllersForce_P">
                    <property name="text">
                     <string>Force</string>
                    </property>
                   </widget>
                  </item>
                  <item row="7" column="3">
-                  <widget class="QPushButton" name="pushButton_4">
+                  <widget class="QPushButton" name="btn_ControllersForce_D">
                    <property name="text">
                     <string>Force</string>
                    </property>
                   </widget>
                  </item>
                  <item row="6" column="3">
-                  <widget class="QPushButton" name="pushButton_5">
+                  <widget class="QPushButton" name="btn_ControllersForce_I">
                    <property name="text">
                     <string>Force</string>
                    </property>
@@ -1352,14 +1352,24 @@
                   </spacer>
                  </item>
                  <item row="1" column="3">
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="btn_ControllersForce_SetPoint">
                    <property name="text">
                     <string>Force</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="2">
-                  <widget class="QLineEdit" name="lineEdit_14"/>
+                  <widget class="QLineEdit" name="lineEdit_ControllersForce_SetPoint"/>
+                 </item>
+                 <item row="8" column="2">
+                  <widget class="QLineEdit" name="lineEdit_ControllersForce_IntegrateLimit"/>
+                 </item>
+                 <item row="8" column="3">
+                  <widget class="QPushButton" name="btn_ControllersForce_IntegrateLimit">
+                   <property name="text">
+                    <string>Force</string>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>

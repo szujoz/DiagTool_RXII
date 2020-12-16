@@ -41,6 +41,8 @@ public:
     void DisplayRemoteChData(uint8_t const ch1, uint8_t const ch2, uint8_t const ch3);
     void DisplayEncoderData(int32_t const speed, int32_t const counter);
     void Display7SegNumber(uint8_t const number);
+    void DisplaySpeedCntrlSetPoint(int32_t const setPoint);
+    void DisplaySpeedCntrlControlValue(int32_t const controlValue);
 
 signals:
     void SerialDialogNeeded();
@@ -52,6 +54,11 @@ signals:
     // Command TX
     void CmdTx_DummyData(int32_t const data);
     void CmdTx_7SegNum(uint8_t const number);
+    void CmdTx_SpeedCntrl_SetPoint(int32_t const setPoint);
+    void CmdTx_SpeedCntrl_P(int32_t const P);
+    void CmdTx_SpeedCntrl_I(int32_t const I);
+    void CmdTx_SpeedCntrl_D(int32_t const D);
+    void CmdTx_SpeedCntrl_IntegrateLimit(int32_t const integrateLimit);
 
     // Command RX
 
@@ -96,6 +103,12 @@ private slots:
 
     void on_checkBox_GeneralUiBoardNumberForce_stateChanged(int newState);
     void on_lineEdit_GeneralUiBoard7SegOut_editingFinished();
+
+    void on_btn_ControllersForce_SetPoint_clicked();
+    void on_btn_ControllersForce_P_clicked();
+    void on_btn_ControllersForce_I_clicked();
+    void on_btn_ControllersForce_D_clicked();
+    void on_btn_ControllersForce_IntegrateLimit_clicked();
 
 private:
     Ui::MainWindow *ui;

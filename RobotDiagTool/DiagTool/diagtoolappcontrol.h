@@ -50,6 +50,11 @@ public slots:
     // Comm TX
     void CmdDummyDataTransmit(int32_t const data);
     void HandleTx_7SegNum(uint8_t const number);
+    void HandleTx_SpeedCntrl_SetPoint(int32_t const setPoint);
+    void HandleTx_SpeedCntrl_P(int32_t const P);
+    void HandleTx_SpeedCntrl_I(int32_t const I);
+    void HandleTx_SpeedCntrl_D(int32_t const D);
+    void HandleTx_SpeedCntrl_IntegrateLimit(int32_t const integrateLimit);
 
     // Comm RX
     void CmdTraceArrived(QString const message);
@@ -89,6 +94,10 @@ private:
     bool newTelemetryEncodeInBuffer;
     bool newTelemetyRemoteInBuffer;
     bool newConfigUiNumberInBuffer;
+    bool newTelemetyDistanceFrontInBuffer;
+    bool newTelemetrySpeedCntrlProcInBuffer;
+    bool newTelemetrySpeedCntrlPidInBuffer;
+    bool newTelemertySpeedCntrlDetailInBuffer;
 
     void ConnectSignalsToSlots();
     void InitMessagePacker();
