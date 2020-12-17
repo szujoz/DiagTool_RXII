@@ -119,8 +119,11 @@ void DiagToolAppControl::SerialDataArrived(QDataStream& stream)
 
 void DiagToolAppControl::SerialDataReadyToTransmit(const QString message)
 {
-    QString extended_message = message + "\r\n";
-    communication->send(extended_message.toUtf8());
+    QString text = message;
+    text.remove(' ');
+    QByteArray bytes = QByteArray::fromHex(text.toUtf8());
+    QByteArray out = messagePacker->Pack(bytes);
+    SerialCmdTransmitting(out);
 }
 
 void DiagToolAppControl::SerialCmdTransmitting(QByteArray const bytes)
