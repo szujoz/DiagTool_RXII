@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowIcon(QIcon(":/images/asap-logo.png"));
     debug->GetInstance();
+    serialTerminalBuffer_LongTerm_WriteIndex = 0;
+    serialTerminalBuffer_ShortTerm_WriteIndex = 0;
 }
 
 MainWindow::~MainWindow()
@@ -54,7 +56,30 @@ void MainWindow::DisplaySerialState(const bool connected)
 
 void MainWindow::DisplaySerialTerminalData(const QString str)
 {
+    if (serialTerminalBuffer_ShortTerm_WriteIndex >= serialTerminalBuffer_ShortTerm_Size)
+    {
+        serialTerminalBuffer_ShortTerm_WriteIndex = 0;
+    }
+    serialTerminalBuffer_ShortTerm[serialTerminalBuffer_ShortTerm_WriteIndex] = str;
+    serialTerminalBuffer_ShortTerm_WriteIndex++;
+
+    if (serialTerminalBuffer_LongTerm_WriteIndex >= serialTerminalBuffer_LongTerm_Size)
+    {
+        ui->textEdit_TerminalSerialInput->clear();
+        serialTerminalBuffer_LongTerm_WriteIndex = 0;
+        int i = 0;
+        for(i = 0; i < serialTerminalBuffer_ShortTerm_Size; i++)
+        {
+            if(i >= serialTerminalBuffer_ShortTerm_Size)
+            {
+                i = 0;
+            }
+            ui->textEdit_TerminalSerialInput->append(serialTerminalBuffer_ShortTerm[i]);
+        }
+        serialTerminalBuffer_LongTerm_WriteIndex = i;
+    }
     ui->textEdit_TerminalSerialInput->append(str);
+    serialTerminalBuffer_LongTerm_WriteIndex++;
 }
 
 void MainWindow::ScopeInit()

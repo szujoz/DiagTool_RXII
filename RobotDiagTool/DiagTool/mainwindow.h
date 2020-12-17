@@ -126,8 +126,15 @@ private:
 
     bool autoScalingOn;
 
+    int const serialTerminalBuffer_LongTerm_Size = 10000;
+    int const serialTerminalBuffer_ShortTerm_Size = 100;
+    QString serialTerminalBuffer_ShortTerm[100];
+    int serialTerminalBuffer_LongTerm_WriteIndex;
+    int serialTerminalBuffer_ShortTerm_WriteIndex;
+
     void ScopeDynamicResizeIfNeeded(QVector<QPointF>& points);
 };
+
 
 class QChartView_ : public QChartView
 {
