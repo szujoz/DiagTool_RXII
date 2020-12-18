@@ -62,7 +62,10 @@ public slots:
     void CmdEncoderSpeedArrived(uint32_t const timestamp, int32_t const speed, int32_t const distance);
     void CmdRemoteArrived(uint32_t const timestamp, int8_t const ch1, int8_t const ch2, int8_t const ch3);
     void Cmd7SegNumArrived(uint8_t const number);
-
+    void CmdDistanceFrontArrived(uint32_t const timestamp, int32_t const frontDistance);
+    void CmdSpeedCntrlProcArrived(uint32_t const timestamp, int32_t const setPoint, int32_t const controlValue, int32_t const processValue);
+    void CmdSpeedCntrlPidArrived(uint32_t const timestamp, int32_t const P, int32_t const I, int32_t const D);
+    void CmdSpeedCntrlDetailArrived(uint32_t const timestamp, int32_t const integrateLimit, int32_t const integrate, int32_t const derivative);
 
 signals:
     void SettingsToIni(QMap<QString,QString> params);
@@ -97,7 +100,7 @@ private:
     bool newTelemetyDistanceFrontInBuffer;
     bool newTelemetrySpeedCntrlProcInBuffer;
     bool newTelemetrySpeedCntrlPidInBuffer;
-    bool newTelemertySpeedCntrlDetailInBuffer;
+    bool newTelemetrySpeedCntrlDetailInBuffer;
 
     void ConnectSignalsToSlots();
     void InitMessagePacker();

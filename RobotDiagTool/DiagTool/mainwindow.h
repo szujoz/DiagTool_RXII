@@ -32,17 +32,29 @@ public:
     void ScopeInit();
 
     void DisplayTraceInQuickTab(QString const text);
+    void DisplayDistanceInQuickTab(int32_t const dist);
 
     bool IsGeneralTabSelected();
     bool IsScopeTabSelected();
+    bool IsControllerTabSelected();
     void ScopeAllowAutoScaling(bool on);
 
     void DisplayQickTabSpeed(float const speed);
     void DisplayRemoteChData(uint8_t const ch1, uint8_t const ch2, uint8_t const ch3);
     void DisplayEncoderData(int32_t const speed, int32_t const counter);
     void Display7SegNumber(uint8_t const number);
+    void DisplayDistanceFront(int32_t const frontDistance);
     void DisplaySpeedCntrlSetPoint(int32_t const setPoint);
     void DisplaySpeedCntrlControlValue(int32_t const controlValue);
+    void DisplaySpeedCntrlProcessValue(int32_t const processValue);
+    void DisplaySpeedCntrlP(int32_t const P);
+    void DisplaySpeedCntrlI(int32_t const I);
+    void DisplaySpeedCntrlD(int32_t const D);
+    void DisplaySpeedCntrlIntegrateLimit(int32_t const integrateLimit);
+    void DisplaySpeedCntrlIntegrate(int32_t const integrate);
+    void DisplaySpeedCntrlDerivative(int32_t const derivative);
+    void DisplaySpeedCntrlError(int32_t const error);
+
 
 signals:
     void SerialDialogNeeded();

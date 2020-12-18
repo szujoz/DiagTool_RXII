@@ -123,6 +123,11 @@ void MainWindow::DisplayTraceInQuickTab(const QString text)
     ui->textEdit_quickTabTrace->append(text);
 }
 
+void MainWindow::DisplayDistanceInQuickTab(const int32_t dist)
+{
+    ui->lineEdit_QuickTabFrontDistance->setText(QString::number(dist));
+}
+
 bool MainWindow::IsGeneralTabSelected()
 {
     bool generalViewActive = false;
@@ -140,6 +145,18 @@ bool MainWindow::IsScopeTabSelected()
     bool scopeViewActive = false;
 
     if(ui->tabWidget->currentIndex() == 1)
+    {
+        scopeViewActive = true;
+    }
+
+    return scopeViewActive;
+}
+
+bool MainWindow::IsControllerTabSelected()
+{
+    bool scopeViewActive = false;
+
+    if(ui->tabWidget->currentIndex() == 3)
     {
         scopeViewActive = true;
     }
@@ -173,6 +190,61 @@ void MainWindow::DisplayEncoderData(const int32_t speed, const int32_t counter)
 void MainWindow::Display7SegNumber(const uint8_t number)
 {
     ui->lineEdit_GeneralUiBoard7SegIn->setText(QString::number(number));
+}
+
+void MainWindow::DisplayDistanceFront(const int32_t frontDistance)
+{
+    ui->lineEdit_GeneralDistance->setText(QString::number(frontDistance));
+}
+
+void MainWindow::DisplaySpeedCntrlSetPoint(const int32_t setPoint)
+{
+    ui->lineEdit_ControllersActual_SetPoint->setText(QString::number(setPoint));
+}
+
+void MainWindow::DisplaySpeedCntrlControlValue(const int32_t controlValue)
+{
+    ui->lineEdit_ControllersActual_ControlValue->setText(QString::number(controlValue));
+}
+
+void MainWindow::DisplaySpeedCntrlProcessValue(const int32_t processValue)
+{
+    ui->lineEdit_ControllersActual_ProcessValue->setText(QString::number(processValue));
+}
+
+void MainWindow::DisplaySpeedCntrlP(const int32_t P)
+{
+    ui->lineEdit_ControllersActual_P->setText(QString::number(P));
+}
+
+void MainWindow::DisplaySpeedCntrlI(const int32_t I)
+{
+    ui->lineEdit_ControllersActual_I->setText(QString::number(I));
+}
+
+void MainWindow::DisplaySpeedCntrlD(const int32_t D)
+{
+    ui->lineEdit_ControllersActual_D->setText(QString::number(D));
+}
+
+void MainWindow::DisplaySpeedCntrlIntegrateLimit(const int32_t integrateLimit)
+{
+    ui->lineEdit_ControllersActual_IntegrateLimit->setText(QString::number(integrateLimit));
+}
+
+void MainWindow::DisplaySpeedCntrlIntegrate(const int32_t integrate)
+{
+    ui->lineEdit_ControllersActual_Integrate->setText(QString::number(integrate));
+}
+
+void MainWindow::DisplaySpeedCntrlDerivative(const int32_t derivative)
+{
+    ui->lineEdit_ControllersActual_Derivative->setText(QString::number(derivative));
+}
+
+void MainWindow::DisplaySpeedCntrlError(const int32_t error)
+{
+    ui->lineEdit_ControllersActual_Error->setText(QString::number(error));
 }
 
 void MainWindow::on_btn_QuickTabToggle_clicked()

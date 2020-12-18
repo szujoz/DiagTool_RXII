@@ -216,7 +216,7 @@
          <bool>true</bool>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_General">
          <property name="focusPolicy">
@@ -573,11 +573,11 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_3">
+           <widget class="QGroupBox" name="groupBox_GeneralDistance">
             <property name="title">
              <string>Distance Sensor</string>
             </property>
-            <widget class="QLineEdit" name="lineEdit_2">
+            <widget class="QLineEdit" name="lineEdit_GeneralDistance">
              <property name="geometry">
               <rect>
                <x>82</x>
@@ -587,7 +587,7 @@
               </rect>
              </property>
             </widget>
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="label_GeneralDistance">
              <property name="geometry">
               <rect>
                <x>10</x>

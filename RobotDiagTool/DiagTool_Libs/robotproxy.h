@@ -8,6 +8,8 @@
 #include "encoder.h"
 #include "remote.h"
 #include "sevensegui.h"
+#include "distancesensor.h"
+#include "speedcontroller.h"
 
 class RobotProxy : public QObject
 {
@@ -20,6 +22,8 @@ public:
     Encoder encoder;
     Remote remote;
     SevenSegUi sevenSeg;
+    DistanceSensor frontDist;
+    SpeedController spdController;
 
     void EmptyAllBuffers();
 

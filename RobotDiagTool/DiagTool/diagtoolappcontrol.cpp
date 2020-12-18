@@ -45,6 +45,10 @@ DiagToolAppControl::DiagToolAppControl(int argc, char *argv[])
     newTelemetryEncodeInBuffer = false;
     newTelemetyRemoteInBuffer = false;
     newConfigUiNumberInBuffer = false;
+    newTelemetyDistanceFrontInBuffer = false;
+    newTelemetrySpeedCntrlProcInBuffer = false;
+    newTelemetrySpeedCntrlPidInBuffer = false;
+    newTelemetrySpeedCntrlDetailInBuffer = false;
 
     terminal->GetInstance();
 
@@ -144,6 +148,10 @@ void DiagToolAppControl::HandleScopeClear()
     newTelemetryEncodeInBuffer = false;
     newTelemetyRemoteInBuffer = false;
     newConfigUiNumberInBuffer = false;
+    newTelemetyDistanceFrontInBuffer = false;
+    newTelemetrySpeedCntrlProcInBuffer = false;
+    newTelemetrySpeedCntrlPidInBuffer = false;
+    newTelemetrySpeedCntrlDetailInBuffer = false;
 }
 
 void DiagToolAppControl::HandleTx_7SegNum(uint8_t const number)
@@ -265,6 +273,37 @@ void DiagToolAppControl::Cmd7SegNumArrived(const uint8_t number)
     newConfigUiNumberInBuffer = true;
 }
 
+void DiagToolAppControl::CmdDistanceFrontArrived(const uint32_t timestamp, const int32_t frontDistance)
+{
+    robot.frontDist.SetFrontDistance(timestamp, frontDistance);
+    newTelemetyDistanceFrontInBuffer = true;
+}
+
+void DiagToolAppControl::CmdSpeedCntrlProcArrived(const uint32_t timestamp, const int32_t setPoint, const int32_t controlValue, const int32_t processValue)
+{
+    robot.spdController.SetSetPoint(timestamp, setPoint);
+    robot.spdController.SetControlValue(timestamp, controlValue);
+    robot.spdController.SetProcessValue(timestamp, processValue);
+    robot.spdController.SetError(timestamp, setPoint - processValue);
+    newTelemetrySpeedCntrlProcInBuffer = true;
+}
+
+void DiagToolAppControl::CmdSpeedCntrlPidArrived(const uint32_t timestamp, const int32_t P, const int32_t I, const int32_t D)
+{
+    robot.spdController.SetP(timestamp, P);
+    robot.spdController.SetI(timestamp, I);
+    robot.spdController.SetD(timestamp, D);
+    newTelemetrySpeedCntrlPidInBuffer = true;
+}
+
+void DiagToolAppControl::CmdSpeedCntrlDetailArrived(const uint32_t timestamp, const int32_t integrateLimit, const int32_t integrate, const int32_t derivative)
+{
+    robot.spdController.SetIntegrateLimit(timestamp, integrateLimit);
+    robot.spdController.SetIntegrate(timestamp, integrate);
+    robot.spdController.SetDerivative(timestamp, derivative);
+    newTelemetrySpeedCntrlDetailInBuffer = true;
+}
+
 void DiagToolAppControl::CmdDummyDataTransmit(int32_t const data)
 {
     uint32_t time = 0;
@@ -334,6 +373,33 @@ void DiagToolAppControl::InitMessagePacker()
     mainWindow->scopeSignalSelector->RegisterLineSignal("7segment number");
     messagePacker->RegisterCommand(cmd_7SegNum, "Config/UI number");
     connect(cmd_7SegNum, &RobotCommand_CfgParam7SegNum::CmdArrived, this, &DiagToolAppControl::Cmd7SegNumArrived);
+
+    auto cmd_frontDist = new RobotCommand_Telemetry_DistanceSensor();
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Front Distance");
+    messagePacker->RegisterCommand(cmd_frontDist, "Front Distance");
+    connect(cmd_frontDist, &RobotCommand_Telemetry_DistanceSensor::CmdArrived, this, &DiagToolAppControl::CmdDistanceFrontArrived);
+
+    auto cmd_spdCtlrProc = new RobotCommand_Telemetry_SpeedCntrlProc();
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl Set Point");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl Control Value");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl Process Value");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl Error");
+    messagePacker->RegisterCommand(cmd_spdCtlrProc, "Speed Ctrl Process");
+    connect(cmd_spdCtlrProc, &RobotCommand_Telemetry_SpeedCntrlProc::CmdArrived, this, &DiagToolAppControl::CmdSpeedCntrlProcArrived);
+
+    auto cmd_spdCtrlPid = new RobotCommand_Telemetry_SpeedCntrlPid();
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl P");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl I");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl D");
+    messagePacker->RegisterCommand(cmd_spdCtrlPid, "Speed Ctrl PID");
+    connect(cmd_spdCtrlPid, &RobotCommand_Telemetry_SpeedCntrlPid::CmdArrived, this, &DiagToolAppControl::CmdSpeedCntrlPidArrived);
+
+    auto cmd_spdCtrlDet = new RobotCommand_Telemetry_SpeedCntrlDetail();
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl Integral Limit");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl Integral");
+    mainWindow->scopeSignalSelector->RegisterLineSignal("Speed Ctrl Derivative");
+    messagePacker->RegisterCommand(cmd_spdCtrlDet, "Speed Ctrl inner");
+    connect(cmd_spdCtrlDet, &RobotCommand_Telemetry_SpeedCntrlDetail::CmdArrived, this, &DiagToolAppControl::CmdSpeedCntrlDetailArrived);
 }
 
 void DiagToolAppControl::InitSerialWorkerThread()
@@ -378,7 +444,6 @@ void DiagToolAppControl::TimerEventUpdateScopeView()
         {
             // Nowhere to display.
         }
-
     }
 
     if (newTelemetyRemoteInBuffer == true)
@@ -420,5 +485,108 @@ void DiagToolAppControl::TimerEventUpdateScopeView()
     if (terminal->IsNewTraceAvailable() == true)
     {
         mainWindow->DisplayDebugTrace(terminal->GetNotReadTraces());
+    }
+
+    if (newTelemetyDistanceFrontInBuffer == true)
+    {
+        auto frontDist = robot.frontDist.GetAllSeries()[0].toVector();
+
+        mainWindow->DisplayDistanceInQuickTab(frontDist.last().y());
+
+        if (mainWindow->IsScopeTabSelected() == true)
+        {
+            newTelemetyDistanceFrontInBuffer = false;
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Front Distance", frontDist);
+        }
+        else if (mainWindow->IsGeneralTabSelected() == true)
+        {
+            newTelemetyDistanceFrontInBuffer = false;
+            mainWindow->DisplayDistanceFront(frontDist.last().y());
+        }
+        else
+        {
+            // Nowhere to display.
+        }
+    }
+
+    if (newTelemetrySpeedCntrlProcInBuffer == true)
+    {
+        auto setPoint   = robot.spdController.GetAllSeries()[0].toVector();
+        auto contrValue = robot.spdController.GetAllSeries()[1].toVector();
+        auto procValue  = robot.spdController.GetAllSeries()[2].toVector();
+        auto error      = robot.spdController.GetAllSeries()[9].toVector();
+
+        if (mainWindow->IsScopeTabSelected() == true)
+        {
+            newTelemetrySpeedCntrlProcInBuffer = false;
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl Set Point", setPoint);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl Control Value", contrValue);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl Process Value", procValue);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl Error", error);
+        }
+        else if (mainWindow->IsControllerTabSelected() == true)
+        {
+            newTelemetrySpeedCntrlProcInBuffer = false;
+            mainWindow->DisplaySpeedCntrlSetPoint(setPoint.last().y());
+            mainWindow->DisplaySpeedCntrlControlValue(contrValue.last().y());
+            mainWindow->DisplaySpeedCntrlProcessValue(procValue.last().y());
+            mainWindow->DisplaySpeedCntrlError(error.last().y());
+        }
+        else
+        {
+            // Nowhere to display.
+        }
+    }
+
+    if (newTelemetrySpeedCntrlPidInBuffer == true)
+    {
+        auto P = robot.spdController.GetAllSeries()[3].toVector();
+        auto I = robot.spdController.GetAllSeries()[4].toVector();
+        auto D = robot.spdController.GetAllSeries()[5].toVector();
+
+        if (mainWindow->IsScopeTabSelected() == true)
+        {
+            newTelemetrySpeedCntrlPidInBuffer = false;
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl P", P);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl I", I);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl D", D);
+        }
+        else if (mainWindow->IsControllerTabSelected() == true)
+        {
+            newTelemetrySpeedCntrlPidInBuffer = false;
+            mainWindow->DisplaySpeedCntrlP(P.last().y());
+            mainWindow->DisplaySpeedCntrlI(I.last().y());
+            mainWindow->DisplaySpeedCntrlD(D.last().y());
+        }
+        else
+        {
+            // Nowhere to display.
+        }
+    }
+
+    if (newTelemetrySpeedCntrlDetailInBuffer == true)
+    {
+        auto intLimit = robot.spdController.GetAllSeries()[6].toVector();
+        auto integ = robot.spdController.GetAllSeries()[7].toVector();
+        auto deriv = robot.spdController.GetAllSeries()[8].toVector();
+
+        if (mainWindow->IsScopeTabSelected() == true)
+        {
+            newTelemetrySpeedCntrlDetailInBuffer = false;
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl Integral Limit", intLimit);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl Integral", integ);
+            mainWindow->scopeSignalSelector->UpdateSignalPoints("Speed Ctrl Derivative", deriv);
+        }
+        else if (mainWindow->IsControllerTabSelected() == true)
+        {
+            newTelemetrySpeedCntrlDetailInBuffer = false;
+            mainWindow->DisplaySpeedCntrlIntegrateLimit(intLimit.last().y());
+            mainWindow->DisplaySpeedCntrlIntegrate(integ.last().y());
+            mainWindow->DisplaySpeedCntrlDerivative(deriv.last().y());
+        }
+        else
+        {
+            // Nowhere to display.
+        }
     }
 }
