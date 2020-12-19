@@ -101,11 +101,13 @@ void DiagToolAppControl::SerialSettingsArrived(const QString com, const QString 
 void DiagToolAppControl::SerialConnRequestReceived()
 {
     communication->connect();
+    mainWindow->DisplaySerialState(communication->isConnected());
 }
 
 void DiagToolAppControl::SerialDisconnReqestReceived()
 {
     communication->disconnect();
+    mainWindow->DisplaySerialState(communication->isConnected());
 }
 
 void DiagToolAppControl::SerialDataArrived(QDataStream& stream)

@@ -418,13 +418,11 @@ void MainWindow::on_actionLoad_triggered()
 void MainWindow::on_btn_ToolBarConnectSerial_clicked()
 {
     emit SerialConnectionRequest();
-    DisplaySerialState(true);
 }
 
 void MainWindow::on_btn_ToolBarDisconnectSerial_clicked()
 {
     emit SerialDisconnectionRequest();
-    DisplaySerialState(false);
 }
 
 void MainWindow::on_btn_ScopeSignalSelectorToggle_clicked()
@@ -865,7 +863,7 @@ bool ScopeSignalSelector::UpdateSignalPoints(const QString name, QVector<QPointF
         if (allowedToDrawChart == true)
         {
             signal->_series->replace(*(signal->_points));
-            if (allowedAutoScaling == true)
+            if (allowedAutoScaling == true && signal->_visible == true)
             {
                 newPoints = points.mid(signal->_pointCount, points.size() - signal->_pointCount);
                 ScopeDynamicResizeIfNeeded(newPoints);
@@ -1013,11 +1011,6 @@ void ScopeSignalSelector::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
 
     for(int i = 0; i < points.size(); i++)
     {
-        /*maxX = std::fmaxf(maxX, points[i].x());
-        minX = std::fminf(minX, points[i].x());
-        maxY = std::fmaxf(maxY, points[i].y());
-        minY = std::fminf(minY, points[i].y());*/
-
         if(maxX < points[i].x())
         {
             maxX = points[i].x();
