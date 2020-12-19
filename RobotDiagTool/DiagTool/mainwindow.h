@@ -37,7 +37,6 @@ public:
     bool IsGeneralTabSelected();
     bool IsScopeTabSelected();
     bool IsControllerTabSelected();
-    void ScopeAllowAutoScaling(bool on);
 
     void DisplayQickTabSpeed(float const speed);
     void DisplayRemoteChData(uint8_t const ch1, uint8_t const ch2, uint8_t const ch3);
@@ -143,8 +142,6 @@ private:
     QString serialTerminalBuffer_ShortTerm[100];
     int serialTerminalBuffer_LongTerm_WriteIndex;
     int serialTerminalBuffer_ShortTerm_WriteIndex;
-
-    void ScopeDynamicResizeIfNeeded(QVector<QPointF>& points);
 };
 
 
@@ -172,7 +169,8 @@ typedef struct
     QString           _name;
     QLineSeries*      _series;
     QVector<QPointF>* _points;
-    bool              _visible;
+    int               _pointCount;
+    bool              _visible;    
 
 } SignalInfo;
 
@@ -194,6 +192,8 @@ public:
     bool IsAllowedToDraw();
     void EnableDrawing();
     void DisableDrawing();
+    void EnableAutoScale();
+    void DisableAutoScale();
 
 signals:
     void SignalToBeDisplayed(QString const name, bool const drawAllowed);
@@ -205,12 +205,14 @@ private:
     QValueAxis*  axisX;
     QValueAxis*  axisY;
     bool allowedToDrawChart;
+    bool allowedAutoScaling;
 
     void AttachSignalToChartview(SignalInfo* signal);
     bool FindSignalByName(QString const name, SignalInfo** signal);
     QString GetUiItemNameBySignalName(QString const name);
     QString GetSignalNameByUiItemName(QString const itemName);
     void AddCheckboxToUi(QString const name);
+    void ScopeDynamicResizeIfNeeded(QVector<QPointF>& points);
 
 private slots:
     void StateChanged(int state);

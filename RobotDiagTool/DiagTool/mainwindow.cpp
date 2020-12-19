@@ -111,9 +111,6 @@ void MainWindow::ScopeInit()
 
     ui->frame->setLayout(mainLayout);
     ui->frame->show();
-    //ui->checkBox_ScopeDummyData->setChecked(true);
-
-    autoScalingOn = true;
 
     scopeSignalSelector = std::make_unique<ScopeSignalSelector>(ui, scopeChartView.get(), scopeAxisX, scopeAxisY);
 }
@@ -162,11 +159,6 @@ bool MainWindow::IsControllerTabSelected()
     }
 
     return scopeViewActive;
-}
-
-void MainWindow::ScopeAllowAutoScaling(bool on)
-{
-    autoScalingOn = on;
 }
 
 void MainWindow::DisplayQickTabSpeed(const float speed)
@@ -468,45 +460,9 @@ void MainWindow::on_btn_TerminalClearSerialTerminal_clicked()
     ui->textEdit_TerminalSerialInput->clear();
 }
 
-void MainWindow::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
-{
-    int   i = nextDataIndexToBeChecked;
-    float maxX = scopeAxisX->max()*0.8;
-    float minX = scopeAxisX->min()*0.8;
-    float maxY = scopeAxisY->max()*0.8;
-    float minY = scopeAxisY->min()*0.8;
-
-    for(; i < points.size(); i++)
-    {
-        if(maxX < points[i].x())
-        {
-            maxX = points[i].x();
-        }
-
-        if(minX > points[i].x())
-        {
-            minX = points[i].x();
-        }
-
-        if(maxY < points[i].y())
-        {
-            maxY = points[i].y();
-        }
-
-        if(minY > points[i].y())
-        {
-            minY = points[i].y();
-        }
-    }
-    nextDataIndexToBeChecked = i;
-
-    scopeAxisX->setRange(minX*1.25,maxX*1.25);
-    scopeAxisY->setRange(minY*1.25,maxY*1.25);
-}
-
 void MainWindow::on_btn_ScopeResetZoom_clicked()
 {
-    autoScalingOn = true;
+    scopeSignalSelector->EnableAutoScale();
     scopeChartView->chart()->zoomReset();
 }
 
@@ -542,7 +498,7 @@ void QChartView_::wheelEvent(QWheelEvent *event)
     {
         QPoint numDegrees = event->angleDelta() / 8;
 
-        parentWindow->ScopeAllowAutoScaling(false);
+        parentWindow->scopeSignalSelector->DisableAutoScale();
 
         if(numDegrees.ry() > 0)
         {
@@ -565,7 +521,7 @@ void QChartView_::mousePressEvent(QMouseEvent *event)
         lastMousePos = event->pos();
         event->accept();
 
-        parentWindow->ScopeAllowAutoScaling(false);
+        parentWindow->scopeSignalSelector->DisableAutoScale();
     }
 
     QChartView::mousePressEvent(event);
@@ -601,7 +557,7 @@ void MainWindow::on_btn_ScopeYUpperBoundIncr_pressed()
     auto y_diff = y_max - y_min;
 
     scopeAxisY->setMax(y_max + 0.10*y_diff);
-    ScopeAllowAutoScaling(false);
+    scopeSignalSelector->DisableAutoScale();
 }
 
 void MainWindow::on_btn_ScopeYUpperBoundDecr_pressed()
@@ -611,7 +567,7 @@ void MainWindow::on_btn_ScopeYUpperBoundDecr_pressed()
     auto y_diff = y_max - y_min;
 
     scopeAxisY->setMax(y_max - 0.10*y_diff);
-    ScopeAllowAutoScaling(false);
+    scopeSignalSelector->DisableAutoScale();
 }
 
 void MainWindow::on_btn_ScopeYLowerBoundIncr_pressed()
@@ -621,7 +577,7 @@ void MainWindow::on_btn_ScopeYLowerBoundIncr_pressed()
     auto y_diff = y_max - y_min;
 
     scopeAxisY->setMin(y_min - 0.10*y_diff);
-    ScopeAllowAutoScaling(false);
+    scopeSignalSelector->DisableAutoScale();
 }
 
 void MainWindow::on_btn_ScopeYLowerBoundDecr_pressed()
@@ -631,7 +587,7 @@ void MainWindow::on_btn_ScopeYLowerBoundDecr_pressed()
     auto y_diff = y_max - y_min;
 
     scopeAxisY->setMin(y_min + 0.10*y_diff);
-    ScopeAllowAutoScaling(false);
+    scopeSignalSelector->DisableAutoScale();
 }
 
 void MainWindow::on_btn_ScopeXUpperBoundIncr_pressed()
@@ -641,7 +597,7 @@ void MainWindow::on_btn_ScopeXUpperBoundIncr_pressed()
     auto x_diff = x_max - x_min;
 
     scopeAxisX->setMax(x_max + 0.10*x_diff);
-    ScopeAllowAutoScaling(false);
+    scopeSignalSelector->DisableAutoScale();
 }
 
 void MainWindow::on_btn_ScopeXUpperBoundDecr_pressed()
@@ -651,7 +607,7 @@ void MainWindow::on_btn_ScopeXUpperBoundDecr_pressed()
     auto x_diff = x_max - x_min;
 
     scopeAxisX->setMax(x_max - 0.10*x_diff);
-    ScopeAllowAutoScaling(false);
+    scopeSignalSelector->DisableAutoScale();
 }
 
 void MainWindow::on_btn_ScopeXLowerBoundIncr_pressed()
@@ -661,7 +617,7 @@ void MainWindow::on_btn_ScopeXLowerBoundIncr_pressed()
     auto x_diff = x_max - x_min;
 
     scopeAxisX->setMin(x_min - 0.10*x_diff);
-    ScopeAllowAutoScaling(false);
+    scopeSignalSelector->DisableAutoScale();
 }
 
 void MainWindow::on_btn_ScopeXLowerBoundDecr_pressed()
@@ -671,7 +627,7 @@ void MainWindow::on_btn_ScopeXLowerBoundDecr_pressed()
     auto x_diff = x_max - x_min;
 
     scopeAxisX->setMin(x_min + 0.10*x_diff);
-    ScopeAllowAutoScaling(false);
+    scopeSignalSelector->DisableAutoScale();
 }
 
 void MainWindow::on_lineEdit_ScopeYUpperBound_editingFinished()
@@ -681,7 +637,7 @@ void MainWindow::on_lineEdit_ScopeYUpperBound_editingFinished()
     if(convSuccess == true)
     {
         scopeAxisY->setMax(y_max);
-        ScopeAllowAutoScaling(false);
+        scopeSignalSelector->DisableAutoScale();
     }
 }
 
@@ -692,7 +648,7 @@ void MainWindow::on_lineEdit_ScopeYLowerBound_editingFinished()
     if(convSuccess == true)
     {
         scopeAxisY->setMin(y_min);
-        ScopeAllowAutoScaling(false);
+        scopeSignalSelector->DisableAutoScale();
     }
 }
 
@@ -703,7 +659,7 @@ void MainWindow::on_lineEdit_ScopeXUpperBound_editingFinished()
     if(convSuccess == true)
     {
         scopeAxisX->setMax(x_max);
-        ScopeAllowAutoScaling(false);
+        scopeSignalSelector->DisableAutoScale();
     }
 }
 
@@ -714,7 +670,7 @@ void MainWindow::on_lineEdit_ScopeXLowerBound_editingFinished()
     if(convSuccess == true)
     {
         scopeAxisX->setMin(x_min);
-        ScopeAllowAutoScaling(false);
+        scopeSignalSelector->DisableAutoScale();
     }
 }
 
@@ -873,6 +829,7 @@ ScopeSignalSelector::ScopeSignalSelector(Ui::MainWindow* ui,
     this->axisX = axisX;
     this->axisY = axisY;
     allowedToDrawChart = true;
+    allowedAutoScaling = true;
 }
 
 void ScopeSignalSelector::RegisterLineSignal(const QString name)
@@ -882,6 +839,7 @@ void ScopeSignalSelector::RegisterLineSignal(const QString name)
     item._series = new QLineSeries();
     item._series->setUseOpenGL(true);
     item._points = new QVector<QPointF>();
+    item._pointCount = 0;
     item._visible = false;
     item._chartViewSeriesID = chartView->chart()->series().count();
     signalSeriesList.append(item);
@@ -898,6 +856,7 @@ bool ScopeSignalSelector::UpdateSignalPoints(const QString name, QVector<QPointF
     bool updateSuccess = false;
     bool signalFound = false;
     SignalInfo* signal;
+    QVector<QPointF> newPoints;
 
     signalFound = FindSignalByName(name, &signal);
     if (signalFound == true)
@@ -906,6 +865,12 @@ bool ScopeSignalSelector::UpdateSignalPoints(const QString name, QVector<QPointF
         if (allowedToDrawChart == true)
         {
             signal->_series->replace(*(signal->_points));
+            if (allowedAutoScaling == true)
+            {
+                newPoints = points.mid(signal->_pointCount, points.size() - signal->_pointCount);
+                ScopeDynamicResizeIfNeeded(newPoints);
+            }
+            signal->_pointCount = signal->_points->size();
         }
         updateSuccess = true;
     }
@@ -983,6 +948,16 @@ void ScopeSignalSelector::DisableDrawing()
     allowedToDrawChart = false;
 }
 
+void ScopeSignalSelector::EnableAutoScale()
+{
+    allowedAutoScaling = true;
+}
+
+void ScopeSignalSelector::DisableAutoScale()
+{
+    allowedAutoScaling = false;
+}
+
 void ScopeSignalSelector::AttachSignalToChartview(SignalInfo* signal)
 {
     // if not NULL
@@ -1027,6 +1002,45 @@ void ScopeSignalSelector::AddCheckboxToUi(const QString name)
     ui->scrollAreaWidgetContents_ScopeSignalSelector->layout()->addWidget(box);
 
     connect(box, &QCheckBox::stateChanged, this, &ScopeSignalSelector::StateChanged);
+}
+
+void ScopeSignalSelector::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
+{
+    float maxX = axisX->max()*0.8;
+    float minX = axisX->min()*0.8;
+    float maxY = axisY->max()*0.8;
+    float minY = axisY->min()*0.8;
+
+    for(int i = 0; i < points.size(); i++)
+    {
+        /*maxX = std::fmaxf(maxX, points[i].x());
+        minX = std::fminf(minX, points[i].x());
+        maxY = std::fmaxf(maxY, points[i].y());
+        minY = std::fminf(minY, points[i].y());*/
+
+        if(maxX < points[i].x())
+        {
+            maxX = points[i].x();
+        }
+
+        if(minX > points[i].x())
+        {
+            minX = points[i].x();
+        }
+
+        if(maxY < points[i].y())
+        {
+            maxY = points[i].y();
+        }
+
+        if(minY > points[i].y())
+        {
+            minY = points[i].y();
+        }
+    }
+
+    axisX->setRange(minX*1.25, maxX*1.25);
+    axisY->setRange(minY*1.25, maxY*1.25);
 }
 
 void ScopeSignalSelector::StateChanged(int state)
