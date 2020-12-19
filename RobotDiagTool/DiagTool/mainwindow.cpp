@@ -1039,8 +1039,25 @@ void ScopeSignalSelector::ScopeDynamicResizeIfNeeded(QVector<QPointF> &points)
         }
     }
 
-    axisX->setRange(minX*1.25, maxX*1.25);
-    axisY->setRange(minY*1.25, maxY*1.25);
+    if (ui->checkBox_ScopeFixWindow->isChecked() == true)
+    {
+        int xSize = ui->lineEdit_ScopeFixWindowSizeX->text().toInt();
+        int ySize = ui->lineEdit_ScopeFixWindowSizeY->text().toInt();
+        maxX = maxX + xSize * 0.1;
+        minX = maxX - xSize;
+        minY = minY - ySize * 0.1;
+        maxY = minY + ySize;
+    }
+    else
+    {
+        maxX *= 1.25;
+        minX *= 1.25;
+        maxY *= 1.25;
+        minY *= 1.25;
+    }
+
+    axisX->setRange(minX, maxX);
+    axisY->setRange(minY, maxY);
 }
 
 void ScopeSignalSelector::StateChanged(int state)
